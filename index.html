@@ -507,6 +507,15 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <textarea id="matTxt" placeholder="直接貼上課文、講義、筆記等文字內容..."></textarea>
     </div>
 
+    <div style="margin-top:18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6c3e" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <strong style="color:#5a6c3e;">學習目標（選填）</strong>
+        <span style="font-size:12px;color:#888;">貼上後 AI 將直接採用，不自行歸納</span>
+      </div>
+      <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="從課本複製學習目標，每行一條，例如：&#10;我能領會「用心看世界」的道理。&#10;我能理解現代散文的特色與意涵。&#10;我能掌握如何找尋文本主旨的方法。&#10;&#10;💡 可一次貼上多課的目標，AI 會自動分配比重。&#10;若留空，AI 將從教材中自動擷取。"></textarea>
+    </div>
+
     <div class="mat-st no" id="matSt">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span id="matStTx">尚未提供教材</span>
@@ -967,8 +976,15 @@ async function toStep2() {
   S.scope = scope;
   S.difficulty = document.getElementById('difficulty').value;
   S.matText = document.getElementById('matTxt').value.trim();
+  S.objInput = document.getElementById('objInput').value.trim();
 
   goStep(2);
+
+  // 如果老師有手動貼上學習目標，直接解析，不呼叫 AI
+  if (S.objInput) {
+    doManualObjectives();
+    return;
+  }
 
   if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
@@ -976,6 +992,38 @@ async function toStep2() {
   }
 
   doAnalyze();
+}
+
+function doManualObjectives() {
+  // 逐行解析，過濾空行
+  const lines = S.objInput.split('\n')
+    .map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()) // 移除行首編號
+    .filter(l => l.length > 0);
+  
+  if (lines.length === 0) {
+    alert('學習目標內容為空，請重新輸入');
+    goStep(1);
+    return;
+  }
+
+  const avgWeight = Math.floor(100 / lines.length);
+  const remainder = 100 - avgWeight * lines.length;
+
+  S.objectives = lines.map((name, i) => ({
+    name: name.replace(/。$/, ''), // 去掉結尾句號
+    source: '老師輸入',
+    detail: '',
+    hours: 0,
+    weight: avgWeight + (i < remainder ? 1 : 0),
+    checked: true,
+  }));
+  S.totalHours = 0;
+
+  document.getElementById('s2-ld').classList.add('hide');
+  document.getElementById('s2-err').classList.add('hide');
+  document.getElementById('s2-result').classList.remove('hide');
+  document.getElementById('btn-s2next').disabled = false;
+  renderObjectives();
 }
 
 async function doAnalyze() {
@@ -1030,26 +1078,46 @@ ${material}
   {"error":"教材內容與設定不符：[具體說明不符原因]"}
 - 如果大致相符或無法確定，則正常進行分析。
 
-【學習目標擷取規則（重要）】
-請嚴格遵守以下規則：
+【學習目標擷取規則（最高優先級！）】
 
-1. 原汁原味擷取：請在教材中尋找「學習目標」、「教學目標」、「單元目標」、「課程目標」、「能力指標」、「學習表現」、「學習內容」、「教學重點」、「評量重點」等明確列出的目標項目。一旦找到，請「逐字逐句」完整擷取，絕對不要自行合併、歸納、刪減或修改字眼。有多少條就列出多少條。
+＜第一步：逐行掃描，找出教材中的原始學習目標＞
+教材文字可能來自 PDF 擷取，格式會比較混亂（字之間有空格、標點不規則）。
+請你仔細掃描全文，尋找以下特徵的文字：
+- 出現在「學 習 目 標」或「學習目標」字樣附近
+- 通常以「我能」「能夠」「學會」「認識」「了解」「理解」等開頭
+- 每條目標通常是一句完整的話，以句號結尾
+- 每課/每單元通常有 2-4 個目標
 
-2. 無明確目標時：只有在教材完全找不到任何目標標示時（如純課文、習作），才根據教材內容自行分析出 3-5 個核心學習目標。
+例如 PDF 擷取的文字可能長這樣：
+「學 習 目 標 我能領會「用心看世界」的道理。我能理解現代散文的特色與意涵。我能掌握如何找尋文本主旨的方法。」
+→ 你必須擷取出三條獨立目標：
+  1. 我能領會「用心看世界」的道理
+  2. 我能理解現代散文的特色與意涵
+  3. 我能掌握如何找尋文本主旨的方法
 
-3. 授課節數：如果教材中有標示節數，請直接採用；若無，請預估。
+＜第二步：絕對禁止的行為＞
+- 禁止自行歸納、合併、改寫目標。「理解文體特色與意涵」是歸納句，不是教材原文。
+- 禁止把不同課的目標合併成一條。
+- 每一條都必須是教材中「逐字可查」的原句。
+
+＜第三步：找不到目標時的備案＞
+只有在教材中完全找不到任何「學習目標」相關字樣時，才根據教材內容自行分析出 3-5 個核心學習目標，並在 detail 中標註「AI 歸納」。
+
+＜第四步：授課節數＞
+如果教材中有標示節數，請直接採用；若無，請預估。
 
 【輸出格式】
 請輸出 JSON 格式（繁體中文），包含：
 1. total_hours: 預估總授課節數（每節 40 分鐘）
 2. objectives: 學習目標陣列，每個目標包含：
-   - name: 目標名稱（請直接使用教材上的文字，若太長可微調保留前15字，但須保持原意）
+   - name: 目標名稱（必須是教材原文，去掉多餘空格後的完整句子）
+   - source: 來源標示（例如「L01課本P5」「第二課習作」，若為AI歸納則寫「AI歸納」）
    - detail: 依據說明（說明教材中哪些段落對應此目標，50字以內）
    - hours: 預估授課節數
    - weight: 建議比重百分比（所有目標的 weight 加總必須等於 100）
 
 請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。範例：
-{"total_hours":12,"objectives":[{"name":"我能領會用心看世界的道理","detail":"對應課文主旨與生活體驗","hours":3,"weight":35}]}`;
+{"total_hours":12,"objectives":[{"name":"我能領會「用心看世界」的道理","source":"L01課本P5","detail":"對應課文主旨與生活體驗","hours":3,"weight":35}]}`;
 }
 
 function parseObjectives(raw) {
@@ -1102,6 +1170,7 @@ function parseObjectives(raw) {
     S.totalHours = data.total_hours || 0;
     return (data.objectives || []).map(o => ({
       name: o.name,
+      source: o.source || '',
       detail: o.detail,
       hours: o.hours,
       weight: o.weight,
@@ -1130,7 +1199,7 @@ function renderObjectives() {
           <span>%</span>
         </div>
       </div>
-      <div class="obj-detail">${o.hours} 節 ｜ ${o.detail}</div>
+      <div class="obj-detail">${o.source ? `<span style="display:inline-block;background:${o.source === 'AI歸納' ? '#fef3c7' : '#dcfce7'};color:${o.source === 'AI歸納' ? '#92400e' : '#166534'};font-size:11px;padding:1px 6px;border-radius:4px;margin-right:6px;">${o.source}</span>` : ''}${o.hours} 節 ｜ ${o.detail}</div>
     </div>
   `).join('');
   updObjTotal();
