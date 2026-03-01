@@ -521,7 +521,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <div id="s2-ld" class="ld-wrap">
       <div class="ld-spin"></div>
       <div class="ld-msg">AI 正在分析教材中的學習目標...</div>
-      <div class="ld-sub">通常需要 10-20 秒</div>
+      <div class="ld-sub" id="s2-ldSub">通常需要 10-20 秒</div>
     </div>
 
     <!-- Analysis result -->
@@ -637,6 +637,12 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   <footer class="ftr">
     <div class="ftr-line">出題結果僅供參考，請老師審題後使用</div>
     <div class="ftr-copy">© 2026 新竹市香山區內湖國小</div>
+    <div style="margin-top:8px;">
+      <label style="font-size:11px;color:var(--text-3);cursor:pointer;user-select:none;">
+        <input type="checkbox" id="wsToggle" onchange="toggleWorkshop()" style="vertical-align:middle;margin-right:4px;">
+        研習模式（多人同時使用時開啟，自動錯開請求）
+      </label>
+    </div>
   </footer>
 </div>
 
@@ -681,6 +687,7 @@ const S = {
   apiUrl: localStorage.getItem('nhps_api_url') || '',
   apiSecret: localStorage.getItem('nhps_api_secret') || '',
   output: '',
+  workshopMode: localStorage.getItem('nhps_workshop') === 'true',
 };
 
 // ═══════════════════════════════════════
@@ -1222,12 +1229,20 @@ ${S.grade}___班 座號：_______ 姓名：_______
 }
 
 // ═══════════════════════════════════════
-// Claude API via Apps Script Proxy
+// API via Apps Script Proxy
 // ═══════════════════════════════════════
 async function callAPI(prompt, action) {
   if (!S.apiUrl) {
     document.getElementById('keyModal').classList.remove('hide');
     throw new Error('NEED_URL');
+  }
+
+  // 研習模式：隨機延遲 0-15 秒，錯開大量同時請求
+  if (S.workshopMode) {
+    const delay = Math.floor(Math.random() * 15000);
+    const ldSub = document.getElementById(S.step === 2 ? 's2-ldSub' : 's5-ldSub');
+    if (ldSub) ldSub.textContent = `研習模式：排隊中（約 ${Math.ceil(delay/1000)} 秒後開始）...`;
+    await new Promise(r => setTimeout(r, delay));
   }
 
   const res = await fetch(S.apiUrl, {
@@ -1315,9 +1330,18 @@ function doCopy(e, text, msg) {
 }
 
 // ═══════════════════════════════════════
+// Workshop Mode
+// ═══════════════════════════════════════
+function toggleWorkshop() {
+  S.workshopMode = document.getElementById('wsToggle').checked;
+  localStorage.setItem('nhps_workshop', S.workshopMode);
+}
+
+// ═══════════════════════════════════════
 // Init
 // ═══════════════════════════════════════
 updSteps();
+document.getElementById('wsToggle').checked = S.workshopMode;
 </script>
 
 </body>
