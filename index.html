@@ -301,6 +301,11 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .stbl input[type="number"] { width: 56px; padding: 5px 6px; text-align: center; font-size: 13px; }
 .stbl-total { font-size: 16px; font-weight: 900; color: var(--accent); text-align: right; padding-top: 12px; }
 .stbl-total.err { color: var(--err); }
+.sc-ord { display: flex; flex-direction: column; gap: 2px; }
+.sc-ord button { background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 12px; color: var(--text-2); line-height: 1; transition: all var(--t); }
+.sc-ord button:hover { background: var(--accent-l); border-color: var(--accent); color: var(--accent); }
+.sc-ord button:disabled { opacity: 0.2; cursor: default; }
+.sc-ord button:disabled:hover { background: none; border-color: var(--border); color: var(--text-2); }
 
 /* ═══ Buttons ═══ */
 .brow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; }
@@ -578,9 +583,9 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       配分設定
     </div>
-    <p class="pnl-desc">調整每大題的題數與每題分數。總分需為 100 分。</p>
+    <p class="pnl-desc">調整每大題的題數與每題分數，可用箭頭調整出題順序。總分需為 100 分。</p>
     <table class="stbl">
-      <thead><tr><th>大題</th><th style="width:70px">題數</th><th style="width:70px">每題</th><th style="width:70px;text-align:right">小計</th></tr></thead>
+      <thead><tr><th style="width:50px">順序</th><th>大題</th><th style="width:70px">題數</th><th style="width:70px">每題</th><th style="width:70px;text-align:right">小計</th></tr></thead>
       <tbody id="scBody"></tbody>
     </table>
     <div class="stbl-total" id="scTotal">合計：100 分</div>
@@ -951,6 +956,12 @@ function buildAnalysisPrompt(material) {
 【教材內容】
 ${material}
 
+【重要：教材比對檢查】
+請先判斷教材內容是否與上方的「科目」和「年級」大致相符。
+- 如果教材明顯不符（例如：選了數學科但上傳的是國語課文，或選了六年級但教材是三年級內容），請直接回傳：
+  {"error":"教材內容與設定不符：[具體說明不符原因]"}
+- 如果大致相符或無法確定，則正常進行分析。
+
 【分析要求】
 請輸出 JSON 格式（繁體中文），包含：
 1. total_hours: 預估總授課節數（每節 40 分鐘）
@@ -968,6 +979,10 @@ function parseObjectives(raw) {
   try {
     const clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
     const data = JSON.parse(clean);
+    // 教材比對不符
+    if (data.error) {
+      throw new Error(data.error);
+    }
     S.totalHours = data.total_hours || 0;
     return (data.objectives || []).map(o => ({
       name: o.name,
@@ -977,6 +992,7 @@ function parseObjectives(raw) {
       checked: true,
     }));
   } catch (e) {
+    if (e.message && e.message.startsWith('教材內容與設定不符')) throw e;
     throw new Error('AI 回傳格式異常，請重試');
   }
 }
@@ -1079,16 +1095,60 @@ function toStep4() {
 
   const tb = document.getElementById('scBody');
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
+  renderScTable();
+  updSc();
+  goStep(4);
+}
+
+function renderScTable() {
+  const tb = document.getElementById('scBody');
+  const ord = ['一','二','三','四','五','六','七','八','九','十'];
+  const len = S.selTypes.length;
   tb.innerHTML = S.selTypes.map((t, i) => `
     <tr>
+      <td><div class="sc-ord">
+        <button onclick="moveType(${i},-1)" ${i===0?'disabled':''}>▲</button>
+        <button onclick="moveType(${i},1)" ${i===len-1?'disabled':''}>▼</button>
+      </div></td>
       <td>${ord[i]||i+1}、${t.name}</td>
       <td><input type="number" value="${t.dc}" min="1" max="30" onchange="updSc()"></td>
       <td><input type="number" value="${t.de}" min="1" max="50" onchange="updSc()"></td>
       <td style="text-align:right;font-weight:600" class="sub">${t.dc*t.de}</td>
     </tr>
   `).join('');
+}
+
+function moveType(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= S.selTypes.length) return;
+  // 先把目前配分存下來
   updSc();
-  goStep(4);
+  // 交換
+  const temp = S.selTypes[idx];
+  S.selTypes[idx] = S.selTypes[newIdx];
+  S.selTypes[newIdx] = temp;
+  // 同步 scores 的順序
+  const tempSc = S.scores[idx];
+  S.scores[idx] = S.scores[newIdx];
+  S.scores[newIdx] = tempSc;
+  // 重繪（保留使用者填入的題數/每題分數）
+  const tb = document.getElementById('scBody');
+  const ord = ['一','二','三','四','五','六','七','八','九','十'];
+  const len = S.selTypes.length;
+  tb.innerHTML = S.selTypes.map((t, i) => {
+    const sc = S.scores[i] || { count: t.dc, each: t.de };
+    return `<tr>
+      <td><div class="sc-ord">
+        <button onclick="moveType(${i},-1)" ${i===0?'disabled':''}>▲</button>
+        <button onclick="moveType(${i},1)" ${i===len-1?'disabled':''}>▼</button>
+      </div></td>
+      <td>${ord[i]||i+1}、${t.name}</td>
+      <td><input type="number" value="${sc.count}" min="1" max="30" onchange="updSc()"></td>
+      <td><input type="number" value="${sc.each}" min="1" max="50" onchange="updSc()"></td>
+      <td style="text-align:right;font-weight:600" class="sub">${sc.count*sc.each}</td>
+    </tr>`;
+  }).join('');
+  updSc();
 }
 
 function updSc() {
