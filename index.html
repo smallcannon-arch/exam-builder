@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
 /* ═══════════════════════════════════════
@@ -485,18 +487,18 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
 
     <div class="mtabs">
-      <button class="mtab on" onclick="swTab('up')">上傳 .docx 檔案</button>
+      <button class="mtab on" onclick="swTab('up')">上傳檔案</button>
       <button class="mtab" onclick="swTab('tx')">貼上文字</button>
     </div>
 
     <div id="tab-up" class="mtc on">
       <div class="upz" id="upzone">
-        <input type="file" id="fileIn" multiple accept=".docx">
+        <input type="file" id="fileIn" multiple accept=".docx,.pdf">
         <div class="upz-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <div class="upz-main">點擊或拖曳 .docx 檔案到這裡</div>
-        <div class="upz-hint">僅支援 .docx 格式 ・ 可上傳多個檔案<br>.doc 請先另存為 .docx（<a href="https://cloudconvert.com/doc-to-docx" target="_blank" style="color:var(--accent)">線上轉檔工具</a>）</div>
+        <div class="upz-main">點擊或拖曳 .docx / .pdf 檔案到這裡</div>
+        <div class="upz-hint">支援 .docx 與 .pdf 格式 ・ 可上傳多個檔案<br>⚠️ 掃描式 PDF（純圖片）無法擷取文字，請改用文字貼上</div>
       </div>
       <div class="flist" id="flist"></div>
     </div>
@@ -781,11 +783,16 @@ fileIn.addEventListener('change', e => handleFiles(e.target.files));
 
 async function handleFiles(files) {
   for (const f of files) {
-    if (!f.name.toLowerCase().endsWith('.docx')) {
-      if (f.name.toLowerCase().endsWith('.doc')) {
+    const name = f.name.toLowerCase();
+    const isDocx = name.endsWith('.docx');
+    const isPdf = name.endsWith('.pdf');
+    const isDoc = name.endsWith('.doc');
+
+    if (!isDocx && !isPdf) {
+      if (isDoc) {
         document.getElementById('docModal').classList.remove('hide');
       } else {
-        alert('僅支援 .docx 格式：' + f.name);
+        alert('支援 .docx 與 .pdf 格式：' + f.name);
       }
       continue;
     }
@@ -793,21 +800,40 @@ async function handleFiles(files) {
 
     try {
       const ab = await f.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer: ab });
-      const text = result.value.trim();
+      let text = '';
+
+      if (isDocx) {
+        const result = await mammoth.extractRawText({ arrayBuffer: ab });
+        text = result.value.trim();
+      } else if (isPdf) {
+        text = await extractPdfText(ab);
+      }
+
       if (text.length < 20) {
-        alert(`「${f.name}」內容過少（${text.length} 字），可能是掃描檔。\n請改用文字貼上方式。`);
+        alert(`「${f.name}」內容過少（${text.length} 字），可能是掃描檔或純圖片 PDF。\n請改用文字貼上方式。`);
         continue;
       }
       S.files.push({ name: f.name, size: f.size, text });
     } catch (err) {
-      alert(`「${f.name}」讀取失敗：${err.message}\n請確認為有效的 .docx 檔案`);
+      alert(`「${f.name}」讀取失敗：${err.message}\n請確認檔案格式正確`);
     }
   }
   fileIn.value = '';
   renderFiles();
   updMatSt();
   checkMatLength();
+}
+
+async function extractPdfText(arrayBuffer) {
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join('');
+    fullText += pageText + '\n';
+  }
+  return fullText.trim();
 }
 
 function rmFile(i) { S.files.splice(i, 1); renderFiles(); updMatSt(); }
