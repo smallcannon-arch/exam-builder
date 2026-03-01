@@ -970,8 +970,9 @@ async function doAnalyze() {
 
   try {
     const matContent = getMaterialText();
-    const objectives = await callAPI(buildAnalysisPrompt(matContent), 'analyze');
-    S.objectives = parseObjectives(objectives);
+    const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze');
+    S._lastRaw = rawResult; // debug 暫存
+    S.objectives = parseObjectives(rawResult);
     renderObjectives();
     document.getElementById('s2-ld').classList.add('hide');
     document.getElementById('s2-result').classList.remove('hide');
@@ -980,7 +981,12 @@ async function doAnalyze() {
     if (err.message === 'NEED_SECRET') return;
     document.getElementById('s2-ld').classList.add('hide');
     document.getElementById('s2-err').classList.remove('hide');
-    document.getElementById('s2-errMsg').textContent = '分析失敗：' + err.message;
+    // 顯示錯誤 + 原始回傳前 500 字供 debug
+    let debugInfo = err.message;
+    if (S._lastRaw) {
+      debugInfo += '\n\n【AI 原始回傳（前500字）】\n' + S._lastRaw.substring(0, 500);
+    }
+    document.getElementById('s2-errMsg').textContent = debugInfo;
   }
 }
 
@@ -1032,7 +1038,15 @@ ${material}
 
 function parseObjectives(raw) {
   try {
-    const clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    // 移除 markdown 標記
+    let clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    
+    // 嘗試從回傳中提取 JSON（Gemini 可能在 JSON 前後加上思考文字）
+    const jsonMatch = clean.match(/\{[\s\S]*"objectives"[\s\S]*\}/);
+    if (jsonMatch) {
+      clean = jsonMatch[0];
+    }
+
     const data = JSON.parse(clean);
     // 教材比對不符
     if (data.error) {
@@ -1048,7 +1062,8 @@ function parseObjectives(raw) {
     }));
   } catch (e) {
     if (e.message && e.message.startsWith('教材內容與設定不符')) throw e;
-    throw new Error('AI 回傳格式異常，請重試');
+    console.error('AI raw output:', raw);
+    throw new Error('AI 回傳格式異常，請重試（提示：可嘗試減少教材量或重新上傳）');
   }
 }
 
