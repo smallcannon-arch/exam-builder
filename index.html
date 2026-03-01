@@ -693,7 +693,7 @@ const S = {
   selTypeIds: [],
   scores: [],
   apiUrl: API_URL,
-  apiSecret: localStorage.getItem('nhps_api_secret') || '',
+  apiSecret: '',
   output: '',
   workshopMode: localStorage.getItem('nhps_workshop') === 'true',
 };
@@ -1293,7 +1293,6 @@ function saveKey() {
   const sec = document.getElementById('secIn').value.trim();
   if (!sec) { alert('請輸入存取密碼'); return; }
   S.apiSecret = sec;
-  localStorage.setItem('nhps_api_secret', sec);
   document.getElementById('keyModal').classList.add('hide');
   if (S.step === 2) doAnalyze();
   else if (S.step === 5) generate();
