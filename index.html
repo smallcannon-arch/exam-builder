@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>內湖國小輔助命題系統</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   Variables & Reset
+   ═══════════════════════════════════════ */
+:root {
+  --bg: #F4F1EB;
+  --surface: #FFFFFF;
+  --surface-alt: #FAF8F5;
+  --surface-hover: #F5F3EF;
+  --border: #E4DFD6;
+  --border-light: #EDEAE4;
+  --border-focus: #5B8C5A;
+  --text: #1E1E1E;
+  --text-2: #5C5750;
+  --text-3: #9B958C;
+  --accent: #4E7D4E;
+  --accent-h: #3D6340;
+  --accent-l: #E4EFE4;
+  --accent-bg: #F0F5F0;
+  --gold: #B08D45;
+  --gold-l: #F8F2E4;
+  --warn: #C4883A;
+  --warn-bg: #FDF6EC;
+  --err: #B85454;
+  --err-bg: #FDF0F0;
+  --sh-1: 0 1px 3px rgba(0,0,0,0.05);
+  --sh-2: 0 4px 16px rgba(0,0,0,0.07);
+  --sh-3: 0 8px 30px rgba(0,0,0,0.10);
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --t: 0.2s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans TC', -apple-system, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 15% 85%, rgba(78,125,78,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 15%, rgba(176,141,69,0.04) 0%, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text);
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ Layout ═══ */
+.wrap { max-width: 780px; margin: 0 auto; padding: 16px 20px 48px; }
+@media (min-width: 640px) { .wrap { padding: 24px 32px 56px; } }
+
+/* ═══ Header ═══ */
+.hdr { text-align: center; padding: 28px 0 20px; }
+
+.hdr-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--accent-l); color: var(--accent);
+  font-size: 12px; font-weight: 600; padding: 5px 14px;
+  border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px;
+}
+
+.hdr h1 {
+  font-family: 'Noto Serif TC', serif;
+  font-size: 22px; font-weight: 900; letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--text) 0%, #4A4540 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 6px;
+}
+@media (min-width: 640px) { .hdr h1 { font-size: 28px; } }
+
+.hdr-sub { font-size: 13px; color: var(--text-3); font-weight: 400; letter-spacing: 0.5px; }
+
+/* ═══ Steps ═══ */
+.steps { display: flex; justify-content: center; align-items: center; gap: 0; margin: 4px 0 24px; }
+
+.stp {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--text-3); font-weight: 500; transition: color var(--t);
+}
+.stp.on { color: var(--accent); font-weight: 700; }
+.stp.ok { color: var(--accent); }
+
+.stp-n {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  background: var(--border); color: var(--text-3);
+  transition: all var(--t); flex-shrink: 0;
+}
+.stp.on .stp-n { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(78,125,78,0.3); }
+.stp.ok .stp-n { background: var(--accent-l); color: var(--accent); }
+
+.stp-c {
+  width: 20px; height: 2px; background: var(--border-light);
+  margin: 0 6px; flex-shrink: 0; border-radius: 1px;
+  transition: background var(--t);
+}
+.stp-c.ok { background: var(--accent-l); }
+
+.stp-t { display: none; }
+@media (min-width: 540px) { .stp-t { display: inline; } }
+
+/* ═══ Panel ═══ */
+.pnl {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 14px;
+  box-shadow: var(--sh-1);
+  animation: slideUp 0.35s ease;
+}
+@media (min-width: 640px) { .pnl { padding: 32px; } }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pnl-t {
+  font-size: 15px; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--text);
+}
+.pnl-t svg { width: 18px; height: 18px; color: var(--accent); flex-shrink: 0; }
+
+.pnl-desc { font-size: 13px; color: var(--text-2); margin-bottom: 16px; line-height: 1.6; }
+
+/* ═══ Form ═══ */
+.fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 520px) { .fg { grid-template-columns: 1fr; } }
+.fg-full { grid-column: 1 / -1; }
+
+.fl { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; display: block; letter-spacing: 0.3px; }
+.fl .req { color: var(--err); margin-left: 2px; }
+
+select, input[type="text"], input[type="number"], textarea {
+  width: 100%; padding: 10px 12px;
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  font-size: 14px; font-family: inherit; color: var(--text);
+  background: var(--surface); transition: all var(--t); outline: none;
+}
+select:focus, input:focus, textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(78,125,78,0.10);
+}
+select {
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%235C5750' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
+}
+textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
+
+/* ═══ Upload Zone ═══ */
+.upz {
+  border: 2px dashed var(--border); border-radius: var(--r-md);
+  padding: 32px 20px; text-align: center; cursor: pointer;
+  transition: all var(--t); position: relative; background: var(--surface-alt);
+}
+.upz:hover, .upz.drag { border-color: var(--accent); background: var(--accent-bg); }
+.upz input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upz-icon { color: var(--text-3); margin-bottom: 6px; }
+.upz-icon svg { width: 28px; height: 28px; }
+.upz-main { font-size: 14px; font-weight: 500; color: var(--text-2); }
+.upz-hint { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
+
+/* ═══ File List ═══ */
+.flist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.fitem {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--surface-alt);
+  border-radius: var(--r-sm); font-size: 13px;
+  border: 1px solid var(--border-light);
+}
+.fitem-icon { color: var(--accent); flex-shrink: 0; }
+.fitem-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.fitem-info { color: var(--text-3); font-size: 11px; flex-shrink: 0; }
+.fitem-rm {
+  background: none; border: none; cursor: pointer; color: var(--text-3);
+  padding: 2px; border-radius: 4px; transition: color var(--t); flex-shrink: 0;
+}
+.fitem-rm:hover { color: var(--err); }
+
+/* ═══ Material Tabs ═══ */
+.mtabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid var(--border-light); }
+.mtab {
+  padding: 8px 16px; font-size: 13px; font-weight: 500;
+  color: var(--text-3); cursor: pointer; border: none;
+  background: none; font-family: inherit;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: all var(--t);
+}
+.mtab:hover { color: var(--text-2); }
+.mtab.on { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+.mtc { display: none; }
+.mtc.on { display: block; }
+
+.mat-st {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; margin-top: 10px;
+}
+.mat-st.ok { background: var(--accent-bg); color: var(--accent); }
+.mat-st.no { background: var(--warn-bg); color: var(--warn); }
+
+/* ═══ Objectives (Step 2) ═══ */
+.obj-card {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: all var(--t);
+  background: var(--surface);
+}
+.obj-card:hover { border-color: var(--accent); }
+.obj-card.unchecked { opacity: 0.5; }
+
+.obj-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.obj-chk {
+  width: 20px; height: 20px; border: 2px solid var(--border);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; cursor: pointer; transition: all var(--t);
+}
+.obj-chk.on { background: var(--accent); border-color: var(--accent); }
+.obj-chk svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
+.obj-chk.on svg { opacity: 1; }
+
+.obj-name { flex: 1; font-size: 14px; font-weight: 600; }
+
+.obj-weight {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+}
+.obj-weight input {
+  width: 50px; padding: 4px 6px; text-align: center; font-size: 13px;
+  border-radius: 4px;
+}
+.obj-weight span { font-size: 12px; color: var(--text-3); }
+
+.obj-detail {
+  font-size: 12px; color: var(--text-2); line-height: 1.6;
+  padding-left: 30px;
+}
+
+.obj-summary {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0 0; margin-top: 8px; border-top: 1px solid var(--border-light);
+  font-size: 13px;
+}
+.obj-total { font-weight: 700; color: var(--accent); }
+.obj-total.err { color: var(--err); }
+
+/* ═══ Question Type Checkboxes ═══ */
+.qtg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 520px) { .qtg { grid-template-columns: 1fr; } }
+
+.qti {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border: 1.5px solid var(--border);
+  border-radius: var(--r-md); cursor: pointer;
+  transition: all var(--t); user-select: none;
+}
+.qti:hover { border-color: var(--accent); background: var(--accent-bg); }
+.qti.on { border-color: var(--accent); background: var(--accent-l); }
+.qti input { display: none; }
+
+.qti-c {
+  width: 20px; height: 20px; border: 2px solid var(--border);
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px; transition: all var(--t);
+}
+.qti.on .qti-c { background: var(--accent); border-color: var(--accent); }
+.qti-c svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
+.qti.on .qti-c svg { opacity: 1; }
+
+.qti-info { flex: 1; }
+.qti-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.qti-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+.qti-badge {
+  display: inline-block; background: var(--gold-l); color: var(--gold);
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 3px; margin-left: 4px; vertical-align: middle;
+}
+
+/* ═══ Score Table ═══ */
+.stbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.stbl th, .stbl td { padding: 10px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-light); }
+.stbl th { font-weight: 600; color: var(--text-3); font-size: 11px; letter-spacing: 0.5px; }
+.stbl input[type="number"] { width: 56px; padding: 5px 6px; text-align: center; font-size: 13px; }
+.stbl-total { font-size: 16px; font-weight: 900; color: var(--accent); text-align: right; padding-top: 12px; }
+.stbl-total.err { color: var(--err); }
+
+/* ═══ Buttons ═══ */
+.brow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px; border: none; border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: all var(--t); letter-spacing: 0.3px;
+}
+.btn-p {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-h) 100%);
+  color: #fff; box-shadow: var(--sh-1);
+}
+.btn-p:hover { box-shadow: var(--sh-2); transform: translateY(-1px); }
+.btn-p:active { transform: translateY(0); }
+.btn-p:disabled { background: var(--border); cursor: not-allowed; box-shadow: none; transform: none; }
+
+.btn-s { background: var(--surface); color: var(--text-2); border: 1.5px solid var(--border); }
+.btn-s:hover { background: var(--surface-hover); }
+
+.btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* ═══ Output ═══ */
+.out-area {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 24px; margin-top: 14px;
+  animation: slideUp 0.35s ease;
+}
+@media (min-width: 640px) { .out-area { padding: 32px; } }
+
+.out-txt {
+  font-size: 14px; line-height: 1.85; white-space: pre-wrap;
+  font-family: 'Noto Sans TC', sans-serif;
+  max-height: 600px; overflow-y: auto; padding-right: 8px;
+}
+.out-txt::-webkit-scrollbar { width: 5px; }
+.out-txt::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.out-acts {
+  display: flex; gap: 8px; margin-top: 16px;
+  padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;
+}
+
+/* ═══ Loading ═══ */
+.ld-wrap { text-align: center; padding: 48px 20px; }
+.ld-spin {
+  width: 32px; height: 32px; border: 3px solid var(--border);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 0 auto 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.ld-msg { font-size: 14px; color: var(--text-2); font-weight: 500; }
+.ld-sub { font-size: 12px; color: var(--text-3); margin-top: 4px; }
+
+/* ═══ Status Msg ═══ */
+.smsg {
+  padding: 10px 14px; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; margin-top: 10px;
+  display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+}
+.smsg svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
+.smsg.err { background: var(--err-bg); color: var(--err); }
+.smsg.warn { background: var(--warn-bg); color: var(--warn); }
+.smsg.info { background: var(--accent-bg); color: var(--accent); }
+
+/* ═══ Modal ═══ */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; padding: 20px; animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } }
+
+.modal {
+  background: var(--surface); border-radius: var(--r-lg);
+  padding: 28px; max-width: 420px; width: 100%;
+  box-shadow: var(--sh-3); animation: scaleIn 0.25s ease;
+}
+@keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } }
+.modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+.modal p { font-size: 13px; color: var(--text-2); margin-bottom: 14px; line-height: 1.6; }
+.modal a { color: var(--accent); text-decoration: underline; }
+.modal input { margin-bottom: 14px; }
+
+/* ═══ Footer ═══ */
+.ftr {
+  text-align: center; padding: 28px 0 8px;
+  font-size: 11px; color: var(--text-3); letter-spacing: 0.3px;
+}
+.ftr-line { margin-bottom: 4px; }
+.ftr-copy { font-weight: 500; }
+
+/* ═══ Utility ═══ */
+.hide { display: none !important; }
+.sep { height: 1px; background: var(--border-light); margin: 18px 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <header class="hdr">
+    <div class="hdr-badge">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      新竹市香山區內湖國小
+    </div>
+    <h1>輔助命題系統</h1>
+    <p class="hdr-sub">上傳教材 → AI 分析學習目標 → 智慧出題 → 老師審題把關</p>
+  </header>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="stp on" data-s="1"><span class="stp-n">1</span><span class="stp-t">教材</span></div>
+    <div class="stp-c"></div>
+    <div class="stp" data-s="2"><span class="stp-n">2</span><span class="stp-t">目標</span></div>
+    <div class="stp-c"></div>
+    <div class="stp" data-s="3"><span class="stp-n">3</span><span class="stp-t">題型</span></div>
+    <div class="stp-c"></div>
+    <div class="stp" data-s="4"><span class="stp-n">4</span><span class="stp-t">配分</span></div>
+    <div class="stp-c"></div>
+    <div class="stp" data-s="5"><span class="stp-n">5</span><span class="stp-t">出題</span></div>
+  </div>
+
+  <!-- ═══ STEP 1: 設定與教材 ═══ -->
+  <div id="s1" class="pnl">
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-8.66-2.34 2.83-2.83m11.66-5.66 2.83-2.83M1 12h4m14 0h4M4.34 4.34l2.83 2.83m11.66 5.66 2.83 2.83"/></svg>
+      考卷設定與教材上傳
+    </div>
+
+    <div class="fg">
+      <div>
+        <label class="fl">科目 <span class="req">*</span></label>
+        <select id="subject">
+          <option value="">請選擇</option>
+          <option value="國語">國語</option>
+          <option value="數學">數學</option>
+          <option value="自然">自然</option>
+          <option value="社會">社會</option>
+          <option value="英語">英語</option>
+        </select>
+      </div>
+      <div>
+        <label class="fl">年級 <span class="req">*</span></label>
+        <select id="grade">
+          <option value="">請選擇</option>
+          <option>一年級</option><option>二年級</option><option>三年級</option>
+          <option>四年級</option><option>五年級</option><option>六年級</option>
+        </select>
+      </div>
+      <div>
+        <label class="fl">難度</label>
+        <select id="difficulty">
+          <option value="balanced">均衡混合（建議）</option>
+          <option value="easy">基礎為主</option>
+          <option value="hard">偏難挑戰</option>
+        </select>
+      </div>
+      <div>
+        <label class="fl">範圍 <span class="req">*</span></label>
+        <input type="text" id="scope" placeholder="第二單元、期中考範圍...">
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      上傳教材 <span class="req" style="font-size:13px">*</span>
+    </div>
+    <p class="pnl-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。可混合使用檔案上傳與文字貼上。</p>
+
+    <div class="mtabs">
+      <button class="mtab on" onclick="swTab('up')">上傳 .docx 檔案</button>
+      <button class="mtab" onclick="swTab('tx')">貼上文字</button>
+    </div>
+
+    <div id="tab-up" class="mtc on">
+      <div class="upz" id="upzone">
+        <input type="file" id="fileIn" multiple accept=".docx">
+        <div class="upz-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="upz-main">點擊或拖曳 .docx 檔案到這裡</div>
+        <div class="upz-hint">僅支援 .docx 格式 ・ 可上傳多個檔案<br>.doc 請先另存為 .docx（<a href="https://cloudconvert.com/doc-to-docx" target="_blank" style="color:var(--accent)">線上轉檔工具</a>）</div>
+      </div>
+      <div class="flist" id="flist"></div>
+    </div>
+
+    <div id="tab-tx" class="mtc">
+      <textarea id="matTxt" placeholder="直接貼上課文、講義、筆記等文字內容..."></textarea>
+    </div>
+
+    <div class="mat-st no" id="matSt">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="matStTx">尚未提供教材</span>
+    </div>
+
+    <div class="brow">
+      <span></span>
+      <button class="btn btn-p" onclick="toStep2()">
+        下一步：分析學習目標
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2: 學習目標 ═══ -->
+  <div id="s2" class="pnl hide">
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      學習目標分析
+    </div>
+    <p class="pnl-desc">AI 已分析教材，請確認學習目標與授課比重。可勾選/取消、調整比重。</p>
+
+    <!-- Loading for analysis -->
+    <div id="s2-ld" class="ld-wrap">
+      <div class="ld-spin"></div>
+      <div class="ld-msg">AI 正在分析教材中的學習目標...</div>
+      <div class="ld-sub">通常需要 10-20 秒</div>
+    </div>
+
+    <!-- Analysis result -->
+    <div id="s2-result" class="hide">
+      <div id="s2-summary" style="font-size:13px;color:var(--text-2);margin-bottom:14px;font-weight:500;"></div>
+      <div id="objList"></div>
+      <div class="obj-summary">
+        <span style="color:var(--text-3)">比重合計需等於 100%</span>
+        <span class="obj-total" id="objTotal">100%</span>
+      </div>
+    </div>
+
+    <div id="s2-err" class="smsg err hide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <span id="s2-errMsg"></span>
+    </div>
+
+    <div class="brow">
+      <button class="btn btn-s" onclick="goStep(1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+        上一步
+      </button>
+      <button class="btn btn-p" id="btn-s2next" onclick="toStep3()" disabled>
+        下一步：選題型
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3: 題型 ═══ -->
+  <div id="s3" class="pnl hide">
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      選擇題型
+    </div>
+    <p class="pnl-desc">根據 <strong id="s3-info"></strong> 的特性，系統推薦以下題型：</p>
+    <div class="qtg" id="qtGrid"></div>
+    <div class="brow">
+      <button class="btn btn-s" onclick="goStep(2)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+        上一步
+      </button>
+      <button class="btn btn-p" onclick="toStep4()">
+        下一步：配分
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 4: 配分 ═══ -->
+  <div id="s4" class="pnl hide">
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      配分設定
+    </div>
+    <p class="pnl-desc">調整每大題的題數與每題分數。總分需為 100 分。</p>
+    <table class="stbl">
+      <thead><tr><th>大題</th><th style="width:70px">題數</th><th style="width:70px">每題</th><th style="width:70px;text-align:right">小計</th></tr></thead>
+      <tbody id="scBody"></tbody>
+    </table>
+    <div class="stbl-total" id="scTotal">合計：100 分</div>
+    <div class="brow">
+      <button class="btn btn-s" onclick="goStep(3)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+        上一步
+      </button>
+      <button class="btn btn-p" id="btnGen" onclick="generate()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        開始出題
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 5: 出題 ═══ -->
+  <div id="s5" class="hide">
+    <div id="s5-ld" class="pnl">
+      <div class="ld-wrap">
+        <div class="ld-spin"></div>
+        <div class="ld-msg" id="s5-ldMsg">AI 正在根據教材與學習目標命題中...</div>
+        <div class="ld-sub" id="s5-ldSub">通常需要 30-60 秒，依題數而定</div>
+      </div>
+    </div>
+    <div id="s5-ok" class="out-area hide">
+      <div class="pnl-t">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        出題結果
+      </div>
+      <div class="out-txt" id="outTxt"></div>
+      <div class="out-acts">
+        <button class="btn btn-p" onclick="copyAll(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          複製考卷
+        </button>
+        <button class="btn btn-s" onclick="copyAns(event)">複製答案卷</button>
+        <button class="btn btn-s" onclick="copyObj(event)">複製目標統計</button>
+        <button class="btn btn-s" onclick="copyImg(event)">複製圖片指令</button>
+        <button class="btn btn-s" onclick="goStep(1)">重新出題</button>
+      </div>
+    </div>
+    <div id="s5-err" class="pnl hide">
+      <div class="smsg err">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <span id="s5-errMsg"></span>
+      </div>
+      <div class="brow">
+        <button class="btn btn-s" onclick="goStep(1)">從頭開始</button>
+        <button class="btn btn-s" onclick="goStep(4)">返回重試</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="ftr">
+    <div class="ftr-line">出題結果僅供參考，請老師審題後使用</div>
+    <div class="ftr-copy">© 2026 新竹市香山區內湖國小</div>
+  </footer>
+</div>
+
+<!-- API URL Modal -->
+<div id="keyModal" class="modal-bg hide">
+  <div class="modal">
+    <h3>設定系統連線</h3>
+    <p>請輸入後端服務網址與存取密碼。僅需設定一次，會記住在您的瀏覽器中。</p>
+    <label class="fl" style="margin-top:8px">後端網址 <span class="req">*</span></label>
+    <input type="text" id="keyIn" placeholder="https://script.google.com/macros/s/.../exec">
+    <label class="fl" style="margin-top:8px">存取密碼</label>
+    <input type="text" id="secIn" placeholder="請向管理員索取">
+    <div class="brow"><span></span><button class="btn btn-p" onclick="saveKey()">儲存並繼續</button></div>
+  </div>
+</div>
+
+<!-- .doc Warning Modal -->
+<div id="docModal" class="modal-bg hide">
+  <div class="modal">
+    <h3>不支援 .doc 格式</h3>
+    <p>本系統僅支援 <strong>.docx</strong> 格式。<br><br>
+    <strong>轉檔方式：</strong>用 Word 開啟 → 檔案 → 另存新檔 → 格式選「Word 文件 (.docx)」<br><br>
+    <strong>線上轉檔：</strong><a href="https://cloudconvert.com/doc-to-docx" target="_blank">cloudconvert.com</a></p>
+    <div class="brow"><span></span><button class="btn btn-s" onclick="document.getElementById('docModal').classList.add('hide')">了解</button></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// State
+// ═══════════════════════════════════════
+const S = {
+  step: 1,
+  subject: '', grade: '', scope: '', difficulty: 'balanced',
+  files: [],       // [{name, size, text}]
+  matText: '',
+  objectives: [],  // [{name, detail, hours, weight, checked}]
+  totalHours: 0,
+  selTypes: [],
+  selTypeIds: [],
+  scores: [],
+  apiUrl: localStorage.getItem('nhps_api_url') || '',
+  apiSecret: localStorage.getItem('nhps_api_secret') || '',
+  output: '',
+};
+
+// ═══════════════════════════════════════
+// Difficulty Config
+// ═══════════════════════════════════════
+const DIFF = {
+  easy:     { label: '基礎為主', basic: 70, mid: 20, adv: 10 },
+  balanced: { label: '均衡混合', basic: 40, mid: 40, adv: 20 },
+  hard:     { label: '偏難挑戰', basic: 20, mid: 40, adv: 40 },
+};
+
+// ═══════════════════════════════════════
+// Question Types
+// ═══════════════════════════════════════
+const BASE_QT = [
+  { id:'MC', name:'選擇題（單選）', desc:'4選項選1正確答案', dc:10, de:3 },
+  { id:'TF', name:'是非題', desc:'○/✕ 判斷對錯', dc:5, de:2 },
+  { id:'SA', name:'簡答/問答題', desc:'文字作答', dc:2, de:10 },
+  { id:'RG', name:'題組（閱讀理解）', desc:'一段文本＋2-4道子題', dc:1, de:20 },
+];
+
+const SUBJ_QT = {
+  '國語': [
+    { id:'VOCAB', name:'字詞替換題', desc:'找近義或反義詞', dc:3, de:2 },
+    { id:'RHETORIC', name:'修辭辨識題', desc:'辨認修辭手法', dc:2, de:3 },
+    { id:'SENTENCE', name:'造句題', desc:'用指定詞語造句', dc:2, de:5 },
+    { id:'PHONICS', name:'注音/國字題', desc:'寫正確注音或國字', dc:5, de:2 },
+  ],
+  '數學': [
+    { id:'CALC', name:'計算填充題', desc:'計算並填答案', dc:5, de:4 },
+    { id:'WORD', name:'應用題', desc:'列算式求解', dc:3, de:6 },
+    { id:'PATTERN', name:'找規律題', desc:'觀察數列找規律', dc:2, de:4 },
+  ],
+  '自然': [
+    { id:'EXP', name:'實驗觀察題', desc:'判斷實驗步驟或結果', dc:2, de:5 },
+    { id:'CHART', name:'圖表判讀題', desc:'看圖表回答問題', dc:2, de:5 },
+    { id:'CAUSE', name:'因果排序題', desc:'排列因果順序', dc:2, de:4 },
+    { id:'VAR', name:'變因控制題', desc:'辨別操縱/控制/應變變因', dc:2, de:5 },
+  ],
+  '社會': [
+    { id:'MAP', name:'地圖判讀題', desc:'看地圖回答問題', dc:2, de:4 },
+    { id:'TIMELINE', name:'時間排序題', desc:'按時間排列事件', dc:2, de:4 },
+    { id:'MATCH', name:'配對連線題', desc:'左右欄配對', dc:3, de:2 },
+    { id:'COMPARE', name:'資料比較題', desc:'比較資料找異同', dc:2, de:5 },
+  ],
+  '英語': [
+    { id:'VOCABM', name:'字彙配對題', desc:'英中配對', dc:5, de:2 },
+    { id:'REWRITE', name:'句型改寫題', desc:'依提示改寫句子', dc:2, de:5 },
+    { id:'DIALOG', name:'對話完成題', desc:'補完對話空格', dc:3, de:3 },
+  ],
+};
+
+// ═══════════════════════════════════════
+// File Upload & docx Parsing
+// ═══════════════════════════════════════
+const upzone = document.getElementById('upzone');
+const fileIn = document.getElementById('fileIn');
+
+upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag'); });
+upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'));
+upzone.addEventListener('drop', e => { e.preventDefault(); upzone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
+fileIn.addEventListener('change', e => handleFiles(e.target.files));
+
+async function handleFiles(files) {
+  for (const f of files) {
+    if (!f.name.toLowerCase().endsWith('.docx')) {
+      if (f.name.toLowerCase().endsWith('.doc')) {
+        document.getElementById('docModal').classList.remove('hide');
+      } else {
+        alert('僅支援 .docx 格式：' + f.name);
+      }
+      continue;
+    }
+    if (S.files.length >= 10) { alert('最多上傳 10 個檔案'); break; }
+
+    try {
+      const ab = await f.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer: ab });
+      const text = result.value.trim();
+      if (text.length < 20) {
+        alert(`「${f.name}」內容過少（${text.length} 字），可能是掃描檔。\n請改用文字貼上方式。`);
+        continue;
+      }
+      S.files.push({ name: f.name, size: f.size, text });
+    } catch (err) {
+      alert(`「${f.name}」讀取失敗：${err.message}\n請確認為有效的 .docx 檔案`);
+    }
+  }
+  fileIn.value = '';
+  renderFiles();
+  updMatSt();
+  checkMatLength();
+}
+
+function rmFile(i) { S.files.splice(i, 1); renderFiles(); updMatSt(); }
+
+function renderFiles() {
+  const el = document.getElementById('flist');
+  if (!S.files.length) { el.innerHTML = ''; return; }
+  el.innerHTML = S.files.map((f, i) => {
+    const sz = f.size < 1048576 ? (f.size/1024).toFixed(0)+' KB' : (f.size/1048576).toFixed(1)+' MB';
+    return `<div class="fitem">
+      <span class="fitem-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      <span class="fitem-name">${f.name}</span>
+      <span class="fitem-info">${sz} · ${f.text.length.toLocaleString()} 字</span>
+      <button class="fitem-rm" onclick="rmFile(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// Material Tabs & Status
+// ═══════════════════════════════════════
+function swTab(t) {
+  document.querySelectorAll('.mtab').forEach(e => e.classList.remove('on'));
+  document.querySelectorAll('.mtc').forEach(e => e.classList.remove('on'));
+  document.querySelector(`.mtab[onclick="swTab('${t}')"]`).classList.add('on');
+  document.getElementById(t === 'up' ? 'tab-up' : 'tab-tx').classList.add('on');
+}
+
+document.getElementById('matTxt').addEventListener('input', updMatSt);
+
+function hasMat() { return S.files.length > 0 || document.getElementById('matTxt').value.trim().length > 0; }
+
+function updMatSt() {
+  const el = document.getElementById('matSt');
+  const tx = document.getElementById('matStTx');
+  const txt = document.getElementById('matTxt').value.trim();
+  const fc = S.files.length;
+  const ftotal = S.files.reduce((a, f) => a + f.text.length, 0);
+
+  if (fc > 0 && txt.length > 0) {
+    el.className = 'mat-st ok';
+    tx.textContent = `已上傳 ${fc} 個檔案（${ftotal.toLocaleString()} 字）+ 貼上文字（${txt.length.toLocaleString()} 字）`;
+  } else if (fc > 0) {
+    el.className = 'mat-st ok';
+    tx.textContent = `已上傳 ${fc} 個檔案，共 ${ftotal.toLocaleString()} 字`;
+  } else if (txt.length > 0) {
+    el.className = 'mat-st ok';
+    tx.textContent = `已貼上 ${txt.length.toLocaleString()} 字`;
+  } else {
+    el.className = 'mat-st no';
+    tx.textContent = '尚未提供教材';
+  }
+}
+
+var MAX_MAT_CHARS = 30000;
+function checkMatLength() {
+  const total = S.files.reduce((a, f) => a + f.text.length, 0)
+    + (document.getElementById('matTxt').value.trim().length);
+  if (total > MAX_MAT_CHARS) {
+    alert(`教材文字共 ${total.toLocaleString()} 字，超過建議上限（${(MAX_MAT_CHARS/10000).toFixed(0)} 萬字）。\n過多文字會增加費用且可能影響品質。\n建議只上傳出題範圍的教材。`);
+  }
+}
+
+// ═══════════════════════════════════════
+// Navigation
+// ═══════════════════════════════════════
+function goStep(n) {
+  for (let i = 1; i <= 5; i++) document.getElementById('s'+i).classList.add('hide');
+  document.getElementById('s'+n).classList.remove('hide');
+  S.step = n;
+  updSteps();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updSteps() {
+  document.querySelectorAll('.stp').forEach(e => {
+    const s = parseInt(e.dataset.s);
+    e.classList.remove('on','ok');
+    if (s === S.step) e.classList.add('on');
+    else if (s < S.step) e.classList.add('ok');
+  });
+  document.querySelectorAll('.stp-c').forEach((e, i) => {
+    e.classList.toggle('ok', i + 1 < S.step);
+  });
+}
+
+// ═══════════════════════════════════════
+// Step 1 → 2: Analyze Objectives
+// ═══════════════════════════════════════
+async function toStep2() {
+  const subj = document.getElementById('subject').value;
+  const grade = document.getElementById('grade').value;
+  const scope = document.getElementById('scope').value.trim();
+  if (!subj || !grade || !scope) { alert('請填寫科目、年級和範圍'); return; }
+  if (!hasMat()) { alert('請上傳教材或貼上文字'); return; }
+
+  S.subject = subj;
+  S.grade = grade;
+  S.scope = scope;
+  S.difficulty = document.getElementById('difficulty').value;
+  S.matText = document.getElementById('matTxt').value.trim();
+
+  goStep(2);
+
+  if (!S.apiUrl) {
+    document.getElementById('keyModal').classList.remove('hide');
+    return;
+  }
+
+  doAnalyze();
+}
+
+async function doAnalyze() {
+  document.getElementById('s2-ld').classList.remove('hide');
+  document.getElementById('s2-result').classList.add('hide');
+  document.getElementById('s2-err').classList.add('hide');
+  document.getElementById('btn-s2next').disabled = true;
+
+  try {
+    const matContent = getMaterialText();
+    const objectives = await callAPI(buildAnalysisPrompt(matContent), 'analyze');
+    S.objectives = parseObjectives(objectives);
+    renderObjectives();
+    document.getElementById('s2-ld').classList.add('hide');
+    document.getElementById('s2-result').classList.remove('hide');
+    document.getElementById('btn-s2next').disabled = false;
+  } catch (err) {
+    if (err.message === 'NEED_URL') return;
+    document.getElementById('s2-ld').classList.add('hide');
+    document.getElementById('s2-err').classList.remove('hide');
+    document.getElementById('s2-errMsg').textContent = '分析失敗：' + err.message;
+  }
+}
+
+function getMaterialText() {
+  let parts = [];
+  for (const f of S.files) parts.push(`【檔案：${f.name}】\n${f.text}`);
+  if (S.matText) parts.push(`【貼上文字】\n${S.matText}`);
+  return parts.join('\n\n');
+}
+
+function buildAnalysisPrompt(material) {
+  return `你是一位資深國小課程分析專家。請以繁體中文閱讀以下教材內容，分析其中包含的學習目標。
+
+【教材資訊】
+科目：${S.subject}
+年級：${S.grade}
+範圍：${S.scope}
+
+【教材內容】
+${material}
+
+【分析要求】
+請輸出 JSON 格式（繁體中文），包含：
+1. total_hours: 預估總授課節數（每節 40 分鐘）
+2. objectives: 學習目標陣列（3-8 個最核心的目標，不要太細碎），每個目標包含：
+   - name: 目標名稱（簡短，10字以內）
+   - detail: 依據說明（說明教材中哪些段落/內容對應此目標，50字以內）
+   - hours: 預估授課節數
+   - weight: 建議比重百分比（所有目標的 weight 加總必須等於 100）
+
+請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。範例：
+{"total_hours":12,"objectives":[{"name":"水的三態變化","detail":"教材第1-3段，含固態液態氣態定義與實驗觀察","hours":3,"weight":25}]}`;
+}
+
+function parseObjectives(raw) {
+  try {
+    const clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+    const data = JSON.parse(clean);
+    S.totalHours = data.total_hours || 0;
+    return (data.objectives || []).map(o => ({
+      name: o.name,
+      detail: o.detail,
+      hours: o.hours,
+      weight: o.weight,
+      checked: true,
+    }));
+  } catch (e) {
+    throw new Error('AI 回傳格式異常，請重試');
+  }
+}
+
+function renderObjectives() {
+  document.getElementById('s2-summary').textContent =
+    `本範圍預估總授課 ${S.totalHours} 節，包含 ${S.objectives.length} 個學習目標：`;
+  const el = document.getElementById('objList');
+  el.innerHTML = S.objectives.map((o, i) => `
+    <div class="obj-card${o.checked ? '' : ' unchecked'}" id="obj-${i}">
+      <div class="obj-top">
+        <div class="obj-chk${o.checked ? ' on' : ''}" onclick="togObj(${i})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <span class="obj-name">${o.name}</span>
+        <div class="obj-weight">
+          <input type="number" value="${o.weight}" min="0" max="100" onchange="updObjW(${i}, this.value)">
+          <span>%</span>
+        </div>
+      </div>
+      <div class="obj-detail">${o.hours} 節 ｜ ${o.detail}</div>
+    </div>
+  `).join('');
+  updObjTotal();
+}
+
+function togObj(i) {
+  S.objectives[i].checked = !S.objectives[i].checked;
+  const card = document.getElementById('obj-' + i);
+  card.classList.toggle('unchecked');
+  card.querySelector('.obj-chk').classList.toggle('on');
+  const inp = card.querySelector('.obj-weight input');
+  inp.disabled = !S.objectives[i].checked;
+  updObjTotal();
+}
+
+function updObjW(i, v) {
+  S.objectives[i].weight = parseInt(v) || 0;
+  updObjTotal();
+}
+
+function updObjTotal() {
+  const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
+  const el = document.getElementById('objTotal');
+  el.textContent = total + '%';
+  el.classList.toggle('err', total !== 100);
+  document.getElementById('btn-s2next').disabled = total !== 100;
+}
+
+// ═══════════════════════════════════════
+// Step 2 → 3: Question Types
+// ═══════════════════════════════════════
+function toStep3() {
+  const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
+  if (total !== 100) { alert('學習目標比重合計需等於 100%'); return; }
+
+  const recs = SUBJ_QT[S.subject] || [];
+  const all = [...BASE_QT, ...recs.map(r => ({ ...r, rec: true }))];
+  const grid = document.getElementById('qtGrid');
+  grid.innerHTML = all.map(t => `
+    <label class="qti" data-id="${t.id}" onclick="togQt(this)">
+      <input type="checkbox" value="${t.id}">
+      <span class="qti-c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <span class="qti-info">
+        <span class="qti-name">${t.name}${t.rec ? '<span class="qti-badge">推薦</span>' : ''}</span>
+        <span class="qti-desc">${t.desc}</span>
+      </span>
+    </label>
+  `).join('');
+
+  // 恢復之前的選擇，或預設勾選 MC 和 TF
+  if (S.selTypeIds && S.selTypeIds.length > 0) {
+    S.selTypeIds.forEach(id => {
+      const el = grid.querySelector(`[data-id="${id}"]`);
+      if (el) { el.classList.add('on'); el.querySelector('input').checked = true; }
+    });
+  } else {
+    grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
+  }
+
+  document.getElementById('s3-info').textContent = `${S.grade}${S.subject}科「${S.scope}」`;
+  goStep(3);
+}
+
+function togQt(el) { el.classList.toggle('on'); el.querySelector('input').checked = el.classList.contains('on'); }
+
+// ═══════════════════════════════════════
+// Step 3 → 4: Score Allocation
+// ═══════════════════════════════════════
+function toStep4() {
+  const checked = document.querySelectorAll('#qtGrid .qti.on');
+  if (!checked.length) { alert('請至少選擇一種題型'); return; }
+
+  // 快取選擇的題型 ID
+  S.selTypeIds = Array.from(checked).map(e => e.dataset.id);
+
+  const all = [...BASE_QT, ...(SUBJ_QT[S.subject] || [])];
+  const map = Object.fromEntries(all.map(t => [t.id, t]));
+  S.selTypes = Array.from(checked).map(e => map[e.dataset.id]);
+
+  const tb = document.getElementById('scBody');
+  const ord = ['一','二','三','四','五','六','七','八','九','十'];
+  tb.innerHTML = S.selTypes.map((t, i) => `
+    <tr>
+      <td>${ord[i]||i+1}、${t.name}</td>
+      <td><input type="number" value="${t.dc}" min="1" max="30" onchange="updSc()"></td>
+      <td><input type="number" value="${t.de}" min="1" max="50" onchange="updSc()"></td>
+      <td style="text-align:right;font-weight:600" class="sub">${t.dc*t.de}</td>
+    </tr>
+  `).join('');
+  updSc();
+  goStep(4);
+}
+
+function updSc() {
+  let total = 0;
+  S.scores = [];
+  document.querySelectorAll('#scBody tr').forEach((row, i) => {
+    const ins = row.querySelectorAll('input');
+    const c = parseInt(ins[0].value) || 0, e = parseInt(ins[1].value) || 0, sub = c * e;
+    row.querySelector('.sub').textContent = sub;
+    total += sub;
+    S.scores.push({ name: S.selTypes[i].name, id: S.selTypes[i].id, count: c, each: e, subtotal: sub });
+  });
+  const el = document.getElementById('scTotal');
+  if (total === 100) {
+    el.textContent = '合計：100 分 ✓';
+    el.classList.remove('err');
+  } else {
+    const diff = total - 100;
+    el.textContent = `合計：${total} 分（${diff > 0 ? '超出' : '不足'} ${Math.abs(diff)} 分）`;
+    el.classList.add('err');
+  }
+  document.getElementById('btnGen').disabled = total !== 100;
+}
+
+// ═══════════════════════════════════════
+// Step 4 → 5: Generate Exam
+// ═══════════════════════════════════════
+async function generate() {
+  if (!S.apiUrl) { document.getElementById('keyModal').classList.remove('hide'); return; }
+
+  goStep(5);
+  document.getElementById('s5-ld').classList.remove('hide');
+  document.getElementById('s5-ok').classList.add('hide');
+  document.getElementById('s5-err').classList.add('hide');
+
+  // Loading 提示輪播
+  const hints = [
+    '正在分析教材與學習目標...',
+    '正在規劃題型分布與難度...',
+    '正在撰寫題目與選項...',
+    '正在檢查誘答力與品質...',
+    '正在產生答案卷與統計...',
+    '即將完成，請稍候...',
+  ];
+  let hintIdx = 0;
+  const hintTimer = setInterval(() => {
+    hintIdx = Math.min(hintIdx + 1, hints.length - 1);
+    const sub = document.getElementById('s5-ldSub');
+    if (sub) sub.textContent = hints[hintIdx];
+  }, 8000);
+
+  try {
+    const prompt = buildExamPrompt();
+    const result = await callAPI(prompt, 'generate');
+    clearInterval(hintTimer);
+    S.output = result;
+    document.getElementById('outTxt').textContent = result;
+    document.getElementById('s5-ld').classList.add('hide');
+    document.getElementById('s5-ok').classList.remove('hide');
+  } catch (err) {
+    clearInterval(hintTimer);
+    document.getElementById('s5-ld').classList.add('hide');
+    document.getElementById('s5-err').classList.remove('hide');
+    document.getElementById('s5-errMsg').textContent = '出題失敗：' + err.message;
+  }
+}
+
+function buildExamPrompt() {
+  const d = DIFF[S.difficulty];
+  const ord = ['一','二','三','四','五','六','七','八','九','十'];
+
+  const scoreSpec = S.scores.map((s, i) => `${ord[i]||i+1}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
+
+  const objSpec = S.objectives.filter(o => o.checked)
+    .map(o => `- ${o.name}（比重 ${o.weight}%，對應 ${o.weight} 分）`).join('\n');
+
+  const matContent = getMaterialText();
+
+  // Subject-specific advanced question guidelines
+  const advGuide = {
+    '國語': '進階題請參考 PIRLS/PISA 閱讀素養框架：要求學生「推論理解」（從文本線索推斷未直接說明的意思）、「詮釋整合」（整合文本不同部分形成完整理解）、或「評鑑批判」（評價文本內容或寫作手法）。避免只考「直接提取」。',
+    '數學': '進階題請參考 PISA 數學素養/TIMSS 框架：給予真實生活情境，要求學生「數學建模」（從情境中抽取數學問題）、「多步驟推理」（需要兩步以上的運算或推論）、或「策略選擇」（判斷用哪種方法解題最有效）。',
+    '自然': '進階題請參考 PISA 科學素養/TIMSS 框架：要求學生「評估實驗設計」（判斷實驗是否公平測試）、「根據證據推論」（從數據推導結論）、或「區辨科學與非科學」（判斷哪些說法有科學依據）。可設計新情境讓學生應用已學概念。',
+    '社會': '進階題請參考 PISA 跨域素養/ICCS 公民素養框架：要求學生「多角度分析」（從不同立場理解同一事件）、「資料判讀與推論」（從圖表或資料中得出結論）、或「價值判斷」（在兩難情境中說明自己的立場與理由）。',
+    '英語': '進階題請參考 PIRLS 閱讀框架：在英文語境中要求「推論理解」（理解未直接說出的含意）、或「整合應用」（將所讀內容應用到新的簡單情境）。難度需符合國小英語程度。',
+  };
+
+  return `你是一位資深國小命題教師，專精 ${S.subject} 科。請以繁體中文，嚴格根據以下教材內容出一份完整考卷。
+
+【核心原則】
+1. 每一題的正確答案都必須能在教材內容中找到明確依據
+2. 不可超出教材範圍命題
+3. 選擇題的誘答選項必須對應學生常見迷思概念，有合理的誘答力
+
+【基本資訊】
+學校：新竹市香山區內湖國小
+科目：${S.subject}
+年級：${S.grade}
+範圍：${S.scope}
+總分：100 分
+
+【學習目標與配分比重】
+以下為本範圍的學習目標，請確保每個目標都依比重分配到對應分數的題目：
+${objSpec}
+
+【題型配分】
+${scoreSpec}
+
+【難度分布】
+${d.label}：基礎 ${d.basic}% / 中等 ${d.mid}% / 進階 ${d.adv}%
+
+難度定義：
+- 基礎（${d.basic}%）：答案直接出現在教材中，考記憶與辨認。題幹簡單直接。
+- 中等（${d.mid}%）：需要理解後轉換，或整合兩個以上概念。選項誘答力較高。
+- 進階（${d.adv}%）：${advGuide[S.subject] || '應用到新情境、多步推論、分析比較。'}
+
+請在每大題內按照難度由淺到深排列。
+
+【命題品質要求】
+1. 選擇題：題幹完整問句，4選項長度接近，誘答選項對應常見迷思，(A)(B)(C)(D) 分布均勻
+2. 是非題：敘述明確真或假，不模稜兩可，使用 ○/✕
+3. 簡答題：明確作答方向，附評分標準
+4. 題組：情境適合${S.grade}，子題由淺到深，子題間不洩漏答案
+5. 用字符合${S.grade}程度
+6. 題目間不互相洩漏答案
+7. 避免文化偏見或性別刻板印象
+
+【圖片處理】
+如果某題需要搭配圖片才能作答（如幾何圖形、實驗裝置圖、地圖等），請在題目中標示 [見配圖 X]，並在考卷最後的「圖片生成指令」區統一輸出每張配圖的詳細描述，包含：精確的圖形描述、標註文字、以及「黑白線稿，適合國小考卷印刷」的風格要求。
+
+【學習目標標註】
+每一題的題號後面必須標註該題對應的學習目標，格式為 [學習目標名稱]。
+例如：1. [水的三態變化] 下列關於水的敘述，何者正確？
+
+【教材內容】
+${matContent}
+
+【輸出格式】
+直接輸出考卷，格式如下：
+
+內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷
+${S.grade}___班 座號：_______ 姓名：_______
+
+（依序輸出各大題，每題標註 [學習目標名稱]）
+
+═══ 答案卷 ═══
+（列出所有答案與評分標準）
+
+═══ 學習目標對應統計 ═══
+（針對每個學習目標，列出對應的題號、合計分數、佔比，並與目標比重比對。格式如下：）
+學習目標名稱（目標比重 X%）→ 第○,○,○題，共 ○ 分（實際 X%）✓ 或 ⚠偏差過大
+
+═══ 圖片生成指令（請複製到 Gemini 或 ChatGPT 產圖）═══
+（如無需圖片則省略此區）
+
+請直接開始，不加前言。`;
+}
+
+// ═══════════════════════════════════════
+// Claude API via Apps Script Proxy
+// ═══════════════════════════════════════
+async function callAPI(prompt, action) {
+  if (!S.apiUrl) {
+    document.getElementById('keyModal').classList.remove('hide');
+    throw new Error('NEED_URL');
+  }
+
+  const res = await fetch(S.apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      action: action || 'generate',
+      prompt: prompt,
+      secret: S.apiSecret,
+    }),
+  });
+
+  const text = await res.text();
+  let data;
+  try { data = JSON.parse(text); } catch (e) {
+    throw new Error('後端回傳格式異常，請確認 Apps Script 網址正確');
+  }
+
+  if (data.error) throw new Error(data.error);
+  if (!data.text) throw new Error('AI 未回傳內容，請重試');
+  return data.text;
+}
+
+// ═══════════════════════════════════════
+// API URL & Secret
+// ═══════════════════════════════════════
+function saveKey() {
+  const url = document.getElementById('keyIn').value.trim();
+  const sec = document.getElementById('secIn').value.trim();
+  if (!url) { alert('請輸入後端服務網址'); return; }
+  if (!url.startsWith('https://script.google.com/')) {
+    alert('網址格式不正確，應以 https://script.google.com/ 開頭');
+    return;
+  }
+  S.apiUrl = url;
+  S.apiSecret = sec;
+  localStorage.setItem('nhps_api_url', url);
+  localStorage.setItem('nhps_api_secret', sec);
+  document.getElementById('keyModal').classList.add('hide');
+  // Resume: 呼叫獨立的分析函式避免重複流程
+  if (S.step === 2) doAnalyze();
+  else if (S.step === 5) generate();
+}
+
+// ═══════════════════════════════════════
+// Copy Actions
+// ═══════════════════════════════════════
+function copyAll(e) { doCopy(e, S.output, '已複製完整考卷！'); }
+
+function copyAns(e) {
+  const m = '═══ 答案卷';
+  const m2 = '═══ 學習目標對應統計';
+  let i = S.output.indexOf(m);
+  let end = S.output.indexOf(m2);
+  if (i < 0) return doCopy(e, S.output, '已複製！');
+  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i);
+  doCopy(e, text, '已複製答案卷！');
+}
+
+function copyObj(e) {
+  const m = '═══ 學習目標對應統計';
+  const m2 = '═══ 圖片生成指令';
+  const i = S.output.indexOf(m);
+  if (i < 0) { alert('未找到學習目標統計'); return; }
+  const end = S.output.indexOf(m2);
+  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
+  doCopy(e, text, '已複製目標統計！');
+}
+
+function copyImg(e) {
+  const m = '═══ 圖片生成指令';
+  const i = S.output.indexOf(m);
+  if (i < 0) { alert('本份考卷無需配圖'); return; }
+  doCopy(e, S.output.substring(i), '已複製圖片指令！');
+}
+
+function doCopy(e, text, msg) {
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = e.target.closest('.btn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+    btn.style.background = 'var(--accent-l)'; btn.style.color = 'var(--accent)';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
+  });
+}
+
+// ═══════════════════════════════════════
+// Init
+// ═══════════════════════════════════════
+updSteps();
+</script>
+
+</body>
+</html>
