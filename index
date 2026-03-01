@@ -839,7 +839,7 @@ function updMatSt() {
   }
 }
 
-var MAX_MAT_CHARS = 30000;
+var MAX_MAT_CHARS = 50000;
 function checkMatLength() {
   const total = S.files.reduce((a, f) => a + f.text.length, 0)
     + (document.getElementById('matTxt').value.trim().length);
