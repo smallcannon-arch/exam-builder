@@ -473,7 +473,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       上傳教材 <span class="req" style="font-size:13px">*</span>
     </div>
-    <p class="pnl-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。可混合使用檔案上傳與文字貼上。</p>
+    <p class="pnl-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。可混合使用檔案上傳與文字貼上。<br>💡 可從電子書平台下載教材或教案的 .docx 檔案，或直接複製課文貼上。</p>
 
     <div class="mtabs">
       <button class="mtab on" onclick="swTab('up')">上傳 .docx 檔案</button>
@@ -654,13 +654,11 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 <!-- API URL Modal -->
 <div id="keyModal" class="modal-bg hide">
   <div class="modal">
-    <h3>設定系統連線</h3>
-    <p>請輸入後端服務網址與存取密碼。僅需設定一次，會記住在您的瀏覽器中。</p>
-    <label class="fl" style="margin-top:8px">後端網址 <span class="req">*</span></label>
-    <input type="text" id="keyIn" placeholder="https://script.google.com/macros/s/.../exec">
-    <label class="fl" style="margin-top:8px">存取密碼</label>
-    <input type="text" id="secIn" placeholder="請向管理員索取">
-    <div class="brow"><span></span><button class="btn btn-p" onclick="saveKey()">儲存並繼續</button></div>
+    <h3>輸入系統密碼</h3>
+    <p>首次使用請輸入存取密碼，請向管理員（總務主任）索取。</p>
+    <label class="fl" style="margin-top:8px">存取密碼 <span class="req">*</span></label>
+    <input type="password" id="secIn" placeholder="請輸入密碼">
+    <div class="brow"><span></span><button class="btn btn-p" onclick="saveKey()">確認並繼續</button></div>
   </div>
 </div>
 
@@ -689,7 +687,7 @@ const S = {
   selTypes: [],
   selTypeIds: [],
   scores: [],
-  apiUrl: localStorage.getItem('nhps_api_url') || '',
+  apiUrl: API_URL,
   apiSecret: localStorage.getItem('nhps_api_secret') || '',
   output: '',
   workshopMode: localStorage.getItem('nhps_workshop') === 'true',
@@ -708,40 +706,51 @@ const DIFF = {
 // Question Types
 // ═══════════════════════════════════════
 const BASE_QT = [
-  { id:'MC', name:'選擇題（單選）', desc:'4選項選1正確答案', dc:10, de:3 },
+  { id:'MC', name:'選擇題（單選）', desc:'4選項選1正確答案', dc:10, de:2 },
   { id:'TF', name:'是非題', desc:'○/✕ 判斷對錯', dc:5, de:2 },
-  { id:'SA', name:'簡答/問答題', desc:'文字作答', dc:2, de:10 },
-  { id:'RG', name:'題組（閱讀理解）', desc:'一段文本＋2-4道子題', dc:1, de:20 },
+  { id:'FILL', name:'填充題', desc:'在空格中填入正確答案', dc:5, de:2 },
+  { id:'SA', name:'簡答題', desc:'簡短文字作答', dc:2, de:5 },
+  { id:'RG', name:'題組（閱讀理解）', desc:'一段情境＋2-3道子題', dc:1, de:10 },
 ];
 
 const SUBJ_QT = {
   '國語': [
-    { id:'VOCAB', name:'字詞替換題', desc:'找近義或反義詞', dc:3, de:2 },
-    { id:'RHETORIC', name:'修辭辨識題', desc:'辨認修辭手法', dc:2, de:3 },
-    { id:'SENTENCE', name:'造句題', desc:'用指定詞語造句', dc:2, de:5 },
-    { id:'PHONICS', name:'注音/國字題', desc:'寫正確注音或國字', dc:5, de:2 },
+    { id:'PHONICS', name:'寫國字或注音', desc:'看注音寫國字或看國字寫注音', dc:10, de:1 },
+    { id:'CORRECT', name:'改錯字題', desc:'找出句中錯字並改正', dc:5, de:1 },
+    { id:'PHRASE', name:'照樣寫短語', desc:'仿照範例完成短語練習', dc:2, de:4 },
+    { id:'SENTENCE', name:'造句題', desc:'用指定詞語或關聯詞造句', dc:2, de:3 },
+    { id:'VOCAB', name:'選詞填空/字詞替換', desc:'測驗詞意理解，選填正確語詞', dc:3, de:2 },
+    { id:'RADICAL', name:'部首造詞題', desc:'寫出部首並造詞', dc:3, de:2 },
   ],
   '數學': [
-    { id:'CALC', name:'計算填充題', desc:'計算並填答案', dc:5, de:4 },
-    { id:'WORD', name:'應用題', desc:'列算式求解', dc:3, de:6 },
-    { id:'PATTERN', name:'找規律題', desc:'觀察數列找規律', dc:2, de:4 },
+    { id:'CALC', name:'計算題/算算看', desc:'純數字直式運算', dc:5, de:4 },
+    { id:'WORD', name:'應用題/做法與答案', desc:'生活情境列式求解', dc:3, de:5 },
+    { id:'COMPARE', name:'比比看/連連看', desc:'大小比較或圖形配對', dc:3, de:2 },
+    { id:'PATTERN', name:'找規律題', desc:'觀察數列或圖形找規律', dc:2, de:4 },
   ],
   '自然': [
-    { id:'EXP', name:'實驗觀察題', desc:'判斷實驗步驟或結果', dc:2, de:5 },
-    { id:'CHART', name:'圖表判讀題', desc:'看圖表回答問題', dc:2, de:5 },
-    { id:'CAUSE', name:'因果排序題', desc:'排列因果順序', dc:2, de:4 },
-    { id:'VAR', name:'變因控制題', desc:'辨別操縱/控制/應變變因', dc:2, de:5 },
+    { id:'EXP', name:'實驗與觀察題組', desc:'判斷實驗步驟或觀察結果', dc:2, de:5 },
+    { id:'CHART', name:'圖表判讀題', desc:'看實驗數據或構造圖回答', dc:5, de:2 },
+    { id:'MATCH', name:'配合連線題', desc:'特徵配對（如昆蟲與棲地）', dc:3, de:2 },
+    { id:'CLASS', name:'分類勾選題', desc:'勾選符合的科學項目', dc:3, de:2 },
+    { id:'VAR', name:'變因控制題', desc:'辨別操縱、控制、應變變因', dc:2, de:5 },
   ],
   '社會': [
-    { id:'MAP', name:'地圖判讀題', desc:'看地圖回答問題', dc:2, de:4 },
-    { id:'TIMELINE', name:'時間排序題', desc:'按時間排列事件', dc:2, de:4 },
-    { id:'MATCH', name:'配對連線題', desc:'左右欄配對', dc:3, de:2 },
-    { id:'COMPARE', name:'資料比較題', desc:'比較資料找異同', dc:2, de:5 },
+    { id:'MAP', name:'圖表與地圖判讀題', desc:'看地圖、氣候圖、統計表作答', dc:5, de:2 },
+    { id:'MATCH', name:'配合連線題', desc:'歷史人物、地理特產配對', dc:5, de:2 },
+    { id:'SCENARIO', name:'情境簡答題', desc:'生活情境中的公民素養判斷', dc:2, de:5 },
+    { id:'CHECK', name:'勾選題/勾勾看', desc:'複選符合的概念項目', dc:3, de:2 },
+    { id:'TIMELINE', name:'時間排序題', desc:'按時序排列歷史或公民事件', dc:2, de:4 },
+    { id:'COMPARE', name:'資料比較題', desc:'比較史料或圖表找異同', dc:2, de:5 },
   ],
   '英語': [
-    { id:'VOCABM', name:'字彙配對題', desc:'英中配對', dc:5, de:2 },
-    { id:'REWRITE', name:'句型改寫題', desc:'依提示改寫句子', dc:2, de:5 },
-    { id:'DIALOG', name:'對話完成題', desc:'補完對話空格', dc:3, de:3 },
+    { id:'LISTEN', name:'聽力測驗腳本', desc:'產生聽力文字腳本，由老師錄音施測', dc:5, de:3 },
+    { id:'CLOZE', name:'克漏字填空', desc:'Fill in the blanks', dc:5, de:2 },
+    { id:'UNSCR', name:'句子重組', desc:'打散單字重新排列成正確句子', dc:3, de:4 },
+    { id:'READ', name:'閱讀測驗', desc:'Reading Comprehension', dc:3, de:4 },
+    { id:'IMGMATCH', name:'圖文配對', desc:'單字與圖片連線 Look and Match', dc:5, de:2 },
+    { id:'READMATCH', name:'閱讀配對', desc:'問句與答句配對 Read and Match', dc:3, de:2 },
+    { id:'DIALOG', name:'對話完成題', desc:'依情境補完對話空格', dc:3, de:3 },
   ],
 };
 
@@ -889,7 +898,7 @@ async function toStep2() {
 
   goStep(2);
 
-  if (!S.apiUrl) {
+  if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
     return;
   }
@@ -912,7 +921,7 @@ async function doAnalyze() {
     document.getElementById('s2-result').classList.remove('hide');
     document.getElementById('btn-s2next').disabled = false;
   } catch (err) {
-    if (err.message === 'NEED_URL') return;
+    if (err.message === 'NEED_SECRET') return;
     document.getElementById('s2-ld').classList.add('hide');
     document.getElementById('s2-err').classList.remove('hide');
     document.getElementById('s2-errMsg').textContent = '分析失敗：' + err.message;
@@ -1103,7 +1112,7 @@ function updSc() {
 // Step 4 → 5: Generate Exam
 // ═══════════════════════════════════════
 async function generate() {
-  if (!S.apiUrl) { document.getElementById('keyModal').classList.remove('hide'); return; }
+  if (!S.apiSecret) { document.getElementById('keyModal').classList.remove('hide'); return; }
 
   goStep(5);
   document.getElementById('s5-ld').classList.remove('hide');
@@ -1237,9 +1246,9 @@ ${S.grade}___班 座號：_______ 姓名：_______
 // API via Apps Script Proxy
 // ═══════════════════════════════════════
 async function callAPI(prompt, action) {
-  if (!S.apiUrl) {
+  if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
-    throw new Error('NEED_URL');
+    throw new Error('NEED_SECRET');
   }
 
   // 研習模式：隨機延遲 0-15 秒，錯開大量同時請求
@@ -1274,20 +1283,15 @@ async function callAPI(prompt, action) {
 // ═══════════════════════════════════════
 // API URL & Secret
 // ═══════════════════════════════════════
+// ★ 部署時請將下方 API_URL 改為你的 Apps Script 部署網址
+var API_URL = 'https://script.google.com/macros/s/AKfycbyHfCOBAybbPFIW621lMUmAtehq7HBQ9j3MPmxoJ5S5UYOcR9Wd3H1vD40c1yZnTxdA/exec';
+
 function saveKey() {
-  const url = document.getElementById('keyIn').value.trim();
   const sec = document.getElementById('secIn').value.trim();
-  if (!url) { alert('請輸入後端服務網址'); return; }
-  if (!url.startsWith('https://script.google.com/')) {
-    alert('網址格式不正確，應以 https://script.google.com/ 開頭');
-    return;
-  }
-  S.apiUrl = url;
+  if (!sec) { alert('請輸入存取密碼'); return; }
   S.apiSecret = sec;
-  localStorage.setItem('nhps_api_url', url);
   localStorage.setItem('nhps_api_secret', sec);
   document.getElementById('keyModal').classList.add('hide');
-  // Resume: 呼叫獨立的分析函式避免重複流程
   if (S.step === 2) doAnalyze();
   else if (S.step === 5) generate();
 }
