@@ -688,7 +688,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 // ═══════════════════════════════════════
 // API Configuration
 // ═══════════════════════════════════════
-var API_URL = 'https://script.google.com/macros/s/AKfycbz5A504P0p7jDpgrsIVNZdzUuDquHbdIFBIRHPcnDlS-xVdSQ2Pj1R1m8JGvBqgPTzf/exec';
+var API_URL = 'https://script.google.com/macros/s/AKfycbyHfCOBAybbPFIW621lMUmAtehq7HBQ9j3MPmxoJ5S5UYOcR9Wd3H1vD40c1yZnTxdA/exec';
 
 // ═══════════════════════════════════════
 // State
@@ -838,6 +838,22 @@ async function extractPdfText(arrayBuffer) {
 
 function rmFile(i) { S.files.splice(i, 1); renderFiles(); updMatSt(); }
 
+function previewFile(i) {
+  const f = S.files[i];
+  const preview = f.text.substring(0, 2000) + (f.text.length > 2000 ? '\n\n...（僅顯示前 2000 字）' : '');
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:700px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
+      <strong>📄 ${f.name}（${f.text.length.toLocaleString()} 字）</strong>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;padding:4px;">✕</button>
+    </div>
+    <pre style="padding:16px 20px;margin:0;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:13px;line-height:1.6;color:#374151;">${preview.replace(/</g,'&lt;')}</pre>
+  </div>`;
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  document.body.appendChild(modal);
+}
+
 function renderFiles() {
   const el = document.getElementById('flist');
   if (!S.files.length) { el.innerHTML = ''; return; }
@@ -845,7 +861,7 @@ function renderFiles() {
     const sz = f.size < 1048576 ? (f.size/1024).toFixed(0)+' KB' : (f.size/1048576).toFixed(1)+' MB';
     return `<div class="fitem">
       <span class="fitem-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
-      <span class="fitem-name">${f.name}</span>
+      <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" onclick="previewFile(${i})" title="點擊預覽擷取內容">${f.name}</span>
       <span class="fitem-info">${sz} · ${f.text.length.toLocaleString()} 字</span>
       <button class="fitem-rm" onclick="rmFile(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
