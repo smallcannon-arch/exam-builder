@@ -410,7 +410,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 <div class="wrap">
 
-  <!-- Header -->
   <header class="hdr">
     <div class="hdr-badge">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -420,7 +419,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <p class="hdr-sub">上傳教材 → AI 分析學習目標 → 智慧出題 → 老師審題把關</p>
   </header>
 
-  <!-- Steps -->
   <div class="steps">
     <div class="stp on" data-s="1"><span class="stp-n">1</span><span class="stp-t">教材</span></div>
     <div class="stp-c"></div>
@@ -433,7 +431,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <div class="stp" data-s="5"><span class="stp-n">5</span><span class="stp-t">出題</span></div>
   </div>
 
-  <!-- ═══ STEP 1: 設定與教材 ═══ -->
   <div id="s1" class="pnl">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-8.66-2.34 2.83-2.83m11.66-5.66 2.83-2.83M1 12h4m14 0h4M4.34 4.34l2.83 2.83m11.66 5.66 2.83 2.83"/></svg>
@@ -513,6 +510,16 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
         <strong style="color:#5a6c3e;">學習目標（選填）</strong>
         <span style="font-size:12px;color:#888;">貼上後 AI 將直接採用，不自行歸納</span>
       </div>
+
+      <div style="margin-bottom: 10px; padding: 10px 14px; background-color: var(--accent-bg); border-radius: 8px; border-left: 4px solid var(--accent);">
+        <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          啟動 AI 學習目標擷取器
+          <span style="color: var(--text-2); font-size: 12px; font-weight: normal; margin-left: 4px;">
+            (上傳教案電子檔，自動轉為可貼上的格式)
+          </span>
+        </a>
+      </div>
       <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="從課本複製學習目標，每行一條，例如：&#10;我能領會「用心看世界」的道理。&#10;我能理解現代散文的特色與意涵。&#10;我能掌握如何找尋文本主旨的方法。&#10;&#10;💡 可一次貼上多課的目標，AI 會自動分配比重。&#10;若留空，AI 將從教材中自動擷取。"></textarea>
     </div>
 
@@ -530,7 +537,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
-  <!-- ═══ STEP 2: 學習目標 ═══ -->
   <div id="s2" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
@@ -538,14 +544,12 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
     <p class="pnl-desc">AI 已分析教材，請確認學習目標與授課比重。可勾選/取消、調整比重。</p>
 
-    <!-- Loading for analysis -->
     <div id="s2-ld" class="ld-wrap">
       <div class="ld-spin"></div>
       <div class="ld-msg">AI 正在分析教材中的學習目標...</div>
       <div class="ld-sub" id="s2-ldSub">通常需要 10-20 秒</div>
     </div>
 
-    <!-- Analysis result -->
     <div id="s2-result" class="hide">
       <div id="s2-summary" style="font-size:13px;color:var(--text-2);margin-bottom:14px;font-weight:500;"></div>
       <div id="objList"></div>
@@ -572,7 +576,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
-  <!-- ═══ STEP 3: 題型 ═══ -->
   <div id="s3" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -592,7 +595,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
-  <!-- ═══ STEP 4: 配分 ═══ -->
   <div id="s4" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -616,7 +618,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
-  <!-- ═══ STEP 5: 出題 ═══ -->
   <div id="s5" class="hide">
     <div id="s5-ld" class="pnl">
       <div class="ld-wrap">
@@ -658,7 +659,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="ftr">
     <div class="ftr-line">出題結果僅供參考，請老師審題後使用</div>
     <div class="ftr-copy">© 2026 新竹市香山區內湖國小</div>
@@ -671,7 +671,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   </footer>
 </div>
 
-<!-- API URL Modal -->
 <div id="keyModal" class="modal-bg hide">
   <div class="modal">
     <h3>輸入系統密碼</h3>
@@ -682,7 +681,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   </div>
 </div>
 
-<!-- .doc Warning Modal -->
 <div id="docModal" class="modal-bg hide">
   <div class="modal">
     <h3>不支援 .doc 格式</h3>
