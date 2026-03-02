@@ -54,7 +54,10 @@ body {
     radial-gradient(ellipse at 85% 15%, rgba(176,141,69,0.04) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--text);
-  line-height: 1.65;
+  /* --- 修改重點 --- */
+  font-size: 18px;    /* 設定全域基礎字體大小 */
+  line-height: 1.75;   /* 稍微增加行高，讓閱讀更舒服 */
+  /* ---------------- */
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -141,20 +144,24 @@ body {
 }
 .pnl-t svg { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; }
 
-.pnl-desc { font-size: 13px; color: var(--text-2); margin-bottom: 16px; line-height: 1.6; }
+.pnl-desc { font-size: 16px; color: var(--text-2); margin-bottom: 16px; line-height: 1.7; }
 
 /* ═══ Form ═══ */
 .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 520px) { .fg { grid-template-columns: 1fr; } }
 .fg-full { grid-column: 1 / -1; }
 
-.fl { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 4px; display: block; letter-spacing: 0.3px; }
+.fl { font-size: 15px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; display: block; letter-spacing: 0.3px; }
 .fl .req { color: var(--err); margin-left: 2px; }
 
 select, input[type="text"], input[type="number"], textarea {
-  width: 100%; padding: 10px 12px;
+  width: 100%; 
+  /* --- 修改重點 --- */
+  padding: 12px 16px;  /* 增加內距，配合字體放大 */
+  font-size: 17px;     /* 輸入框字體加大 */
+  /* ---------------- */
   border: 1.5px solid var(--border); border-radius: var(--r-sm);
-  font-size: 14px; font-family: inherit; color: var(--text);
+  font-family: inherit; color: var(--text);
   background: var(--surface); transition: all var(--t); outline: none;
 }
 select:focus, input:focus, textarea:focus {
@@ -316,9 +323,13 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .brow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; }
 
 .btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 10px 20px; border: none; border-radius: var(--r-sm);
-  font-size: 13px; font-weight: 600; font-family: inherit;
+  display: inline-flex; align-items: center; gap: 8px;
+  /* --- 修改重點 --- */
+  padding: 12px 24px;  /* 按鈕變大一點 */
+  font-size: 16px;     /* 按鈕字體加大 */
+  /* ---------------- */
+  border: none; border-radius: var(--r-sm);
+  font-weight: 600; font-family: inherit;
   cursor: pointer; transition: all var(--t); letter-spacing: 0.3px;
 }
 .btn-p {
