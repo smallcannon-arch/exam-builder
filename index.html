@@ -54,10 +54,8 @@ body {
     radial-gradient(ellipse at 85% 15%, rgba(176,141,69,0.04) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--text);
-  /* --- 修改重點 --- */
   font-size: 18px;    /* 設定全域基礎字體大小 */
   line-height: 1.75;   /* 稍微增加行高，讓閱讀更舒服 */
-  /* ---------------- */
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -76,16 +74,15 @@ body {
   border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px;
 }
 
-/* 1. 系統大標題加大 (搜尋 .hdr h1) */
 .hdr h1 {
   font-family: 'Noto Serif TC', serif;
-  font-size: 28px; /* 加大 */
+  font-size: 28px;
   font-weight: 900; letter-spacing: 2px;
   background: linear-gradient(135deg, var(--text) 0%, #4A4540 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text; margin-bottom: 6px;
 }
-@media (min-width: 640px) { .hdr h1 { font-size: 38px; } } /* 寬螢幕顯著加大 */
+@media (min-width: 640px) { .hdr h1 { font-size: 38px; } }
 
 .hdr-sub { font-size: 13px; color: var(--text-3); font-weight: 400; letter-spacing: 0.5px; }
 
@@ -137,7 +134,7 @@ body {
 }
 
 .pnl-t {
-  font-size: 18px; /* 從 15px 加大 */
+  font-size: 18px;
   font-weight: 700; margin-bottom: 16px;
   display: flex; align-items: center; gap: 8px;
   color: var(--text);
@@ -156,10 +153,8 @@ body {
 
 select, input[type="text"], input[type="number"], textarea {
   width: 100%; 
-  /* --- 修改重點 --- */
-  padding: 12px 16px;  /* 增加內距，配合字體放大 */
-  font-size: 17px;     /* 輸入框字體加大 */
-  /* ---------------- */
+  padding: 12px 16px;
+  font-size: 17px;
   border: 1.5px solid var(--border); border-radius: var(--r-sm);
   font-family: inherit; color: var(--text);
   background: var(--surface); transition: all var(--t); outline: none;
@@ -324,10 +319,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  /* --- 修改重點 --- */
-  padding: 12px 24px;  /* 按鈕變大一點 */
-  font-size: 16px;     /* 按鈕字體加大 */
-  /* ---------------- */
+  padding: 12px 24px;
+  font-size: 16px;
   border: none; border-radius: var(--r-sm);
   font-weight: 600; font-family: inherit;
   cursor: pointer; transition: all var(--t); letter-spacing: 0.3px;
@@ -374,8 +367,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   animation: spin 0.7s linear infinite; margin: 0 auto 14px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-/* 3. 載入中狀態文字加大 (搜尋 .ld-msg) */
-.ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; } /* 變大且改為校園綠色 */
+.ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; }
 .ld-sub { font-size: 14px; color: var(--text-3); margin-top: 8px; }
 
 /* ═══ Status Msg ═══ */
@@ -1047,7 +1039,8 @@ async function doAnalyze() {
 
   try {
     const matContent = getMaterialText();
-    const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze');
+    // 分析步驟不需要用到高階引擎，預設使用 flash 即可
+    const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze', 'flash');
     S._lastRaw = rawResult; // debug 暫存
     S.objectives = parseObjectives(rawResult);
     renderObjectives();
@@ -1373,7 +1366,7 @@ function updSc() {
 }
 
 // ═══════════════════════════════════════
-// Step 4 → 5: Generate Exam
+// Step 4 → 5: Generate Exam (雙引擎分流版)
 // ═══════════════════════════════════════
 async function generate() {
   if (!S.apiSecret) { document.getElementById('keyModal').classList.remove('hide'); return; }
@@ -1383,15 +1376,7 @@ async function generate() {
   document.getElementById('s5-ok').classList.add('hide');
   document.getElementById('s5-err').classList.add('hide');
 
-  // Loading 提示輪播
-  const hints = [
-    '正在分析教材與學習目標...',
-    '正在規劃題型分布與難度...',
-    '正在撰寫題目與選項...',
-    '正在檢查誘答力與品質...',
-    '正在產生答案卷與統計...',
-    '即將完成，請稍候...',
-  ];
+  const hints = ['正在分析教材與學習目標...', '正在規劃題型分布與難度...', '正在撰寫題目與選項...', '正在檢查誘答力與品質...', '即將完成，請稍候...'];
   let hintIdx = 0;
   const hintTimer = setInterval(() => {
     hintIdx = Math.min(hintIdx + 1, hints.length - 1);
@@ -1400,11 +1385,43 @@ async function generate() {
   }, 8000);
 
   try {
-    const prompt = buildExamPrompt();
-    const result = await callAPI(prompt, 'generate');
+    // ★ 核心分流設定：只有這些需要深度邏輯的題型會呼叫 Pro 模型
+    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ']; 
+    const flashScores = [];
+    const proScores = [];
+    
+    // 幫每個題型加上順序名稱 (一、二、三...)
+    const ord = ['一','二','三','四','五','六','七','八','九','十'];
+    S.scores.forEach((s, idx) => {
+      const item = { ...s, ordName: ord[idx] || (idx+1).toString() };
+      if (proTypes.includes(s.id)) proScores.push(item);
+      else flashScores.push(item);
+    });
+
+    let finalOutput = '';
+
+    if (flashScores.length > 0 && proScores.length > 0) {
+      document.getElementById('s5-ldMsg').textContent = 'AI 雙引擎同步運算中...';
+      document.getElementById('s5-ldSub').textContent = 'Flash 處理基礎題，Pro 深度運算素養題';
+      // ★ 雙管齊下：同時向 Flash 和 Pro 發出請求
+      const [flashText, proText] = await Promise.all([
+        callAPI(buildExamPrompt(flashScores, true), 'generate', 'flash'),
+        callAPI(buildExamPrompt(proScores, false), 'generate', 'pro')
+      ]);
+      finalOutput = mergeExam(flashText, proText);
+    } else if (proScores.length > 0) {
+      document.getElementById('s5-ldMsg').textContent = '啟動高階引擎：Pro 深度運算中...';
+      document.getElementById('s5-ldSub').textContent = '全卷採用 Pro 模型深度出題';
+      finalOutput = await callAPI(buildExamPrompt(proScores, true), 'generate', 'pro');
+    } else {
+      document.getElementById('s5-ldMsg').textContent = '啟動極速引擎：Flash 產出考卷...';
+      document.getElementById('s5-ldSub').textContent = '全卷採用 Flash 模型極速出題';
+      finalOutput = await callAPI(buildExamPrompt(flashScores, true), 'generate', 'flash');
+    }
+
     clearInterval(hintTimer);
-    S.output = result;
-    document.getElementById('outTxt').textContent = result;
+    S.output = finalOutput;
+    document.getElementById('outTxt').textContent = finalOutput;
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch (err) {
@@ -1415,18 +1432,45 @@ async function generate() {
   }
 }
 
-function buildExamPrompt() {
+// 將兩份考卷完美拼接的輔助函數
+function mergeExam(flashText, proText) {
+  function extract(text) {
+    let ex = text, ans = '', st = '', leak = '', img = '';
+    const p1 = text.split(/═══ 答案卷 ═══/);
+    ex = p1[0];
+    if (p1[1]) {
+      const p2 = p1[1].split(/═══ 學習目標對應統計 ═══/);
+      ans = p2[0];
+      if (p2[1]) {
+        const p3 = p2[1].split(/═══ 防洩漏自檢報告 ═══/);
+        st = p3[0];
+        if (p3[1]) {
+          const p4 = p3[1].split(/═══ 圖片生成指令.*═══|═══ 圖片生成指令/);
+          leak = p4[0];
+          img = p4[1] ? p4[1].replace(/^[^\n]*\n/, '') : '';
+        }
+      }
+    }
+    return { ex: ex.trim(), ans: ans.trim(), st: st.trim(), leak: leak.trim(), img: img.trim() };
+  }
+  
+  const f = extract(flashText);
+  const p = extract(proText);
+  
+  // 移除 Pro 試卷中多餘的「知識大綱」與「表頭」，直接銜接題目
+  let cleanPEx = p.ex.replace(/=== 知識萃取大綱 ===[\s\S]*?(內湖國小|一、|二、|三、|四、|五、|六、|七、|八、|九、|十、)/, '$1');
+  cleanPEx = cleanPEx.replace(/內湖國小[\s\S]*?姓名：_+\n*/, '');
+
+  return `${f.ex}\n\n${cleanPEx}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${p.st}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${p.leak}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
+}
+
+// 產生 Prompt (動態接收要負責的大題)
+function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
-  const ord = ['一','二','三','四','五','六','七','八','九','十'];
-
-  const scoreSpec = S.scores.map((s, i) => `${ord[i]||i+1}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
-
-  const objSpec = S.objectives.filter(o => o.checked)
-    .map(o => `- ${o.name}（比重 ${o.weight}%，對應 ${o.weight} 分）`).join('\n');
-
+  const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
+  const objSpec = S.objectives.filter(o => o.checked).map(o => `- ${o.name}（比重 ${o.weight}%）`).join('\n');
   const matContent = getMaterialText();
 
-  // ═══ 各科動態給藥：只注入該科的專屬規則與範例 ═══
   const subjectRules = {
     '國語': `
 【國語科專屬命題規則】
@@ -1540,10 +1584,8 @@ function buildExamPrompt() {
 進階題請測試學生在簡短情境對話中的「語意推論」，避免考冷僻單字。`,
   };
 
-  // 取得該科的專屬規則（未定義的科目給空字串）
   const currentSubjectRules = subjectRules[S.subject] || '';
 
-  // ═══ 各科任務一的知識萃取指引 ═══
   const extractGuide = {
     '國語': `1. 核心生字與語詞清單：請特別挑選適合考注音與錯字的詞彙，標註注音。
 2. 核心知識點與重要情境（羅列 3-5 點，這是後續出題的唯一依據）。
@@ -1572,7 +1614,9 @@ function buildExamPrompt() {
 注意：出題時不可使用本課未教過的單字（若必要須加註中文）。`,
   };
 
-  const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重要概念（羅列 3-5 點）。\n2. 重要情境與範例。`;
+  const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重點。\n2. 課文主旨與情境。`;
+
+  let headerOutput = isMain ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n` : '';
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
 請嚴格執行以下「兩階段命題任務」。你必須先萃取教材知識，再根據萃取結果進行出題。
@@ -1594,64 +1638,45 @@ ${currentExtractGuide}
 ${currentSubjectRules}
 
 【基本資訊】
-學校：新竹市香山區內湖國小
-科目：${S.subject} / 年級：${S.grade} / 範圍：${S.scope} / 總分：100 分
+學校：內湖國小 / 科目：${S.subject} / 年級：${S.grade} / 範圍：${S.scope}
+
+【你負責的題型配分清單】
+${scoreSpec}
 
 【學習目標與配分比重】
 ${objSpec}
 
-【題型配分清單】
-${scoreSpec}
-
 【難度分布】
 ${d.label}：基礎 ${d.basic}% / 中等 ${d.mid}% / 進階 ${d.adv}%
-- 基礎（${d.basic}%）：答案直接出現在教材中，考記憶與辨認。
-- 中等（${d.mid}%）：需理解後轉換，或整合兩個以上概念。
-請在每大題內按照難度由淺到深排列。
-
-【圖片處理】
-如果某題需要搭配圖片才能作答，請在題目中標示 [見配圖 X]，並在考卷最後的「圖片生成指令」區統一輸出每張配圖的詳細描述。
-
-【學習目標標註】
-每一題的題號後面必須標註該題對應的學習目標，格式為 [學習目標名稱]。
 
 【排版與輸出格式】
-請在「=== 知識萃取大綱 ===」結束後，立刻輸出考卷，格式如下：
+${isMain ? '請在「=== 知識萃取大綱 ===」結束後，立刻輸出考卷，格式如下：' : '請在「=== 知識萃取大綱 ===」結束後，直接輸出分配給你的大題，格式如下：'}
 
-內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷
-${S.grade}___班 座號：_______ 姓名：_______
-
-（依序輸出各大題，每題題號後方標註 [學習目標名稱]）
+${headerOutput}（依序輸出各大題，每題題號後方標註 [學習目標名稱]）
 
 ═══ 答案卷 ═══
-（列出所有答案與評分標準。選擇題請附上簡短的誘答解析。）
+（列出所有答案與評分標準）
 
 ═══ 學習目標對應統計 ═══
-學習目標名稱（目標比重 X%）→ 第○,○,○題，共 ○ 分（實際 X%）✓ 或 ⚠偏差過大
+（列出你負責題目的目標佔比）
 
 ═══ 防洩漏自檢報告 ═══
-（逐一列出你檢查過的潛在洩漏風險，以及如何避免。例如：「第3題選項(C)原含有第7題答案『倚靠』→ 已改為『依賴』」）
+（檢查題幹是否有洩漏答案）
 
-═══ 圖片生成指令（請複製到 Gemini 或 ChatGPT 產圖）═══
-（如無需圖片則省略此區）
+═══ 圖片生成指令 ═══
 
 === 教材內容開始 ===
 ${matContent}
-=== 教材內容結束 ===
-
-請立即開始執行任務一與任務二。`;
+=== 教材內容結束 ===`;
 }
 
-// ═══════════════════════════════════════
-// API via Apps Script Proxy
-// ═══════════════════════════════════════
-async function callAPI(prompt, action) {
+// ★ 支援接收 model 參數的 API 呼叫器
+async function callAPI(prompt, action, model = 'flash') {
   if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
     throw new Error('NEED_SECRET');
   }
 
-  // 研習模式：隨機延遲 0-15 秒，錯開大量同時請求
   if (S.workshopMode) {
     const delay = Math.floor(Math.random() * 15000);
     const ldSub = document.getElementById(S.step === 2 ? 's2-ldSub' : 's5-ldSub');
@@ -1666,6 +1691,7 @@ async function callAPI(prompt, action) {
       action: action || 'generate',
       prompt: prompt,
       secret: S.apiSecret,
+      model: model // ★ 將指定的模型(flash或pro)傳給後端
     }),
   });
 
