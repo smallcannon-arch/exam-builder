@@ -1150,6 +1150,7 @@ document.getElementById('subject').addEventListener('change', function() {
   document.getElementById('normalMatArea').classList.toggle('hide', isChinese);
   document.getElementById('chineseMatArea').classList.toggle('hide', !isChinese);
   document.getElementById('objInputArea').classList.toggle('hide', isChinese);
+  document.getElementById('mat-desc').classList.toggle('hide', isChinese);
   // 下一步按鈕文字
   document.querySelector('#s1 .btn-p').innerHTML = isChinese
     ? '下一步：設定評量向度 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>'
