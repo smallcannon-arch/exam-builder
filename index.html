@@ -54,8 +54,8 @@ body {
     radial-gradient(ellipse at 85% 15%, rgba(176,141,69,0.04) 0%, transparent 50%);
   background-attachment: fixed;
   color: var(--text);
-  font-size: 18px;    
-  line-height: 1.75;   
+  font-size: 18px;
+  line-height: 1.75;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
@@ -70,36 +70,36 @@ body {
 .hdr-badge {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--accent-l); color: var(--accent);
-  font-size: 14px; font-weight: 600; padding: 6px 16px;
+  font-size: 12px; font-weight: 600; padding: 5px 14px;
   border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px;
 }
 
 .hdr h1 {
   font-family: 'Noto Serif TC', serif;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900; letter-spacing: 2px;
   background: linear-gradient(135deg, var(--text) 0%, #4A4540 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   background-clip: text; margin-bottom: 6px;
 }
-@media (min-width: 640px) { .hdr h1 { font-size: 42px; } }
+@media (min-width: 640px) { .hdr h1 { font-size: 38px; } }
 
-.hdr-sub { font-size: 15px; color: var(--text-3); font-weight: 400; letter-spacing: 0.5px; }
+.hdr-sub { font-size: 13px; color: var(--text-3); font-weight: 400; letter-spacing: 0.5px; }
 
 /* ═══ Steps ═══ */
 .steps { display: flex; justify-content: center; align-items: center; gap: 0; margin: 4px 0 24px; }
 
 .stp {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--text-3); font-weight: 500; transition: color var(--t);
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--text-3); font-weight: 500; transition: color var(--t);
 }
 .stp.on { color: var(--accent); font-weight: 700; }
 .stp.ok { color: var(--accent); }
 
 .stp-n {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 24px; height: 24px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 700;
+  font-size: 11px; font-weight: 700;
   background: var(--border); color: var(--text-3);
   transition: all var(--t); flex-shrink: 0;
 }
@@ -107,8 +107,8 @@ body {
 .stp.ok .stp-n { background: var(--accent-l); color: var(--accent); }
 
 .stp-c {
-  width: 24px; height: 2px; background: var(--border-light);
-  margin: 0 8px; flex-shrink: 0; border-radius: 1px;
+  width: 20px; height: 2px; background: var(--border-light);
+  margin: 0 6px; flex-shrink: 0; border-radius: 1px;
   transition: background var(--t);
 }
 .stp-c.ok { background: var(--accent-l); }
@@ -134,27 +134,27 @@ body {
 }
 
 .pnl-t {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700; margin-bottom: 16px;
   display: flex; align-items: center; gap: 8px;
   color: var(--text);
 }
-.pnl-t svg { width: 24px; height: 24px; color: var(--accent); flex-shrink: 0; }
+.pnl-t svg { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; }
 
-.pnl-desc { font-size: 17px; color: var(--text-2); margin-bottom: 16px; line-height: 1.7; }
+.pnl-desc { font-size: 16px; color: var(--text-2); margin-bottom: 16px; line-height: 1.7; }
 
 /* ═══ Form ═══ */
-.fg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 520px) { .fg { grid-template-columns: 1fr; } }
 .fg-full { grid-column: 1 / -1; }
 
-.fl { font-size: 16px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: block; letter-spacing: 0.3px; }
+.fl { font-size: 15px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; display: block; letter-spacing: 0.3px; }
 .fl .req { color: var(--err); margin-left: 2px; }
 
 select, input[type="text"], input[type="number"], textarea {
   width: 100%; 
-  padding: 14px 18px;
-  font-size: 18px;
+  padding: 12px 16px;
+  font-size: 17px;
   border: 1.5px solid var(--border); border-radius: var(--r-sm);
   font-family: inherit; color: var(--text);
   background: var(--surface); transition: all var(--t); outline: none;
@@ -165,45 +165,45 @@ select:focus, input:focus, textarea:focus {
 }
 select {
   cursor: pointer; appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235C5750' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%235C5750' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
 }
 textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 /* ═══ Upload Zone ═══ */
 .upz {
   border: 2px dashed var(--border); border-radius: var(--r-md);
-  padding: 36px 20px; text-align: center; cursor: pointer;
+  padding: 32px 20px; text-align: center; cursor: pointer;
   transition: all var(--t); position: relative; background: var(--surface-alt);
 }
 .upz:hover, .upz.drag { border-color: var(--accent); background: var(--accent-bg); }
 .upz input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.upz-icon { color: var(--text-3); margin-bottom: 8px; }
-.upz-icon svg { width: 32px; height: 32px; }
-.upz-main { font-size: 16px; font-weight: 500; color: var(--text-2); }
-.upz-hint { font-size: 14px; color: var(--text-3); margin-top: 6px; line-height: 1.5; }
+.upz-icon { color: var(--text-3); margin-bottom: 6px; }
+.upz-icon svg { width: 28px; height: 28px; }
+.upz-main { font-size: 14px; font-weight: 500; color: var(--text-2); }
+.upz-hint { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
 
 /* ═══ File List ═══ */
-.flist { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.flist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
 .fitem {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px; background: var(--surface-alt);
-  border-radius: var(--r-sm); font-size: 15px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--surface-alt);
+  border-radius: var(--r-sm); font-size: 13px;
   border: 1px solid var(--border-light);
 }
 .fitem-icon { color: var(--accent); flex-shrink: 0; }
 .fitem-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-.fitem-info { color: var(--text-3); font-size: 13px; flex-shrink: 0; }
+.fitem-info { color: var(--text-3); font-size: 11px; flex-shrink: 0; }
 .fitem-rm {
   background: none; border: none; cursor: pointer; color: var(--text-3);
-  padding: 4px; border-radius: 4px; transition: color var(--t); flex-shrink: 0;
+  padding: 2px; border-radius: 4px; transition: color var(--t); flex-shrink: 0;
 }
 .fitem-rm:hover { color: var(--err); }
 
 /* ═══ Material Tabs ═══ */
-.mtabs { display: flex; gap: 0; margin-bottom: 14px; border-bottom: 2px solid var(--border-light); }
+.mtabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid var(--border-light); }
 .mtab {
-  padding: 10px 18px; font-size: 15px; font-weight: 500;
+  padding: 8px 16px; font-size: 13px; font-weight: 500;
   color: var(--text-3); cursor: pointer; border: none;
   background: none; font-family: inherit;
   border-bottom: 2px solid transparent; margin-bottom: -2px;
@@ -216,8 +216,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 .mat-st {
   display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px; border-radius: var(--r-sm);
-  font-size: 14px; font-weight: 500; margin-top: 12px;
+  padding: 10px 14px; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; margin-top: 10px;
 }
 .mat-st.ok { background: var(--accent-bg); color: var(--accent); }
 .mat-st.no { background: var(--warn-bg); color: var(--warn); }
@@ -226,55 +226,55 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .obj-card {
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
-  padding: 16px 18px;
-  margin-bottom: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
   transition: all var(--t);
   background: var(--surface);
 }
 .obj-card:hover { border-color: var(--accent); }
 .obj-card.unchecked { opacity: 0.5; }
 
-.obj-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.obj-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
 .obj-chk {
-  width: 22px; height: 22px; border: 2px solid var(--border);
+  width: 20px; height: 20px; border: 2px solid var(--border);
   border-radius: 4px; display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; cursor: pointer; transition: all var(--t);
 }
 .obj-chk.on { background: var(--accent); border-color: var(--accent); }
-.obj-chk svg { width: 14px; height: 14px; color: #fff; opacity: 0; transition: opacity var(--t); }
+.obj-chk svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
 .obj-chk.on svg { opacity: 1; }
 
-.obj-name { flex: 1; font-size: 16px; font-weight: 600; line-height: 1.4; }
+.obj-name { flex: 1; font-size: 14px; font-weight: 600; }
 
 .obj-weight {
   display: flex; align-items: center; gap: 6px; flex-shrink: 0;
 }
 .obj-weight input {
-  width: 56px; padding: 6px 8px; text-align: center; font-size: 15px;
+  width: 50px; padding: 4px 6px; text-align: center; font-size: 13px;
   border-radius: 4px;
 }
-.obj-weight span { font-size: 14px; color: var(--text-3); }
+.obj-weight span { font-size: 12px; color: var(--text-3); }
 
 .obj-detail {
-  font-size: 14px; color: var(--text-2); line-height: 1.6;
-  padding-left: 34px;
+  font-size: 12px; color: var(--text-2); line-height: 1.6;
+  padding-left: 30px;
 }
 
 .obj-summary {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 14px 0 0; margin-top: 10px; border-top: 1px solid var(--border-light);
-  font-size: 15px;
+  padding: 12px 0 0; margin-top: 8px; border-top: 1px solid var(--border-light);
+  font-size: 13px;
 }
 .obj-total { font-weight: 700; color: var(--accent); }
 .obj-total.err { color: var(--err); }
 
 /* ═══ Question Type Checkboxes ═══ */
-.qtg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qtg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media (max-width: 520px) { .qtg { grid-template-columns: 1fr; } }
 
 .qti {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 14px 16px; border: 1.5px solid var(--border);
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; border: 1.5px solid var(--border);
   border-radius: var(--r-md); cursor: pointer;
   transition: all var(--t); user-select: none;
 }
@@ -283,44 +283,44 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .qti input { display: none; }
 
 .qti-c {
-  width: 22px; height: 22px; border: 2px solid var(--border);
+  width: 20px; height: 20px; border: 2px solid var(--border);
   border-radius: 4px; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 2px; transition: all var(--t);
+  flex-shrink: 0; margin-top: 1px; transition: all var(--t);
 }
 .qti.on .qti-c { background: var(--accent); border-color: var(--accent); }
-.qti-c svg { width: 14px; height: 14px; color: #fff; opacity: 0; transition: opacity var(--t); }
+.qti-c svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
 .qti.on .qti-c svg { opacity: 1; }
 
 .qti-info { flex: 1; }
-.qti-name { font-size: 16px; font-weight: 600; line-height: 1.4; }
-.qti-desc { font-size: 14px; color: var(--text-3); margin-top: 4px; }
+.qti-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.qti-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
 
 .qti-badge {
   display: inline-block; background: var(--gold-l); color: var(--gold);
-  font-size: 12px; font-weight: 700; padding: 2px 8px;
-  border-radius: 4px; margin-left: 6px; vertical-align: middle;
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 3px; margin-left: 4px; vertical-align: middle;
 }
 
 /* ═══ Score Table ═══ */
-.stbl { width: 100%; border-collapse: collapse; margin-top: 8px; }
-.stbl th, .stbl td { padding: 12px 10px; text-align: left; font-size: 15px; border-bottom: 1px solid var(--border-light); }
-.stbl th { font-weight: 600; color: var(--text-3); font-size: 14px; letter-spacing: 0.5px; }
-.stbl input[type="number"] { width: 64px; padding: 6px 8px; text-align: center; font-size: 15px; }
-.stbl-total { font-size: 18px; font-weight: 900; color: var(--accent); text-align: right; padding-top: 14px; }
+.stbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.stbl th, .stbl td { padding: 10px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-light); }
+.stbl th { font-weight: 600; color: var(--text-3); font-size: 11px; letter-spacing: 0.5px; }
+.stbl input[type="number"] { width: 56px; padding: 5px 6px; text-align: center; font-size: 13px; }
+.stbl-total { font-size: 16px; font-weight: 900; color: var(--accent); text-align: right; padding-top: 12px; }
 .stbl-total.err { color: var(--err); }
-.sc-ord { display: flex; flex-direction: column; gap: 4px; }
-.sc-ord button { background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 2px 6px; font-size: 13px; color: var(--text-2); line-height: 1; transition: all var(--t); }
+.sc-ord { display: flex; flex-direction: column; gap: 2px; }
+.sc-ord button { background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 12px; color: var(--text-2); line-height: 1; transition: all var(--t); }
 .sc-ord button:hover { background: var(--accent-l); border-color: var(--accent); color: var(--accent); }
 .sc-ord button:disabled { opacity: 0.2; cursor: default; }
 .sc-ord button:disabled:hover { background: none; border-color: var(--border); color: var(--text-2); }
 
 /* ═══ Buttons ═══ */
-.brow { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 24px; }
+.brow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; }
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 28px;
-  font-size: 18px;
+  padding: 12px 24px;
+  font-size: 16px;
   border: none; border-radius: var(--r-sm);
   font-weight: 600; font-family: inherit;
   cursor: pointer; transition: all var(--t); letter-spacing: 0.3px;
@@ -336,7 +336,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .btn-s { background: var(--surface); color: var(--text-2); border: 1.5px solid var(--border); }
 .btn-s:hover { background: var(--surface-hover); }
 
-.btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+.btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
 /* ═══ Output ═══ */
 .out-area {
@@ -347,37 +347,36 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 @media (min-width: 640px) { .out-area { padding: 32px; } }
 
 .out-txt {
-  font-size: 16px; line-height: 1.85; white-space: pre-wrap;
+  font-size: 14px; line-height: 1.85; white-space: pre-wrap;
   font-family: 'Noto Sans TC', sans-serif;
   max-height: 600px; overflow-y: auto; padding-right: 8px;
 }
-.out-txt::-webkit-scrollbar { width: 6px; }
+.out-txt::-webkit-scrollbar { width: 5px; }
 .out-txt::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
 .out-acts {
-  display: flex; gap: 10px; margin-top: 18px;
-  padding-top: 18px; border-top: 1px solid var(--border-light); flex-wrap: wrap;
+  display: flex; gap: 8px; margin-top: 16px;
+  padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;
 }
 
 /* ═══ Loading ═══ */
 .ld-wrap { text-align: center; padding: 48px 20px; }
 .ld-spin {
-  width: 36px; height: 36px; border: 3px solid var(--border);
+  width: 32px; height: 32px; border: 3px solid var(--border);
   border-top-color: var(--accent); border-radius: 50%;
-  animation: spin 0.7s linear infinite; margin: 0 auto 16px;
+  animation: spin 0.7s linear infinite; margin: 0 auto 14px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.ld-msg { font-size: 22px; color: var(--accent); font-weight: 700; }
-.ld-sub { font-size: 15px; color: var(--text-3); margin-top: 8px; }
+.ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; }
+.ld-sub { font-size: 14px; color: var(--text-3); margin-top: 8px; }
 
 /* ═══ Status Msg ═══ */
 .smsg {
-  padding: 12px 16px; border-radius: var(--r-sm);
-  font-size: 15px; font-weight: 500; margin-top: 12px;
-  display: flex; align-items: flex-start; gap: 10px; line-height: 1.6;
-  white-space: pre-wrap; /* 讓 \n 錯誤訊息正確換行 */
+  padding: 10px 14px; border-radius: var(--r-sm);
+  font-size: 12px; font-weight: 500; margin-top: 10px;
+  display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
 }
-.smsg svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+.smsg svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
 .smsg.err { background: var(--err-bg); color: var(--err); }
 .smsg.warn { background: var(--warn-bg); color: var(--warn); }
 .smsg.info { background: var(--accent-bg); color: var(--accent); }
@@ -392,26 +391,26 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 .modal {
   background: var(--surface); border-radius: var(--r-lg);
-  padding: 32px; max-width: 440px; width: 100%;
+  padding: 28px; max-width: 420px; width: 100%;
   box-shadow: var(--sh-3); animation: scaleIn 0.25s ease;
 }
 @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } }
-.modal h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
-.modal p { font-size: 15px; color: var(--text-2); margin-bottom: 16px; line-height: 1.6; }
+.modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+.modal p { font-size: 13px; color: var(--text-2); margin-bottom: 14px; line-height: 1.6; }
 .modal a { color: var(--accent); text-decoration: underline; }
-.modal input { margin-bottom: 16px; }
+.modal input { margin-bottom: 14px; }
 
 /* ═══ Footer ═══ */
 .ftr {
-  text-align: center; padding: 32px 0 12px;
-  font-size: 13px; color: var(--text-3); letter-spacing: 0.3px;
+  text-align: center; padding: 28px 0 8px;
+  font-size: 11px; color: var(--text-3); letter-spacing: 0.3px;
 }
-.ftr-line { margin-bottom: 6px; }
+.ftr-line { margin-bottom: 4px; }
 .ftr-copy { font-weight: 500; }
 
 /* ═══ Utility ═══ */
 .hide { display: none !important; }
-.sep { height: 1px; background: var(--border-light); margin: 20px 0; }
+.sep { height: 1px; background: var(--border-light); margin: 18px 0; }
 </style>
 </head>
 <body>
@@ -420,7 +419,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
   <header class="hdr">
     <div class="hdr-badge">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       新竹市香山區內湖國小
     </div>
     <h1>輔助命題系統</h1>
@@ -483,11 +482,11 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      上傳教材 <span class="req" style="font-size:15px">*</span>
+      上傳教材 <span class="req" style="font-size:13px">*</span>
     </div>
     <p class="pnl-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。可混合使用檔案上傳與文字貼上。<br>💡 可從電子書平台下載教材或教案的 .docx 檔案，或直接複製課文貼上。</p>
-    <div id="matTip" class="smsg info hide" style="margin-bottom:14px;">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    <div id="matTip" class="smsg info hide" style="margin-bottom:12px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       <span id="matTipTx"></span>
     </div>
 
@@ -512,27 +511,27 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <textarea id="matTxt" placeholder="直接貼上課文、講義、筆記等文字內容..."></textarea>
     </div>
 
-    <div style="margin-top:20px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5a6c3e" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <strong style="color:#5a6c3e;font-size:16px;">學習目標（選填）</strong>
-        <span style="font-size:14px;color:#888;">貼上後 AI 將直接採用，不自行歸納</span>
+    <div style="margin-top:18px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6c3e" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <strong style="color:#5a6c3e;">學習目標（選填）</strong>
+        <span style="font-size:12px;color:#888;">貼上後 AI 將直接採用，不自行歸納</span>
       </div>
 
-      <div style="margin-bottom: 12px; padding: 12px 16px; background-color: var(--accent-bg); border-radius: 8px; border-left: 4px solid var(--accent);">
-        <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      <div style="margin-bottom: 10px; padding: 10px 14px; background-color: var(--accent-bg); border-radius: 8px; border-left: 4px solid var(--accent);">
+        <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           啟動 AI 學習目標擷取器
-          <span style="color: var(--text-2); font-size: 14px; font-weight: normal; margin-left: 4px;">
+          <span style="color: var(--text-2); font-size: 12px; font-weight: normal; margin-left: 4px;">
             (上傳教案電子檔，自動轉為可貼上的格式)
           </span>
         </a>
       </div>
-      <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:12px 16px;font-size:16px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="從課本複製學習目標，每行一條，例如：&#10;我能領會「用心看世界」的道理。&#10;我能理解現代散文的特色與意涵。&#10;我能掌握如何找尋文本主旨的方法。&#10;&#10;💡 可一次貼上多課的目標，AI 會自動分配比重。&#10;若留空，AI 將從教材中自動擷取。"></textarea>
+      <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="從課本複製學習目標，每行一條，例如：&#10;我能領會「用心看世界」的道理。&#10;我能理解現代散文的特色與意涵。&#10;我能掌握如何找尋文本主旨的方法。&#10;&#10;💡 可一次貼上多課的目標，AI 會自動分配比重。&#10;若留空，AI 將從教材中自動擷取。"></textarea>
     </div>
 
     <div class="mat-st no" id="matSt">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span id="matStTx">尚未提供教材</span>
     </div>
 
@@ -559,7 +558,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
 
     <div id="s2-result" class="hide">
-      <div id="s2-summary" style="font-size:15px;color:var(--text-2);margin-bottom:16px;font-weight:500;"></div>
+      <div id="s2-summary" style="font-size:13px;color:var(--text-2);margin-bottom:14px;font-weight:500;"></div>
       <div id="objList"></div>
       <div class="obj-summary">
         <span style="color:var(--text-3)">比重合計需等於 100%</span>
@@ -610,7 +609,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
     <p class="pnl-desc">調整每大題的題數與每題分數，可用箭頭調整出題順序。總分需為 100 分。</p>
     <table class="stbl">
-      <thead><tr><th style="width:60px">順序</th><th>大題</th><th style="width:80px">題數</th><th style="width:80px">每題</th><th style="width:80px;text-align:right">小計</th></tr></thead>
+      <thead><tr><th style="width:50px">順序</th><th>大題</th><th style="width:70px">題數</th><th style="width:70px">每題</th><th style="width:70px;text-align:right">小計</th></tr></thead>
       <tbody id="scBody"></tbody>
     </table>
     <div class="stbl-total" id="scTotal">合計：100 分</div>
@@ -649,7 +648,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
         <button class="btn btn-s" onclick="copyObj(event)">複製目標統計</button>
         <button class="btn btn-s" onclick="copyImg(event)">複製圖片指令</button>
         <button class="btn btn-s" onclick="downloadReview()">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           下載審核表
         </button>
         <button class="btn btn-s" onclick="goStep(1)">重新出題</button>
@@ -670,9 +669,9 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   <footer class="ftr">
     <div class="ftr-line">出題結果僅供參考，請老師審題後使用</div>
     <div class="ftr-copy">© 2026 新竹市香山區內湖國小</div>
-    <div style="margin-top:10px;">
-      <label style="font-size:13px;color:var(--text-3);cursor:pointer;user-select:none;">
-        <input type="checkbox" id="wsToggle" onchange="toggleWorkshop()" style="vertical-align:middle;margin-right:6px;">
+    <div style="margin-top:8px;">
+      <label style="font-size:11px;color:var(--text-3);cursor:pointer;user-select:none;">
+        <input type="checkbox" id="wsToggle" onchange="toggleWorkshop()" style="vertical-align:middle;margin-right:4px;">
         研習模式（多人同時使用時開啟，自動錯開請求）
       </label>
     </div>
@@ -683,7 +682,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   <div class="modal">
     <h3>輸入系統密碼</h3>
     <p>首次使用請輸入存取密碼，請向管理員（總務主任）索取。</p>
-    <label class="fl" style="margin-top:10px">存取密碼 <span class="req">*</span></label>
+    <label class="fl" style="margin-top:8px">存取密碼 <span class="req">*</span></label>
     <input type="password" id="secIn" placeholder="請輸入密碼">
     <div class="brow"><span></span><button class="btn btn-p" onclick="saveKey()">確認並繼續</button></div>
   </div>
@@ -742,7 +741,6 @@ const BASE_QT = [
   { id:'FILL', name:'填充題', desc:'在空格中填入正確答案', dc:5, de:2 },
   { id:'SA', name:'簡答題', desc:'簡短文字作答', dc:2, de:5 },
   { id:'RG', name:'題組（閱讀理解）', desc:'一段情境＋2-3道子題', dc:1, de:10 },
-  { id:'LIT_INQ', name:'情境探究素養題', desc:'真實生活情境＋高階邏輯推論', dc:2, de:4 }, 
 ];
 
 const SUBJ_QT = {
@@ -862,9 +860,9 @@ function previewFile(i) {
   modal.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:700px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;">
     <div style="padding:16px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
       <strong>📄 ${f.name}（${f.text.length.toLocaleString()} 字）</strong>
-      <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:24px;cursor:pointer;padding:4px;">✕</button>
+      <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;padding:4px;">✕</button>
     </div>
-    <pre style="padding:16px 20px;margin:0;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:15px;line-height:1.6;color:#374151;">${preview.replace(/</g,'&lt;')}</pre>
+    <pre style="padding:16px 20px;margin:0;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:13px;line-height:1.6;color:#374151;">${preview.replace(/</g,'&lt;')}</pre>
   </div>`;
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
   document.body.appendChild(modal);
@@ -876,10 +874,10 @@ function renderFiles() {
   el.innerHTML = S.files.map((f, i) => {
     const sz = f.size < 1048576 ? (f.size/1024).toFixed(0)+' KB' : (f.size/1048576).toFixed(1)+' MB';
     return `<div class="fitem">
-      <span class="fitem-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      <span class="fitem-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
       <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" onclick="previewFile(${i})" title="點擊預覽擷取內容">${f.name}</span>
       <span class="fitem-info">${sz} · ${f.text.length.toLocaleString()} 字</span>
-      <button class="fitem-rm" onclick="rmFile(${i})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="fitem-rm" onclick="rmFile(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
   }).join('');
 }
@@ -896,7 +894,7 @@ function swTab(t) {
 
 document.getElementById('matTxt').addEventListener('input', updMatSt);
 
-// 科目切換時顯示教材建議與防呆機制
+// 科目切換時顯示教材建議
 const MAT_TIPS = {
   '國語': '建議上傳：課本課文 + 習作。教案也可以，AI 會自動擷取學習目標。',
   '數學': '建議上傳：學生版課本 + 習作（含計算題與應用題）。AI 會自動抓取數字範圍與情境模板來命題。',
@@ -904,25 +902,12 @@ const MAT_TIPS = {
   '社會': '建議上傳：課本 + 習作。地圖或圖表題需搭配文字描述。',
   '英語': '建議上傳：課本（含單字表、句型）+ 習作。聽力題 AI 會產生文字腳本，由老師錄音施測。',
 };
-
 document.getElementById('subject').addEventListener('change', function() {
   const tip = MAT_TIPS[this.value];
   const el = document.getElementById('matTip');
   const tx = document.getElementById('matTipTx');
   if (tip) { tx.textContent = tip; el.classList.remove('hide'); }
   else { el.classList.add('hide'); }
-
-  // ★ 終極防呆機制：只要變更科目，立刻清空後方步驟的所有暫存狀態
-  S.objectives = [];
-  S.selTypeIds = [];
-  S.selTypes = [];
-  S.scores = [];
-
-  // 同時重置畫面上的已分析結果，強迫必須重新點擊「下一步：分析學習目標」
-  const s2Result = document.getElementById('s2-result');
-  const btnS2Next = document.getElementById('btn-s2next');
-  if (s2Result) s2Result.classList.add('hide');
-  if (btnS2Next) btnS2Next.disabled = true;
 });
 
 function hasMat() { return S.files.length > 0 || document.getElementById('matTxt').value.trim().length > 0; }
@@ -1000,7 +985,6 @@ async function toStep2() {
 
   goStep(2);
 
-  // 如果老師有手動貼上學習目標，直接解析，不呼叫 AI
   if (S.objInput) {
     doManualObjectives();
     return;
@@ -1015,9 +999,8 @@ async function toStep2() {
 }
 
 function doManualObjectives() {
-  // 逐行解析，過濾空行
   const lines = S.objInput.split('\n')
-    .map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()) // 移除行首編號
+    .map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim())
     .filter(l => l.length > 0);
   
   if (lines.length === 0) {
@@ -1030,7 +1013,7 @@ function doManualObjectives() {
   const remainder = 100 - avgWeight * lines.length;
 
   S.objectives = lines.map((name, i) => ({
-    name: name.replace(/。$/, ''), // 去掉結尾句號
+    name: name.replace(/。$/, ''),
     source: '老師輸入',
     detail: '',
     hours: 0,
@@ -1054,9 +1037,9 @@ async function doAnalyze() {
 
   try {
     const matContent = getMaterialText();
-    // 分析步驟不需要用到高階引擎，預設使用 flash 即可
+    // 目標分析一律交給 flash
     const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze', 'flash');
-    S._lastRaw = rawResult; // debug 暫存
+    S._lastRaw = rawResult;
     S.objectives = parseObjectives(rawResult);
     renderObjectives();
     document.getElementById('s2-ld').classList.add('hide');
@@ -1066,18 +1049,11 @@ async function doAnalyze() {
     if (err.message === 'NEED_SECRET') return;
     document.getElementById('s2-ld').classList.add('hide');
     document.getElementById('s2-err').classList.remove('hide');
-    
-    // ★ 加入明確的操作引導
     let debugInfo = err.message;
-    debugInfo += '\n\n💡 建議：請點擊左下方「上一步」返回，檢查「科目」與「上傳教材」是否相符，或手動修正後再重新操作。';
-    
-    // 顯示錯誤 + 原始回傳前 500 字供 debug
     if (S._lastRaw) {
       debugInfo += '\n\n【AI 原始回傳（前500字）】\n' + S._lastRaw.substring(0, 500);
     }
-    
-    // 改用 innerText 確保 \n 能正確呈現為換行
-    document.getElementById('s2-errMsg').innerText = debugInfo;
+    document.getElementById('s2-errMsg').textContent = debugInfo;
   }
 }
 
@@ -1115,13 +1091,6 @@ ${material}
 - 每條目標通常是一句完整的話，以句號結尾
 - 每課/每單元通常有 2-4 個目標
 
-例如 PDF 擷取的文字可能長這樣：
-「學 習 目 標 我能領會「用心看世界」的道理。我能理解現代散文的特色與意涵。我能掌握如何找尋文本主旨的方法。」
-→ 你必須擷取出三條獨立目標：
-  1. 我能領會「用心看世界」的道理
-  2. 我能理解現代散文的特色與意涵
-  3. 我能掌握如何找尋文本主旨的方法
-
 ＜第二步：絕對禁止的行為＞
 - 禁止自行歸納、合併、改寫目標。「理解文體特色與意涵」是歸納句，不是教材原文。
 - 禁止把不同課的目標合併成一條。
@@ -1143,32 +1112,23 @@ ${material}
    - hours: 預估授課節數
    - weight: 建議比重百分比（所有目標的 weight 加總必須等於 100）
 
-請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。範例：
-{"total_hours":12,"objectives":[{"name":"我能領會「用心看世界」的道理","source":"L01課本P5","detail":"對應課文主旨與生活體驗","hours":3,"weight":35}]}`;
+請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。`;
 }
 
 function parseObjectives(raw) {
   try {
-    // 移除 markdown 標記
     let clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-    
-    // 嘗試從回傳中提取 JSON（Gemini 可能在 JSON 前後加上思考文字）
     const jsonMatch = clean.match(/\{[\s\S]*"objectives"[\s\S]*\}/);
-    if (jsonMatch) {
-      clean = jsonMatch[0];
-    }
+    if (jsonMatch) clean = jsonMatch[0];
 
     let data;
     try {
       data = JSON.parse(clean);
     } catch (_) {
-      // JSON 可能被截斷，嘗試修復：找到最後一個完整的 } 閉合物件
-      // 先提取已完成的 objectives 陣列項目
       const objArrMatch = clean.match(/"objectives"\s*:\s*\[/);
       if (objArrMatch) {
         const arrStart = clean.indexOf(objArrMatch[0]);
         const afterArr = clean.substring(arrStart + objArrMatch[0].length);
-        // 找到所有完整的 {...} 物件
         const items = [];
         let depth = 0, start = -1;
         for (let i = 0; i < afterArr.length; i++) {
@@ -1176,12 +1136,10 @@ function parseObjectives(raw) {
           else if (afterArr[i] === '}') { depth--; if (depth === 0 && start >= 0) { items.push(afterArr.substring(start, i + 1)); start = -1; } }
         }
         if (items.length > 0) {
-          // 從 clean 開頭取得 total_hours
           const hoursMatch = clean.match(/"total_hours"\s*:\s*(\d+)/);
           const totalHours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
           const rebuilt = '{"total_hours":' + totalHours + ',"objectives":[' + items.join(',') + ']}';
           data = JSON.parse(rebuilt);
-          console.log('JSON 截斷修復成功，擷取到 ' + items.length + ' 個目標');
         } else {
           throw new Error('無法修復截斷的 JSON');
         }
@@ -1190,10 +1148,7 @@ function parseObjectives(raw) {
       }
     }
 
-    // 教材比對不符
-    if (data.error) {
-      throw new Error(data.error);
-    }
+    if (data.error) throw new Error(data.error);
     S.totalHours = data.total_hours || 0;
     return (data.objectives || []).map(o => ({
       name: o.name,
@@ -1205,7 +1160,6 @@ function parseObjectives(raw) {
     }));
   } catch (e) {
     if (e.message && e.message.startsWith('教材內容與設定不符')) throw e;
-    console.error('AI raw output:', raw);
     throw new Error('AI 回傳格式異常，請重試（提示：可嘗試減少教材量或重新上傳）');
   }
 }
@@ -1226,7 +1180,7 @@ function renderObjectives() {
           <span>%</span>
         </div>
       </div>
-      <div class="obj-detail">${o.source ? `<span style="display:inline-block;background:${o.source === 'AI歸納' ? '#fef3c7' : '#dcfce7'};color:${o.source === 'AI歸納' ? '#92400e' : '#166534'};font-size:12px;padding:2px 8px;border-radius:4px;margin-right:8px;">${o.source}</span>` : ''}${o.hours} 節 ｜ ${o.detail}</div>
+      <div class="obj-detail">${o.source ? `<span style="display:inline-block;background:${o.source === 'AI歸納' ? '#fef3c7' : '#dcfce7'};color:${o.source === 'AI歸納' ? '#92400e' : '#166534'};font-size:11px;padding:1px 6px;border-radius:4px;margin-right:6px;">${o.source}</span>` : ''}${o.hours} 節 ｜ ${o.detail}</div>
     </div>
   `).join('');
   updObjTotal();
@@ -1262,18 +1216,8 @@ function toStep3() {
   const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
   if (total !== 100) { alert('學習目標比重合計需等於 100%'); return; }
 
-  // ★ 動態過濾基礎題型：根據當前科目，剃除不適合的通用選項
-  let currentBaseQT = [...BASE_QT];
-  if (S.subject === '數學') {
-    // 數學科剃除「簡答題」與「閱讀理解」，由下方的專屬「應用題」與「素養題」取代
-    currentBaseQT = currentBaseQT.filter(t => t.id !== 'SA' && t.id !== 'RG');
-  } else if (S.subject === '英語') {
-    // 英語科剃除「填充題」，由下方的專屬「克漏字填空」取代
-    currentBaseQT = currentBaseQT.filter(t => t.id !== 'FILL');
-  }
-
   const recs = SUBJ_QT[S.subject] || [];
-  const all = [...currentBaseQT, ...recs.map(r => ({ ...r, rec: true }))];
+  const all = [...BASE_QT, ...recs.map(r => ({ ...r, rec: true }))];
   const grid = document.getElementById('qtGrid');
   grid.innerHTML = all.map(t => `
     <div class="qti" data-id="${t.id}" onclick="togQt(this)">
@@ -1286,20 +1230,11 @@ function toStep3() {
     </div>
   `).join('');
 
-  // 恢復之前的選擇，若無有效選擇則預設勾選 MC 和 TF
   if (S.selTypeIds && S.selTypeIds.length > 0) {
-    let hasValidSelection = false;
     S.selTypeIds.forEach(id => {
       const el = grid.querySelector(`[data-id="${id}"]`);
-      if (el) { 
-        el.classList.add('on'); 
-        el.querySelector('input').checked = true; 
-        hasValidSelection = true;
-      }
+      if (el) { el.classList.add('on'); el.querySelector('input').checked = true; }
     });
-    if (!hasValidSelection) {
-      grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
-    }
   } else {
     grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
   }
@@ -1317,15 +1252,12 @@ function toStep4() {
   const checked = document.querySelectorAll('#qtGrid .qti.on');
   if (!checked.length) { alert('請至少選擇一種題型'); return; }
 
-  // 快取選擇的題型 ID
   S.selTypeIds = Array.from(checked).map(e => e.dataset.id);
 
   const all = [...BASE_QT, ...(SUBJ_QT[S.subject] || [])];
   const map = Object.fromEntries(all.map(t => [t.id, t]));
   S.selTypes = Array.from(checked).map(e => map[e.dataset.id]);
 
-  const tb = document.getElementById('scBody');
-  const ord = ['一','二','三','四','五','六','七','八','九','十'];
   renderScTable();
   updSc();
   goStep(4);
@@ -1352,17 +1284,14 @@ function renderScTable() {
 function moveType(idx, dir) {
   const newIdx = idx + dir;
   if (newIdx < 0 || newIdx >= S.selTypes.length) return;
-  // 先把目前配分存下來
   updSc();
-  // 交換
   const temp = S.selTypes[idx];
   S.selTypes[idx] = S.selTypes[newIdx];
   S.selTypes[newIdx] = temp;
-  // 同步 scores 的順序
   const tempSc = S.scores[idx];
   S.scores[idx] = S.scores[newIdx];
   S.scores[newIdx] = tempSc;
-  // 重繪（保留使用者填入的題數/每題分數）
+  
   const tb = document.getElementById('scBody');
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
   const len = S.selTypes.length;
@@ -1424,12 +1353,10 @@ async function generate() {
   }, 8000);
 
   try {
-    // ★ 核心分流設定：加入 LIT_INQ (情境探究素養題) 呼叫 Pro 模型
-    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ', 'LIT_INQ']; 
+    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ']; 
     const flashScores = [];
     const proScores = [];
     
-    // 幫每個題型加上順序名稱 (一、二、三...)
     const ord = ['一','二','三','四','五','六','七','八','九','十'];
     S.scores.forEach((s, idx) => {
       const item = { ...s, ordName: ord[idx] || (idx+1).toString() };
@@ -1442,7 +1369,6 @@ async function generate() {
     if (flashScores.length > 0 && proScores.length > 0) {
       document.getElementById('s5-ldMsg').textContent = 'AI 雙引擎同步運算中...';
       document.getElementById('s5-ldSub').textContent = 'Flash 處理基礎題，Pro 深度運算素養題';
-      // ★ 雙管齊下：同時向 Flash 和 Pro 發出請求
       const [flashText, proText] = await Promise.all([
         callAPI(buildExamPrompt(flashScores, true), 'generate', 'flash'),
         callAPI(buildExamPrompt(proScores, false), 'generate', 'pro')
@@ -1471,21 +1397,21 @@ async function generate() {
   }
 }
 
-// 將兩份考卷完美拼接的輔助函數
+// 將兩份考卷完美拼接的輔助函數 (強化防呆切除版)
 function mergeExam(flashText, proText) {
   function extract(text) {
     let ex = text, ans = '', st = '', leak = '', img = '';
     const p1 = text.split(/═══ 答案卷 ═══/);
-    ex = p1[0];
+    ex = p1[0] || '';
     if (p1[1]) {
       const p2 = p1[1].split(/═══ 學習目標對應統計 ═══/);
-      ans = p2[0];
+      ans = p2[0] || '';
       if (p2[1]) {
         const p3 = p2[1].split(/═══ 防洩漏自檢報告 ═══/);
-        st = p3[0];
+        st = p3[0] || '';
         if (p3[1]) {
           const p4 = p3[1].split(/═══ 圖片生成指令.*═══|═══ 圖片生成指令/);
-          leak = p4[0];
+          leak = p4[0] || '';
           img = p4[1] ? p4[1].replace(/^[^\n]*\n/, '') : '';
         }
       }
@@ -1496,126 +1422,150 @@ function mergeExam(flashText, proText) {
   const f = extract(flashText);
   const p = extract(proText);
   
-  // 移除 Pro 試卷中多餘的「知識大綱」與「表頭」，直接銜接題目
-  let cleanPEx = p.ex.replace(/=== 知識萃取大綱 ===[\s\S]*?(內湖國小|一、|二、|三、|四、|五、|六、|七、|八、|九、|十、)/, '$1');
-  cleanPEx = cleanPEx.replace(/內湖國小[\s\S]*?姓名：_+\n*/, '');
+  // 暴力切除 Pro 考卷題目區塊的廢話與大綱
+  let cleanPEx = p.ex;
+  // 尋找第一個大題的開頭（例如：「四、」、「**四、」、「七、」）
+  const match = cleanPEx.match(/(?:\*\*|)?[一二三四五六七八九十]、/);
+  if (match) {
+    cleanPEx = cleanPEx.substring(match.index);
+  }
+  
+  // 清除 Pro 統計與防洩漏區塊可能夾帶的「難度分布估計」等內心戲
+  let cleanPSt = p.st.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
+  let cleanPLeak = p.leak.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
 
-  return `${f.ex}\n\n${cleanPEx}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${p.st}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${p.leak}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
+  return `${f.ex}\n\n${cleanPEx}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
 }
 
-// 產生 Prompt (動態接收要負責的大題)
+// 產生 Prompt 
 function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
   const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
-
-  // ★ 新增：根據系統難度，動態調整素養題的「鷹架」與「認知負荷」
-  const litDiffGuide = {
-    'easy': '【素養題專屬難度-基礎】：請提供充足的「學習鷹架」（如：對齊的表格、較短的情境描述）。測驗目標以「單一變因推論」或「圖表直接檢索」為主，選項請避免過度隱晦的陷阱。',
-    'balanced': '【素養題專屬難度-中等】：標準情境探究。要求學生進行「雙變因交叉比對」或「跨圖表/文本的資訊整合」，誘答選項須包含常見的直覺迷思。',
-    'hard': '【素養題專屬難度-進階】：請增加情境的「複雜度」與「干擾資訊（雜訊）」。要求學生進行「多步驟邏輯推演」、「批判或除錯（如：評估實驗設計的盲點）」或「社會價值權衡」。'
-  };
-  const currentLitDiff = litDiffGuide[S.difficulty] || litDiffGuide['balanced'];
-
   const objSpec = S.objectives.filter(o => o.checked).map(o => `- ${o.name}（比重 ${o.weight}%）`).join('\n');
   const matContent = getMaterialText();
 
   const subjectRules = {
     '國語': `
-<Subject: Chinese>
-  <Scenario_Type>文學文本、科普文章、真實生活公告（如：旅遊指南、公共設施使用須知）。</Scenario_Type>
-  <Cognitive_Level>分析（推論寫作觀點）、評鑑（分辨寫作特色）。</Cognitive_Level>
-  <Design_Template>
-    - 核心任務：評量學生是否能從長文本中歸納主旨，或判斷作者使用特定表述手段（如：引用數據）的目的。
-    - 誘答設計：使用文本中確實出現過，但「非主旨」的細節字句（字面陷阱），或強加因果關係。
-  </Design_Template>
-</Subject>
-【國語科常規命題規則】
+【國語科專屬命題規則】
 ＜素養化命題原則＞
-你可以基於教材核心字詞「重新創作」全新的短文、情境或故事。但必須源自教材，不可憑空出現未教過的生字。
-＜字音字形與防洩漏＞
-- 從<任務一>萃取的核心生字挑選目標字詞。
-- 注音/國字題的答案不可出現在同份考卷的選擇題選項中。改錯字的正確字不可在其他題目中被直接呈現。`,
+你可以（也鼓勵）基於教材中的核心字詞與知識點，「重新創作」一段全新的短文、情境或故事，用來出以下題型：
+- 寫國字或注音：將目標字詞嵌入新創的生活化句子或短文中
+- 改錯字題：創作含有目標字詞的新句子，替換為同音錯字
+- 閱讀理解題組：基於課文主題延伸創作新的閱讀素材
+- 選詞填空/語詞應用：在新情境中測驗學生對語詞的理解
+但必須遵守：新創內容使用的字詞和知識點必須源自教材，不可憑空出現教材未教過的生字或概念。
+＜字音字形命題細則＞
+1. 從<任務一>萃取的核心生字語詞中挑選目標字詞。
+2. 可以使用教材原句，也可以重新創作融入目標字詞的新句子。
+3. 改錯字的替換必須是小學生常犯的合理同音錯誤。
+＜防洩漏檢查＞
+- 注音/國字題的答案不可出現在同份考卷的選擇題選項或其他題目的題幹中。
+- 改錯字的正確字不可在其他題目中被直接呈現。
+＜進階題指南＞
+進階題請著重「跨段落的主旨比較」或「人物情緒推論」，用語須符合國小學童理解。`,
 
     '數學': `
-<Subject: Mathematics>
-  <Scenario_Type>量化對比情境（如：各類能源碳排放比例圖、賣場促銷方案比較、材料測量）。</Scenario_Type>
-  <Cognitive_Level>應用（數學建模）、分析（解讀數據趨勢）。</Cognitive_Level>
-  <Design_Template>
-    - 核心任務：若為素養題，禁止純粹抽象算式運算。必須要求學生將真實問題轉化為數學模型。
-    - 誘答設計：必須是「計算中途的暫時結果」、「錯用單位」或「錯用公式」所產生的數值。
-  </Design_Template>
-</Subject>
-【數學科常規命題規則】
-＜計算與應用題＞
-- 直式計算必須標明「用直式算算看」。數字大小須符合該年級範圍。
-- 應用題必須使用生活化情境，列式部分標明「寫出做法與答案」，單位必須前後一致。
-＜防洩漏＞
-- 計算題的中間步驟答案不可出現在選擇題選項中。應用題的情境數字不可與其他題重複。`,
+【數學科專屬命題規則】
+＜計算題＞
+- 直式計算必須標明「用直式算算看」，並預留作答空間提示。
+- 數字大小須符合該年級的數字範圍。
+＜應用題＞
+- 必須使用生活化情境（購物、測量、分配等），情境須完整且數據充分。
+- 列式部分必須標明「寫出做法與答案」。
+- 單位必須前後一致。
+＜圖形題＞
+- 需搭配圖片的題目請標示 [見配圖 X]。
+- 圖形描述必須精確到可以重現。
+＜防洩漏檢查＞
+- 計算題的中間步驟答案不可出現在選擇題選項中。
+- 應用題的情境數字不可與其他題重複。
+＜進階題指南＞
+進階題請設計為「需要兩步以上運算的真實生活情境題」，不可超出國小數學課綱。`,
 
     '自然': `
-<Subject: Natural_Sciences>
-  <Scenario_Type>實驗室探究設計、動態系統模擬、日常科學現象（如：氣候變遷、食品保存）。</Scenario_Type>
-  <Cognitive_Level>分析（歸納變因與順序）、創造（規劃實驗步驟）。</Cognitive_Level>
-  <Design_Template>
-    - 核心任務：素養題必須具備「科學探究」歷程。要求學生推導結論，或辨識操縱/控制變因。
-    - 誘答設計：過度推論（超出數據範圍）、未控制變因所得的結果，或學生常見的直覺迷思。
-  </Design_Template>
-</Subject>
-【自然科常規命題規則】
-＜實驗與分類題＞
+【自然科專屬命題規則】
+＜實驗題＞
 - 實驗題組必須提供完整的實驗情境描述（目的、器材、步驟）。
+- 變因控制題必須明確區分操縱變因、控制變因、應變變因。
+＜圖表題＞
+- 數據表格或觀察記錄必須清楚完整。
+- 圖表判讀題的數據必須合理且符合科學事實。
+＜分類題＞
 - 分類標準必須明確，不可有模糊地帶。
-＜防洩漏＞
-- 是非題的敘述不可直接透露選擇題的答案。題組的子題答案不可互相提示。`,
+＜防洩漏檢查＞
+- 是非題的敘述不可直接透露選擇題的答案。
+- 題組的子題答案不可互相提示。
+＜進階題指南＞
+進階題請給予一個簡單的實驗情境，要求學生判斷「變因」或「預測結果」。`,
 
     '社會': `
-<Subject: Social_Studies>
-  <Scenario_Type>社會邏輯決策、歷史事件的現代啟示、地理環境變遷（如：氣候衝擊、聽證會）。</Scenario_Type>
-  <Cognitive_Level>分析（因果關係推論）、評鑑（評估多方觀點）。</Cognitive_Level>
-  <Design_Template>
-    - 核心任務：提供具備「衝突感」或多方利害關係人的圖表/文本，要求判斷社會結構或地理成因。
-    - 誘答設計：倒果為因、年代或空間尺度錯置、或者是「符合道德直覺但違反學理事實」的選項。
-  </Design_Template>
-</Subject>
-【社會科常規命題規則】
-＜地圖與情境題＞
-- 地圖題必須標示方位、比例尺。統計圖表的數據必須清楚。
-- 公民素養情境必須貼近學生生活經驗。歷史排序必須有明確線索。
-＜防洩漏＞
-- 時間排序題的答案不可在其他題目被暗示。配合題的正確配對不可在選擇題中出現。`,
+【社會科專屬命題規則】
+＜地圖與圖表題＞
+- 地圖題必須標示方位、比例尺等必要資訊。
+- 統計圖表的數據必須清楚可讀。
+＜配合題＞
+- 配對項目數量應大於正確答案數，提供合理干擾項。
+＜情境題＞
+- 公民素養情境必須貼近學生生活經驗。
+- 歷史事件排序必須有明確的時序線索。
+＜防洩漏檢查＞
+- 時間排序題的答案不可在其他題目的題幹中被暗示。
+- 配合題的正確配對不可在選擇題中被直接提及。
+＜進階題指南＞
+進階題請給予一段生活情境對話或短文，讓學生判斷對應的歷史事件或公民觀念。`,
 
     '英語': `
-<Subject: English>
-  <Scenario_Type>跨文化溝通真實情境（如：機場廣播、外國筆友郵件、商品退換貨說明）。</Scenario_Type>
-  <Cognitive_Level>理解（擷取特定資訊）、應用（推敲上下文語意）。</Cognitive_Level>
-  <Design_Template>
-    - 核心任務：評量語用能力。題幹需具備「資訊落差」或任務（如：主角只有50元，能買什麼？）。
-    - 誘答設計：利用相似拼字（形音義混淆）、直譯錯誤，或只符合部分條件的選項。
-  </Design_Template>
-</Subject>
-【英語科常規命題規則】
-＜聽力與閱讀題＞
-- 聽力腳本必須使用已學過的單字句型。建議標註 (Read slowly and clearly)。
-- 閱讀長度須符合該年級程度。不可出現未學過的單字（若必要須加註中文）。
-＜防洩漏＞
-- 克漏字的答案不可出現在閱讀測驗的題幹中。圖文配對答案不可在其他題型被拼寫出來。`
+【英語科專屬命題規則】
+＜聽力題＞
+- 聽力腳本必須使用該年級已學過的單字和句型。
+- 語速提示：建議標註 (Read slowly and clearly)。
+- 每題唸兩次。
+＜克漏字與閱讀題＞
+- 文章長度須符合該年級程度（中年級 30-50 字，高年級 50-80 字）。
+- 不可出現該年級未學過的單字（若必要，須加註中文）。
+＜句子重組題＞
+- 打散的單字數量：中年級 4-5 個，高年級 5-7 個。
+- 必須有唯一正確答案。
+＜防洩漏檢查＞
+- 克漏字的答案不可出現在閱讀測驗的題幹中。
+- 圖文配對的答案不可在其他題型中被拼寫出來。
+＜進階題指南＞
+進階題請測試學生在簡短情境對話中的「語意推論」，避免考冷僻單字。`,
   };
 
   const currentSubjectRules = subjectRules[S.subject] || '';
 
   const extractGuide = {
-    '國語': `1. 核心生字與語詞清單：請特別挑選適合考注音與錯字的詞彙，標註注音。\n2. 核心知識點與重要情境（羅列 3-5 點，這是後續出題的唯一依據）。\n3. 課文主旨與寫作手法（用於閱讀理解題）。\n注意：若教材包含多篇課文，請務必分開羅列，絕對不可將不同課文的人物或情境混雜。`,
-    '數學': `1. 數字難度邊界：從教材整理出本單元使用的數字範圍。列出 3-5 個代表性算式作為難度基準。\n2. 核心運算規則與易錯點。\n3. 應用題情境模板：萃取 2-3 個生活情境模板，標註數學結構。\n4. 圖形題描述（若有）。\n注意：出題時的數字必須嚴格在「數字難度邊界」內，絕不可超出。`,
-    '自然': `1. 核心科學概念與術語（羅列 3-5 點，含定義）。\n2. 實驗與觀察項目：萃取教材中的實驗名稱、步驟、變因、預期結果。\n3. 分類與比較項目（若有）。\n注意：若教材包含多個單元，請分開羅列，不可混雜。`,
-    '社會': `1. 核心知識點：歷史事件（含時序）、地理概念、公民素養重點。\n2. 圖表與地圖資訊（若有）：萃取教材中的統計數據、地理位置等。\n3. 人物與事件關聯。\n注意：若教材包含多個單元，請分開羅列，不可混雜。`,
-    '英語': `1. 核心單字與片語清單（含中文意思）。\n2. 核心句型結構（列出 2-3 個重點句型）。\n3. 對話情境模板（若有）。\n注意：出題時不可使用本課未教過的單字。`,
+    '國語': `1. 核心生字與語詞清單：請特別挑選適合考注音與錯字的詞彙，標註注音。
+2. 核心知識點與重要情境（羅列 3-5 點，這是後續出題的唯一依據）。
+3. 課文主旨與寫作手法（用於閱讀理解題）。
+注意：若教材包含多篇課文，請務必分開羅列，絕對不可將不同課文的人物或情境混雜。`,
+    '數學': `1. 數字難度邊界：從教材的計算題與範例中，整理出本單元使用的數字範圍（例：小數到第幾位、分數分母最大到幾、整數位數範圍）。請列出 3-5 個代表性算式作為難度基準。
+2. 核心運算規則與易錯點（例：先乘除後加減、通分、小數對位等）。
+3. 應用題情境模板：從教材的文字題中，萃取 2-3 個生活情境模板（例：購物找錢、測量比較、分配問題），標註其數學結構（幾步驟、哪些運算）。
+4. 圖形題描述（若有）：精確描述圖形的邊長、角度等數據。
+注意：出題時的數字必須嚴格在萃取出的「數字難度邊界」內，絕不可超出。AI 可以替換應用題的生活情境（如改為校園、市場、運動等），但數學結構和數字範圍必須與教材一致。`,
+    '自然': `1. 核心科學概念與術語（羅列 3-5 點，含定義）。
+2. 實驗與觀察項目：萃取教材中的實驗名稱、步驟、變因、預期結果。
+3. 分類與比較項目（若有）：萃取教材中的分類標準與比較項目。
+注意：若教材包含多個單元，請分開羅列，不可混雜。`,
+    '社會': `1. 核心知識點：歷史事件（含時序）、地理概念、公民素養重點。
+2. 圖表與地圖資訊（若有）：萃取教材中的統計數據、地理位置等。
+3. 人物與事件關聯：列出重要人物、事件、年代的對應關係。
+注意：若教材包含多個單元，請分開羅列，不可混雜。`,
+    '英語': `1. 核心單字與片語清單（含中文意思）。
+2. 核心句型結構（列出 2-3 個本課重點句型，含範例句）。
+3. 對話情境模板（若有）：萃取教材中的對話主題與常用問答。
+注意：出題時不可使用本課未教過的單字（若必要須加註中文）。`,
   };
 
   const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重點。\n2. 課文主旨與情境。`;
+
   let headerOutput = isMain ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n` : '';
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
-請嚴格執行以下「兩階段命題任務」。你必須先萃取教材知識，再根據萃取結果進行出題。
+請嚴格執行以下「兩階段命題任務」。
+【警告】絕對禁止輸出任何開場白（如「好的」、「收到」）、結尾語、或你的「思考過程」、「難度計算評估」。請嚴格只輸出指定的標題區塊！
 
 <任務一：知識萃取>
 請仔細閱讀最下方的【教材內容】。在正式出題前，請先輸出一段「=== 知識萃取大綱 ===」。
@@ -1629,8 +1579,8 @@ ${currentExtractGuide}
 2. 知識防火牆：絕不可將不同課文單元的人物或情境混雜在同一題。
 3. 難度控制：用語必須絕對符合國小 ${S.grade} 學生的認知程度。
 4. 選擇題品質：題幹為完整問句，4 選項長度接近，誘答選項對應常見迷思，(A)(B)(C)(D) 分布均勻。
-5. 防洩漏鐵則：完成所有題目後，請逐題交叉檢查，確保沒有任何題目的題幹、選項或敘述洩漏了其他題目的答案。
-6. 素養題專屬規範（若題型包含「情境探究素養題」）：嚴禁直接提取字面答案，必須結合真實情境、量化數據或角色互動。正確選項須經過語意轉譯，且絕不可使用「以上皆非/皆是」。
+5. 防洩漏鐵則：完成所有題目後，請逐題交叉檢查，確保沒有任何題目的題幹、選項或敘述洩漏了其他題目的答案。若發現洩漏，必須修改措辭。
+6. 避免文化偏見或性別刻板印象。
 ${currentSubjectRules}
 
 【基本資訊】
@@ -1644,7 +1594,6 @@ ${objSpec}
 
 【難度分布】
 ${d.label}：基礎 ${d.basic}% / 中等 ${d.mid}% / 進階 ${d.adv}%
-${currentLitDiff}
 
 【排版與輸出格式】
 ${isMain ? '請在「=== 知識萃取大綱 ===」結束後，立刻輸出考卷，格式如下：' : '請在「=== 知識萃取大綱 ===」結束後，直接輸出分配給你的大題，格式如下：'}
@@ -1667,7 +1616,7 @@ ${matContent}
 === 教材內容結束 ===`;
 }
 
-// ★ 支援接收 model 參數的 API 呼叫器
+// 支援接收 model 參數的 API 呼叫器
 async function callAPI(prompt, action, model = 'flash') {
   if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
@@ -1688,7 +1637,7 @@ async function callAPI(prompt, action, model = 'flash') {
       action: action || 'generate',
       prompt: prompt,
       secret: S.apiSecret,
-      model: model // ★ 將指定的模型(flash或pro)傳給後端
+      model: model 
     }),
   });
 
@@ -1752,7 +1701,7 @@ function doCopy(e, text, msg) {
   navigator.clipboard.writeText(text).then(() => {
     const btn = e.target.closest('.btn');
     const orig = btn.innerHTML;
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
     btn.style.background = 'var(--accent-l)'; btn.style.color = 'var(--accent)';
     setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
   });
@@ -1764,10 +1713,8 @@ function doCopy(e, text, msg) {
 function downloadReview() {
   const objs = S.objectives.filter(o => o.checked);
   
-  // 從輸出中解析學習目標統計
   const statSection = S.output.substring(S.output.indexOf('═══ 學習目標對應統計 ═══') || 0);
   
-  // 表頭資訊
   const headerRows = [
     ['新竹市香山區內湖國小'],
     ['學年度第___學期 第___次學習評量 試題審核表'],
@@ -1778,7 +1725,6 @@ function downloadReview() {
     ['大單元名稱', '授課節數', '出題佔分', '佔比(%)', '教學目標/學習目標'],
   ];
   
-  // 學習目標明細
   const objRows = objs.map(o => [
     o.name,
     o.hours || '',
@@ -1787,7 +1733,6 @@ function downloadReview() {
     o.detail || '',
   ]);
   
-  // 題型配分
   const typeHeader = [[], ['題型配分明細']];
   const typeRows = [['大題', '題型', '題數', '每題分數', '小計']];
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
@@ -1796,7 +1741,6 @@ function downloadReview() {
   });
   typeRows.push(['', '', '', '合計', S.scores.reduce((a, s) => a + s.subtotal, 0)]);
   
-  // 命題者自評
   const checkRows = [
     [],
     ['★ 命題者自評（打√表示達成）'],
@@ -1814,18 +1758,14 @@ function downloadReview() {
     ['三審  □傳閱 □共同討論', '審題教師簽名：'],
   ];
   
-  // 合併所有資料
   const allRows = [...headerRows, ...objRows, ...typeHeader, ...typeRows, ...checkRows];
   
-  // 建立 Excel
   const ws = XLSX.utils.aoa_to_sheet(allRows);
   
-  // 設定欄寬
   ws['!cols'] = [
     { wch: 20 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 },
   ];
   
-  // 合併標題列
   ws['!merges'] = [
     { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
     { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } },
