@@ -614,7 +614,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       國語科評量向度設定
     </div>
-    <p class="pnl-desc">依據許育健教授評量架構設定本次考試各向度的配分。系統已根據年級帶入建議比例，您可依需求調整。</p>
+    <p class="pnl-desc">依據試題審核表設定本次考試各向度的配分。系統已根據年級帶入建議比例，您可依需求調整。</p>
     <div id="s2ch-content"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border-light);margin-top:8px;">
       <span style="font-size:13px;color:var(--text-3)">所有向度配分合計需等於 100 分</span>
@@ -1560,7 +1560,7 @@ async function toStep5Ch(){
   document.getElementById('s5-ld').classList.remove('hide');
   document.getElementById('s5-ok').classList.add('hide');
   document.getElementById('s5-err').classList.add('hide');
-  document.getElementById('s5-ldMsg').textContent='AI 正在依許育健教授評量架構命題中...';
+  document.getElementById('s5-ldMsg').textContent='AI 正在依審核表評量架構命題中...';
   document.getElementById('s5-ldSub').textContent='國語科採整合式出題，通常需要 30-60 秒';
   try {
     const result=await callAPI(buildChineseExamPrompt(),'generate','pro');
