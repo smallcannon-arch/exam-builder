@@ -11,9 +11,6 @@
 <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
-/* ═══════════════════════════════════════
-   Variables & Reset
-   ═══════════════════════════════════════ */
 :root {
   --bg: #F4F1EB;
   --surface: #FFFFFF;
@@ -43,9 +40,7 @@
   --r-lg: 18px;
   --t: 0.2s ease;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'Noto Sans TC', -apple-system, sans-serif;
   background: var(--bg);
@@ -59,21 +54,15 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
-
-/* ═══ Layout ═══ */
 .wrap { width: 92%; max-width: 1400px; margin: 0 auto; padding: 16px 20px 48px; position: relative; }
 @media (min-width: 640px) { .wrap { padding: 24px 32px 56px; } }
-
-/* ═══ Header ═══ */
 .hdr { text-align: center; padding: 28px 0 20px; }
-
 .hdr-badge {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--accent-l); color: var(--accent);
   font-size: 12px; font-weight: 600; padding: 5px 14px;
   border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px;
 }
-
 .hdr h1 {
   font-family: 'Noto Serif TC', serif;
   font-size: 28px;
@@ -83,19 +72,14 @@ body {
   background-clip: text; margin-bottom: 6px;
 }
 @media (min-width: 640px) { .hdr h1 { font-size: 38px; } }
-
 .hdr-sub { font-size: 13px; color: var(--text-3); font-weight: 400; letter-spacing: 0.5px; }
-
-/* ═══ Steps ═══ */
 .steps { display: flex; justify-content: center; align-items: center; gap: 0; margin: 4px 0 24px; }
-
 .stp {
   display: flex; align-items: center; gap: 5px;
   font-size: 11px; color: var(--text-3); font-weight: 500; transition: color var(--t);
 }
 .stp.on { color: var(--accent); font-weight: 700; }
 .stp.ok { color: var(--accent); }
-
 .stp-n {
   width: 24px; height: 24px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -105,18 +89,14 @@ body {
 }
 .stp.on .stp-n { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(78,125,78,0.3); }
 .stp.ok .stp-n { background: var(--accent-l); color: var(--accent); }
-
 .stp-c {
   width: 20px; height: 2px; background: var(--border-light);
   margin: 0 6px; flex-shrink: 0; border-radius: 1px;
   transition: background var(--t);
 }
 .stp-c.ok { background: var(--accent-l); }
-
 .stp-t { display: none; }
 @media (min-width: 540px) { .stp-t { display: inline; } }
-
-/* ═══ Panel ═══ */
 .pnl {
   background: var(--surface);
   border-radius: var(--r-lg);
@@ -127,12 +107,10 @@ body {
   animation: slideUp 0.35s ease;
 }
 @media (min-width: 640px) { .pnl { padding: 32px; } }
-
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .pnl-t {
   font-size: 18px;
   font-weight: 700; margin-bottom: 16px;
@@ -140,19 +118,14 @@ body {
   color: var(--text);
 }
 .pnl-t svg { width: 22px; height: 22px; color: var(--accent); flex-shrink: 0; }
-
 .pnl-desc { font-size: 16px; color: var(--text-2); margin-bottom: 16px; line-height: 1.7; }
-
-/* ═══ Form ═══ */
 .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 @media (max-width: 520px) { .fg { grid-template-columns: 1fr; } }
 .fg-full { grid-column: 1 / -1; }
-
 .fl { font-size: 15px; font-weight: 600; color: var(--text-2); margin-bottom: 6px; display: block; letter-spacing: 0.3px; }
 .fl .req { color: var(--err); margin-left: 2px; }
-
 select, input[type="text"], input[type="number"], textarea {
-  width: 100%; 
+  width: 100%;
   padding: 12px 16px;
   font-size: 17px;
   border: 1.5px solid var(--border); border-radius: var(--r-sm);
@@ -169,8 +142,6 @@ select {
   background-repeat: no-repeat; background-position: right 12px center; padding-right: 30px;
 }
 textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
-
-/* ═══ Upload Zone ═══ */
 .upz {
   border: 2px dashed var(--border); border-radius: var(--r-md);
   padding: 32px 20px; text-align: center; cursor: pointer;
@@ -182,8 +153,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .upz-icon svg { width: 28px; height: 28px; }
 .upz-main { font-size: 14px; font-weight: 500; color: var(--text-2); }
 .upz-hint { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
-
-/* ═══ File List ═══ */
 .flist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
 .fitem {
   display: flex; align-items: center; gap: 10px;
@@ -199,8 +168,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   padding: 2px; border-radius: 4px; transition: color var(--t); flex-shrink: 0;
 }
 .fitem-rm:hover { color: var(--err); }
-
-/* ═══ Material Tabs ═══ */
 .mtabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid var(--border-light); }
 .mtab {
   padding: 8px 16px; font-size: 13px; font-weight: 500;
@@ -213,7 +180,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .mtab.on { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
 .mtc { display: none; }
 .mtc.on { display: block; }
-
 .mat-st {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 14px; border-radius: var(--r-sm);
@@ -221,8 +187,40 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .mat-st.ok { background: var(--accent-bg); color: var(--accent); }
 .mat-st.no { background: var(--warn-bg); color: var(--warn); }
-
-/* ═══ Objectives (Step 2) ═══ */
+/* ═══ Chinese Material Zones ═══ */
+.ch-zones { display: flex; flex-direction: column; gap: 12px; }
+.ch-zone {
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  background: var(--surface-alt);
+}
+.ch-zone-hd {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 700; color: var(--text);
+  margin-bottom: 8px;
+}
+.ch-zone-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; flex-shrink: 0;
+}
+.ch-zone-badge.z1 { background: #e0f2fe; color: #1e40af; }
+.ch-zone-badge.z2 { background: #fef3c7; color: #92400e; }
+.ch-zone-badge.z3 { background: #f0fdf4; color: #166534; }
+.ch-zone-badge.z4 { background: #fdf4ff; color: #7e22ce; }
+.ch-zone-hint { font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+.ch-zone textarea {
+  width: 100%; min-height: 80px; font-size: 13px;
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  padding: 8px 12px; font-family: inherit; resize: vertical;
+  background: var(--surface);
+}
+.ch-zone textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(78,125,78,0.10);
+  outline: none;
+}
+/* ═══ Objectives ═══ */
 .obj-card {
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
@@ -233,7 +231,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .obj-card:hover { border-color: var(--accent); }
 .obj-card.unchecked { opacity: 0.5; }
-
 .obj-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
 .obj-chk {
   width: 20px; height: 20px; border: 2px solid var(--border);
@@ -243,23 +240,10 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .obj-chk.on { background: var(--accent); border-color: var(--accent); }
 .obj-chk svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
 .obj-chk.on svg { opacity: 1; }
-
 .obj-name { flex: 1; font-size: 14px; font-weight: 600; }
-
-.obj-weight {
-  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
-}
-.obj-weight input {
-  width: 50px; padding: 4px 6px; text-align: center; font-size: 13px;
-  border-radius: 4px;
-}
-.obj-weight span { font-size: 12px; color: var(--text-3); }
-
-.obj-detail {
-  font-size: 13px; color: var(--text-2); line-height: 1.6;
-  padding-left: 30px;
-}
-
+.obj-weight { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.obj-weight input { width: 50px; padding: 4px 6px; text-align: center; font-size: 13px; border-radius: 4px; }
+.obj-detail { font-size: 13px; color: var(--text-2); line-height: 1.6; padding-left: 30px; }
 .obj-summary {
   display: flex; justify-content: space-between; align-items: center;
   padding: 12px 0 0; margin-top: 8px; border-top: 1px solid var(--border-light);
@@ -267,11 +251,9 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .obj-total { font-weight: 700; color: var(--accent); }
 .obj-total.err { color: var(--err); }
-
-/* ═══ Question Type Checkboxes ═══ */
+/* ═══ Question Types ═══ */
 .qtg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 @media (max-width: 520px) { .qtg { grid-template-columns: 1fr; } }
-
 .qti {
   display: flex; align-items: flex-start; gap: 10px;
   padding: 12px 14px; border: 1.5px solid var(--border);
@@ -281,7 +263,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .qti:hover { border-color: var(--accent); background: var(--accent-bg); }
 .qti.on { border-color: var(--accent); background: var(--accent-l); }
 .qti input { display: none; }
-
 .qti-c {
   width: 20px; height: 20px; border: 2px solid var(--border);
   border-radius: 4px; display: flex; align-items: center; justify-content: center;
@@ -290,17 +271,14 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .qti.on .qti-c { background: var(--accent); border-color: var(--accent); }
 .qti-c svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
 .qti.on .qti-c svg { opacity: 1; }
-
 .qti-info { flex: 1; }
 .qti-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
 .qti-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
-
 .qti-badge {
   display: inline-block; background: var(--gold-l); color: var(--gold);
   font-size: 10px; font-weight: 700; padding: 1px 6px;
   border-radius: 3px; margin-left: 4px; vertical-align: middle;
 }
-
 /* ═══ Score Table ═══ */
 .stbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
 .stbl th, .stbl td { padding: 10px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-light); }
@@ -313,10 +291,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .sc-ord button:hover { background: var(--accent-l); border-color: var(--accent); color: var(--accent); }
 .sc-ord button:disabled { opacity: 0.2; cursor: default; }
 .sc-ord button:disabled:hover { background: none; border-color: var(--border); color: var(--text-2); }
-
 /* ═══ Buttons ═══ */
 .brow { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 20px; }
-
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 12px 24px;
@@ -332,12 +308,9 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .btn-p:hover { box-shadow: var(--sh-2); transform: translateY(-1px); }
 .btn-p:active { transform: translateY(0); }
 .btn-p:disabled { background: var(--border); cursor: not-allowed; box-shadow: none; transform: none; }
-
 .btn-s { background: var(--surface); color: var(--text-2); border: 1.5px solid var(--border); }
 .btn-s:hover { background: var(--surface-hover); }
-
 .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
 /* ═══ Output ═══ */
 .out-area {
   background: var(--surface); border: 1px solid var(--border);
@@ -345,7 +318,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   animation: slideUp 0.35s ease;
 }
 @media (min-width: 640px) { .out-area { padding: 32px; } }
-
 .out-txt {
   font-size: 14px; line-height: 1.85; white-space: pre-wrap;
   font-family: 'Noto Sans TC', sans-serif;
@@ -353,12 +325,10 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .out-txt::-webkit-scrollbar { width: 5px; }
 .out-txt::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
 .out-acts {
   display: flex; gap: 8px; margin-top: 16px;
   padding-top: 16px; border-top: 1px solid var(--border-light); flex-wrap: wrap;
 }
-
 /* ═══ Loading ═══ */
 .ld-wrap { text-align: center; padding: 48px 20px; }
 .ld-spin {
@@ -369,7 +339,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; }
 .ld-sub { font-size: 14px; color: var(--text-3); margin-top: 8px; }
-
 /* ═══ Status Msg ═══ */
 .smsg {
   padding: 10px 14px; border-radius: var(--r-sm);
@@ -380,7 +349,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .smsg.err { background: var(--err-bg); color: var(--err); }
 .smsg.warn { background: var(--warn-bg); color: var(--warn); }
 .smsg.info { background: var(--accent-bg); color: var(--accent); }
-
 /* ═══ Modal ═══ */
 .modal-bg {
   position: fixed; inset: 0; background: rgba(0,0,0,0.45);
@@ -388,7 +356,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   z-index: 100; padding: 20px; animation: fadeIn 0.2s ease;
 }
 @keyframes fadeIn { from { opacity: 0; } }
-
 .modal {
   background: var(--surface); border-radius: var(--r-lg);
   padding: 28px; max-width: 420px; width: 100%;
@@ -399,7 +366,6 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .modal p { font-size: 13px; color: var(--text-2); margin-bottom: 14px; line-height: 1.6; }
 .modal a { color: var(--accent); text-decoration: underline; }
 .modal input { margin-bottom: 14px; }
-
 /* ═══ Footer ═══ */
 .ftr {
   text-align: center; padding: 28px 0 8px;
@@ -407,14 +373,46 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .ftr-line { margin-bottom: 4px; }
 .ftr-copy { font-weight: 500; }
-
 /* ═══ Utility ═══ */
 .hide { display: none !important; }
 .sep { height: 1px; background: var(--border-light); margin: 18px 0; }
+/* ═══ Chinese Step2 向度設定 ═══ */
+.ch-score-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0; border-bottom: 1px solid var(--border-light);
+}
+.ch-score-item:last-child { border-bottom: none; }
+.ch-score-label { flex: 1; font-size: 13px; }
+.ch-score-ex { font-size: 11px; color: var(--text-3); margin-left: 4px; }
+.ch-score-input {
+  width: 56px; padding: 4px 6px; text-align: center;
+  font-size: 13px; border: 1.5px solid var(--border);
+  border-radius: 4px; font-family: inherit;
+}
+.ch-score-input:focus { border-color: var(--border-focus); outline: none; }
+.ch-zone-section {
+  border: 1.5px solid var(--border); border-radius: var(--r-md);
+  margin-bottom: 12px; overflow: hidden;
+}
+.ch-zone-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--surface-alt);
+  border-bottom: 1px solid var(--border-light);
+}
+.ch-zone-body { padding: 8px 16px; }
+.ch-expand-btn {
+  background: none; border: none; color: var(--accent);
+  font-size: 12px; cursor: pointer; padding: 6px 0;
+  font-family: inherit; display: flex; align-items: center; gap: 4px;
+}
+.rec-badge {
+  display: inline-block; background: var(--gold-l); color: var(--gold);
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 3px; margin-left: 6px;
+}
 </style>
 </head>
 <body>
-
 <div class="wrap">
 
   <header class="hdr">
@@ -438,12 +436,12 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <div class="stp" data-s="5"><span class="stp-n">5</span><span class="stp-t">出題</span></div>
   </div>
 
+  <!-- ═══ STEP 1 ═══ -->
   <div id="s1" class="pnl">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4m0 14v4m-8.66-2.34 2.83-2.83m11.66-5.66 2.83-2.83M1 12h4m14 0h4M4.34 4.34l2.83 2.83m11.66 5.66 2.83 2.83"/></svg>
       考卷設定與教材上傳
     </div>
-
     <div class="fg">
       <div>
         <label class="fl">科目 <span class="req">*</span></label>
@@ -484,40 +482,81 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       上傳教材 <span class="req" style="font-size:13px">*</span>
     </div>
-    <p class="pnl-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。可混合使用檔案上傳與文字貼上。<br>💡 可從電子書平台下載教材或教案的 .docx 檔案，或直接複製課文貼上。</p>
+    <p class="pnl-desc" id="mat-desc">請提供出題範圍的教材。AI 會嚴格根據教材內容命題。</p>
+
     <div id="matTip" class="smsg info hide" style="margin-bottom:12px;">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       <span id="matTipTx"></span>
     </div>
 
-    <div class="mtabs">
-      <button class="mtab on" onclick="swTab('up')">上傳檔案</button>
-      <button class="mtab" onclick="swTab('tx')">貼上文字</button>
-    </div>
-
-    <div id="tab-up" class="mtc on">
-      <div class="upz" id="upzone">
-        <input type="file" id="fileIn" multiple accept=".docx,.pdf">
-        <div class="upz-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        </div>
-        <div class="upz-main">點擊或拖曳 .docx / .pdf 檔案到這裡</div>
-        <div class="upz-hint">支援 .docx 與 .pdf 格式 ・ 可上傳多個檔案<br>⚠️ 掃描式 PDF（純圖片）無法擷取文字，請改用文字貼上</div>
+    <!-- 一般科目上傳區 -->
+    <div id="normalMatArea">
+      <div class="mtabs">
+        <button class="mtab on" onclick="swTab('up')">上傳檔案</button>
+        <button class="mtab" onclick="swTab('tx')">貼上文字</button>
       </div>
-      <div class="flist" id="flist"></div>
+      <div id="tab-up" class="mtc on">
+        <div class="upz" id="upzone">
+          <input type="file" id="fileIn" multiple accept=".docx,.pdf">
+          <div class="upz-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="upz-main">點擊或拖曳 .docx / .pdf 檔案到這裡</div>
+          <div class="upz-hint">支援 .docx 與 .pdf 格式 ・ 可上傳多個檔案<br>⚠️ 掃描式 PDF（純圖片）無法擷取文字，請改用文字貼上</div>
+        </div>
+        <div class="flist" id="flist"></div>
+      </div>
+      <div id="tab-tx" class="mtc">
+        <textarea id="matTxt" placeholder="直接貼上課文、講義、筆記等文字內容..."></textarea>
+      </div>
     </div>
 
-    <div id="tab-tx" class="mtc">
-      <textarea id="matTxt" placeholder="直接貼上課文、講義、筆記等文字內容..."></textarea>
+    <!-- 國語科素材分區上傳 -->
+    <div id="chineseMatArea" class="hide">
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:12px;">請依向度分區貼上素材。系統會根據您提供的素材推薦命題向度。</p>
+      <div class="ch-zones">
+        <div class="ch-zone">
+          <div class="ch-zone-hd">
+            <span class="ch-zone-badge z1">課文</span>
+            01 課文 Word 檔
+          </div>
+          <div class="ch-zone-hint">貼上本次出題範圍的課文內容</div>
+          <textarea id="ch-text" placeholder="貼上課文..."></textarea>
+        </div>
+        <div class="ch-zone">
+          <div class="ch-zone-hd">
+            <span class="ch-zone-badge z2">字詞短語</span>
+            05 形音 ／ 06 字義 ／ 07 成語
+          </div>
+          <div class="ch-zone-hint">貼上易錯字、多音字、字義分析、成語等內容</div>
+          <textarea id="ch-word" placeholder="貼上形音、字義、成語..."></textarea>
+        </div>
+        <div class="ch-zone">
+          <div class="ch-zone-hd">
+            <span class="ch-zone-badge z3">句式語法</span>
+            08 句型 ／ 10 修辭 ／ 11 修辭總表
+          </div>
+          <div class="ch-zone-hint">貼上句型練習、修辭手法等內容</div>
+          <textarea id="ch-sent" placeholder="貼上句型、修辭..."></textarea>
+        </div>
+        <div class="ch-zone">
+          <div class="ch-zone-hd">
+            <span class="ch-zone-badge z4">段篇讀寫</span>
+            12 大意 ／ 13 結構表 ／ 15 閱讀理解
+          </div>
+          <div class="ch-zone-hint">貼上課文大意、結構表、閱讀理解提問等內容</div>
+          <textarea id="ch-para" placeholder="貼上大意、結構、閱讀理解..."></textarea>
+        </div>
+      </div>
     </div>
 
-    <div style="margin-top:18px;">
+    <!-- 學習目標（非國語科用） -->
+    <div id="objInputArea" style="margin-top:18px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a6c3e" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         <strong style="color:#5a6c3e;">學習目標（選填）</strong>
         <span style="font-size:12px;color:#888;">貼上後 AI 將直接採用，不自行歸納</span>
       </div>
-
       <div style="margin-bottom: 10px; padding: 10px 14px; background-color: var(--accent-bg); border-radius: 8px; border-left: 4px solid var(--accent);">
         <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
@@ -538,25 +577,24 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <div class="brow">
       <span></span>
       <button class="btn btn-p" onclick="toStep2()">
-        下一步：分析學習目標
+        下一步
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
       </button>
     </div>
   </div>
 
+  <!-- ═══ STEP 2 - 一般科目 ═══ -->
   <div id="s2" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       學習目標分析
     </div>
     <p class="pnl-desc">系統已成功擷取單元與目標，請確認目標內容與配分比重（可自由勾選或修改%數）。</p>
-
     <div id="s2-ld" class="ld-wrap">
       <div class="ld-spin"></div>
       <div class="ld-msg">AI 正在分析教材中的學習目標...</div>
       <div class="ld-sub" id="s2-ldSub">通常需要 10-20 秒</div>
     </div>
-
     <div id="s2-result" class="hide">
       <div id="s2-summary" style="font-size:13px;color:var(--text-2);margin-bottom:14px;font-weight:500;"></div>
       <div id="objList"></div>
@@ -565,12 +603,10 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
         <span class="obj-total" id="objTotal">100%</span>
       </div>
     </div>
-
     <div id="s2-err" class="smsg err hide">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
       <span id="s2-errMsg"></span>
     </div>
-
     <div class="brow">
       <button class="btn btn-s" onclick="goStep(1)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
@@ -583,6 +619,31 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
+  <!-- ═══ STEP 2CH - 國語科專屬 ═══ -->
+  <div id="s2ch" class="pnl hide">
+    <div class="pnl-t">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      國語科評量向度設定
+    </div>
+    <p class="pnl-desc">依據許育健教授評量架構設定本次考試各向度的配分。系統已根據年級帶入建議比例，您可依需求調整。</p>
+    <div id="s2ch-content"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--border-light);margin-top:8px;">
+      <span style="font-size:13px;color:var(--text-3)">所有向度配分合計需等於 100 分</span>
+      <span id="ch-total" style="font-size:16px;font-weight:900;color:var(--err)">0 分</span>
+    </div>
+    <div class="brow">
+      <button class="btn btn-s" onclick="goStep(1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m7-7-7 7 7 7"/></svg>
+        上一步
+      </button>
+      <button class="btn btn-p" id="btn-s2ch-next" onclick="toStep5Ch()" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        開始出題
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3 ═══ -->
   <div id="s3" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -602,6 +663,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
+  <!-- ═══ STEP 4 ═══ -->
   <div id="s4" class="pnl hide">
     <div class="pnl-t">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
@@ -625,6 +687,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     </div>
   </div>
 
+  <!-- ═══ STEP 5 ═══ -->
   <div id="s5" class="hide">
     <div id="s5-ld" class="pnl">
       <div class="ld-wrap">
@@ -678,6 +741,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   </footer>
 </div>
 
+<!-- 密碼 Modal -->
 <div id="keyModal" class="modal-bg hide">
   <div class="modal">
     <h3>輸入系統密碼</h3>
@@ -688,6 +752,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   </div>
 </div>
 
+<!-- .doc 格式提示 Modal -->
 <div id="docModal" class="modal-bg hide">
   <div class="modal">
     <h3>不支援 .doc 格式</h3>
@@ -700,7 +765,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 
 <script>
 // ═══════════════════════════════════════
-// Utility & Security (XSS 防護)
+// 工具函式
 // ═══════════════════════════════════════
 function escHTML(s) {
   return String(s)
@@ -711,20 +776,27 @@ function escHTML(s) {
     .replace(/'/g, '&#39;');
 }
 
+function safeGet(k, def) {
+  try { return localStorage.getItem(k) ?? def; } catch { return def; }
+}
+function safeSet(k, v) {
+  try { localStorage.setItem(k, v); } catch {}
+}
+
 // ═══════════════════════════════════════
-// API Configuration
+// API 設定
 // ═══════════════════════════════════════
 var API_URL = 'https://script.google.com/macros/s/AKfycbyHfCOBAybbPFIW621lMUmAtehq7HBQ9j3MPmxoJ5S5UYOcR9Wd3H1vD40c1yZnTxdA/exec';
 
 // ═══════════════════════════════════════
-// State
+// 全域狀態
 // ═══════════════════════════════════════
 const S = {
   step: 1,
   subject: '', grade: '', scope: '', difficulty: 'balanced',
-  files: [],       
+  files: [],
   matText: '',
-  objectives: [],  
+  objectives: [],
   totalHours: 0,
   selTypes: [],
   selTypeIds: [],
@@ -732,79 +804,239 @@ const S = {
   apiUrl: API_URL,
   apiSecret: '',
   output: '',
-  workshopMode: localStorage.getItem('nhps_workshop') === 'true',
+  workshopMode: safeGet('nhps_workshop', 'false') === 'true',
+  // 國語科專屬
+  chMat: { text: '', word: '', sent: '', para: '' },
+  chScores: {},
 };
 
 // ═══════════════════════════════════════
-// Difficulty Config
+// 難度設定
 // ═══════════════════════════════════════
 const DIFF = {
-  easy:     { label: '基礎為主', basic: 70, mid: 20, adv: 10 },
-  balanced: { label: '均衡混合', basic: 40, mid: 40, adv: 20 },
-  hard:     { label: '偏難挑戰', basic: 20, mid: 40, adv: 40 },
+  easy:     { label: '基礎為主',   basic: 70, mid: 20, adv: 10 },
+  balanced: { label: '均衡混合',   basic: 40, mid: 40, adv: 20 },
+  hard:     { label: '偏難挑戰',   basic: 20, mid: 40, adv: 40 },
 };
 
 // ═══════════════════════════════════════
-// Question Types
+// 一般科目題型
 // ═══════════════════════════════════════
 const BASE_QT = [
-  { id:'MC', name:'選擇題（基本知能）', desc:'測驗字詞義、標點、修辭、課文記憶等基礎概念', dc:10, de:2 },
-  { id:'MC_PRO', name:'選擇題（情境素養）', desc:'✨【啟動 Pro 引擎】AI 創作全新生活情境或短文出題', dc:3, de:2 },
-  { id:'TF', name:'是非題', desc:'○/✕ 判斷對錯', dc:5, de:2 },
-  { id:'FILL', name:'填充題', desc:'在空格中填入正確答案', dc:5, de:2 },
-  { id:'SA', name:'簡答題', desc:'簡短文字作答', dc:2, de:5 },
-  { id:'RG', name:'題組（閱讀素養題）', desc:'✨【啟動 Pro 引擎】一段情境＋2-3道子題', dc:1, de:10 },
+  { id:'MC',     name:'選擇題（基本知能）',   desc:'測驗字詞義、標點、修辭、課文記憶等基礎概念', dc:10, de:2 },
+  { id:'MC_PRO', name:'選擇題（情境素養）',   desc:'✨【啟動 Pro 引擎】AI 創作全新生活情境或短文出題', dc:3, de:2 },
+  { id:'TF',     name:'是非題',               desc:'○/✕ 判斷對錯', dc:5, de:2 },
+  { id:'FILL',   name:'填充題',               desc:'在空格中填入正確答案', dc:5, de:2 },
+  { id:'SA',     name:'簡答題',               desc:'簡短文字作答', dc:2, de:5 },
+  { id:'RG',     name:'題組（閱讀素養題）',   desc:'✨【啟動 Pro 引擎】一段情境＋2-3道子題', dc:1, de:10 },
 ];
 
 const SUBJ_QT = {
-  '國語': [
-    { id:'PHONICS', name:'寫國字或注音', desc:'看注音寫國字或看國字寫注音', dc:10, de:1 },
-    { id:'CORRECT', name:'改錯字題', desc:'找出句中錯字並改正', dc:5, de:1 },
-    { id:'PHRASE', name:'照樣寫短語', desc:'仿照範例完成短語練習', dc:2, de:4 },
-    { id:'SENTENCE', name:'造句題', desc:'用指定詞語或關聯詞造句', dc:2, de:3 },
-    { id:'VOCAB', name:'選詞填空/字詞替換', desc:'測驗詞意理解，選填正確語詞', dc:3, de:2 },
-    { id:'RADICAL', name:'部首造詞題', desc:'寫出部首並造詞', dc:3, de:2 },
-  ],
   '數學': [
-    { id:'CALC', name:'計算題/算算看', desc:'純數字直式運算', dc:5, de:4 },
-    { id:'WORD', name:'應用題/做法與答案', desc:'生活情境列式求解', dc:3, de:5 },
-    { id:'COMPARE', name:'比比看/連連看', desc:'大小比較或圖形配對', dc:3, de:2 },
-    { id:'PATTERN', name:'找規律題', desc:'觀察數列或圖形找規律', dc:2, de:4 },
+    { id:'CALC',    name:'計算題/算算看',     desc:'純數字直式運算', dc:5, de:4 },
+    { id:'WORD',    name:'應用題/做法與答案', desc:'生活情境列式求解', dc:3, de:5 },
+    { id:'COMPARE', name:'比比看/連連看',     desc:'大小比較或圖形配對', dc:3, de:2 },
+    { id:'PATTERN', name:'找規律題',           desc:'觀察數列或圖形找規律', dc:2, de:4 },
   ],
   '自然': [
-    { id:'EXP', name:'實驗與觀察題組（素養題）', desc:'✨【啟動 Pro 引擎】判斷實驗步驟或觀察結果', dc:2, de:5 },
-    { id:'CHART', name:'圖表判讀題', desc:'看實驗數據或構造圖回答', dc:5, de:2 },
-    { id:'MATCH', name:'配合連線題', desc:'特徵配對（如昆蟲與棲地）', dc:3, de:2 },
-    { id:'CLASS', name:'分類勾選題', desc:'勾選符合的科學項目', dc:3, de:2 },
-    { id:'VAR', name:'變因控制題', desc:'辨別操縱、控制、應變變因', dc:2, de:5 },
+    { id:'EXP',   name:'實驗與觀察題組（素養題）', desc:'✨【啟動 Pro 引擎】判斷實驗步驟或觀察結果', dc:2, de:5 },
+    { id:'CHART', name:'圖表判讀題',               desc:'看實驗數據或構造圖回答', dc:5, de:2 },
+    { id:'MATCH', name:'配合連線題',               desc:'特徵配對（如昆蟲與棲地）', dc:3, de:2 },
+    { id:'CLASS', name:'分類勾選題',               desc:'勾選符合的科學項目', dc:3, de:2 },
+    { id:'VAR',   name:'變因控制題',               desc:'辨別操縱、控制、應變變因', dc:2, de:5 },
   ],
   '社會': [
-    { id:'MAP', name:'圖表與地圖判讀題', desc:'看地圖、氣候圖、統計表作答', dc:5, de:2 },
-    { id:'MATCH', name:'配合連線題', desc:'歷史人物、地理特產配對', dc:5, de:2 },
+    { id:'MAP',      name:'圖表與地圖判讀題',   desc:'看地圖、氣候圖、統計表作答', dc:5, de:2 },
+    { id:'MATCH',    name:'配合連線題',           desc:'歷史人物、地理特產配對', dc:5, de:2 },
     { id:'SCENARIO', name:'情境簡答題（素養題）', desc:'✨【啟動 Pro 引擎】生活情境中的公民素養判斷', dc:2, de:5 },
-    { id:'CHECK', name:'勾選題/勾勾看', desc:'複選符合的概念項目', dc:3, de:2 },
-    { id:'TIMELINE', name:'時間排序題', desc:'按時序排列歷史或公民事件', dc:2, de:4 },
-    { id:'COMPARE', name:'資料比較題', desc:'比較史料或圖表找異同', dc:2, de:5 },
+    { id:'CHECK',    name:'勾選題/勾勾看',       desc:'複選符合的概念項目', dc:3, de:2 },
+    { id:'TIMELINE', name:'時間排序題',           desc:'按時序排列歷史或公民事件', dc:2, de:4 },
+    { id:'COMPARE',  name:'資料比較題',           desc:'比較史料或圖表找異同', dc:2, de:5 },
   ],
   '英語': [
-    { id:'LISTEN', name:'聽力測驗腳本', desc:'產生聽力文字腳本，由老師錄音施測', dc:5, de:3 },
-    { id:'CLOZE', name:'克漏字填空', desc:'Fill in the blanks', dc:5, de:2 },
-    { id:'UNSCR', name:'句子重組', desc:'打散單字重新排列成正確句子', dc:3, de:4 },
-    { id:'READ', name:'閱讀測驗（素養題）', desc:'✨【啟動 Pro 引擎】Reading Comprehension', dc:3, de:4 },
-    { id:'IMGMATCH', name:'圖文配對', desc:'單字與圖片連線 Look and Match', dc:5, de:2 },
-    { id:'READMATCH', name:'閱讀配對', desc:'問句與答句配對 Read and Match', dc:3, de:2 },
-    { id:'DIALOG', name:'對話完成題（素養題）', desc:'✨【啟動 Pro 引擎】依情境補完對話空格', dc:3, de:3 },
+    { id:'LISTEN',    name:'聽力測驗腳本',       desc:'產生聽力文字腳本，由老師錄音施測', dc:5, de:3 },
+    { id:'CLOZE',     name:'克漏字填空',           desc:'Fill in the blanks', dc:5, de:2 },
+    { id:'UNSCR',     name:'句子重組',             desc:'打散單字重新排列成正確句子', dc:3, de:4 },
+    { id:'READ',      name:'閱讀測驗（素養題）',   desc:'✨【啟動 Pro 引擎】Reading Comprehension', dc:3, de:4 },
+    { id:'IMGMATCH',  name:'圖文配對',             desc:'單字與圖片連線 Look and Match', dc:5, de:2 },
+    { id:'READMATCH', name:'閱讀配對',             desc:'問句與答句配對 Read and Match', dc:3, de:2 },
+    { id:'DIALOG',    name:'對話完成題（素養題）', desc:'✨【啟動 Pro 引擎】依情境補完對話空格', dc:3, de:3 },
   ],
 };
 
 // ═══════════════════════════════════════
-// File Upload & docx Parsing
+// 國語科：許育健教授評量向度資料
+// ═══════════════════════════════════════
+const CH_ZONES = [
+  {
+    id: 'word', label: '字詞短語', badgeClass: 'z2',
+    grades: { low: 50, mid: 30, high: 20 },
+    items: [
+      { key: '正確字音', ex: '指認/習寫',           mat: ['word'] },
+      { key: '近字音',   ex: '語境辨析',             mat: ['word'] },
+      { key: '多字音',   ex: '語境辨析',             mat: ['word'] },
+      { key: '變字音',   ex: '語境辨析',             mat: ['word'] },
+      { key: '確認字形', ex: '指認/習寫',             mat: ['word'] },
+      { key: '筆畫筆順', ex: '筆畫名稱/習寫',         mat: ['word'] },
+      { key: '分辨部首', ex: '部首意義/常用部首',     mat: ['word'] },
+      { key: '部件組合', ex: '常見部件/結構原則',     mat: ['word'] },
+      { key: '造字原則', ex: '六書',                   mat: ['word'] },
+      { key: '字詞釋義', ex: '字詞義解釋',             mat: ['word'] },
+      { key: '近義字詞', ex: '辨識/比較應用',         mat: ['word'] },
+      { key: '反義字詞', ex: '區別/比較應用',         mat: ['word'] },
+      { key: '類詞應用', ex: '量詞/疊詞/狀聲詞',     mat: ['word'] },
+      { key: '四字詞語', ex: '解釋/應用',             mat: ['word'] },
+      { key: '結構詞語', ex: '聯合/偏正/動實結構',   mat: ['word'] },
+    ]
+  },
+  {
+    id: 'sent', label: '句式語法', badgeClass: 'z3',
+    grades: { low: 30, mid: 50, high: 30 },
+    items: [
+      { key: '句意理解', ex: '解釋句義/指認句義',     mat: ['sent'] },
+      { key: '文句組成', ex: '完成句子/造句',         mat: ['sent'] },
+      { key: '句型辨識', ex: '照樣造句/句型練習',     mat: ['sent'] },
+      { key: '句式變化', ex: '換句話說/合併句子',     mat: ['sent'] },
+      { key: '標點符號', ex: '常用符號理解及應用',   mat: ['sent'] },
+      { key: '句群關係', ex: '對話練習/句群判斷',     mat: ['sent'] },
+      { key: '常用修辭', ex: '擬人/設問/誇飾/排比', mat: ['sent'] },
+    ]
+  },
+  {
+    id: 'para', label: '段篇讀寫', badgeClass: 'z4',
+    grades: { low: 20, mid: 20, high: 50 },
+    items: [
+      { key: '提取訊息', ex: '特定詞句/事件細節',   mat: ['para', 'text'] },
+      { key: '推論訊息', ex: '事件因果/角色關係',   mat: ['para', 'text'] },
+      { key: '整合詮釋', ex: '全文主題/跨段比較',   mat: ['para', 'text'] },
+      { key: '比較評估', ex: '文章評析/作者意圖',   mat: ['para', 'text'] },
+      { key: '摘要整合', ex: '段落大意/文章結構',   mat: ['para'] },
+      { key: '推估主旨', ex: '寫作目的/隱含道理',   mat: ['para'] },
+      { key: '文體應用', ex: '便條/日記/書信',       mat: ['para'] },
+      { key: '句子變化', ex: '擴寫/縮寫/改寫',       mat: ['para', 'sent'] },
+      { key: '限制習寫', ex: '限內容/限形式',         mat: ['para'] },
+    ]
+  }
+];
+
+function getGradeLevel(grade) {
+  if (['一年級','二年級'].includes(grade)) return 'low';
+  if (['三年級','四年級'].includes(grade)) return 'mid';
+  return 'high';
+}
+
+// ═══════════════════════════════════════
+// 國語科 Step 2 渲染
+// ═══════════════════════════════════════
+function renderChZones() {
+  const level = getGradeLevel(S.grade);
+  const levelLabel = { low: '低年級（建議）', mid: '中年級（建議）', high: '高年級（建議）' }[level];
+
+  // 判斷哪些素材區有內容
+  const filledMat = [];
+  if (S.chMat.text) filledMat.push('text');
+  if (S.chMat.word) filledMat.push('word');
+  if (S.chMat.sent) filledMat.push('sent');
+  if (S.chMat.para) filledMat.push('para');
+
+  S.chScores = {};
+  const el = document.getElementById('s2ch-content');
+
+  el.innerHTML = CH_ZONES.map(zone => {
+    const suggested = zone.grades[level];
+    // 推薦項目：有對應素材的
+    const recItems = zone.items.filter(it => it.mat.some(m => filledMat.includes(m)));
+    // 其餘項目
+    const otherItems = zone.items.filter(it => !it.mat.some(m => filledMat.includes(m)));
+
+    return `
+    <div class="ch-zone-section">
+      <div class="ch-zone-header">
+        <span class="ch-zone-badge ${zone.badgeClass}">${zone.label}</span>
+        <span style="font-size:13px;font-weight:700;flex:1;">${zone.label}向度</span>
+        <span style="font-size:12px;color:var(--text-3);">${levelLabel} ${suggested} 分</span>
+      </div>
+      <div class="ch-zone-body">
+        ${recItems.length > 0
+          ? recItems.map(it => renderChScoreItem(it, true)).join('')
+          : `<div style="font-size:12px;color:var(--text-3);padding:8px 0;">（未提供本區素材。如需出題請點下方「顯示全部」手動勾選）</div>`
+        }
+        ${otherItems.length > 0 ? `
+        <button class="ch-expand-btn" onclick="toggleChOther('${zone.id}', this)">
+          ▶ 顯示其他 ${otherItems.length} 個向度
+        </button>
+        <div id="ch-other-${zone.id}" class="hide">
+          ${otherItems.map(it => renderChScoreItem(it, false)).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  updChTotal();
+}
+
+function renderChScoreItem(it, isRec) {
+  return `
+  <div class="ch-score-item">
+    <span class="ch-score-label">
+      ${escHTML(it.key)}
+      ${isRec ? '<span class="rec-badge">推薦</span>' : ''}
+      <span class="ch-score-ex">${escHTML(it.ex)}</span>
+    </span>
+    <input type="number" class="ch-score-input" value="0" min="0" max="100"
+      onchange="updChScore('${escHTML(it.key)}', this.value)"
+      placeholder="0">
+    <span style="font-size:12px;color:var(--text-3);width:16px;">分</span>
+  </div>`;
+}
+
+function toggleChOther(zoneId, btn) {
+  const el = document.getElementById('ch-other-' + zoneId);
+  const zone = CH_ZONES.find(z => z.id === zoneId);
+  const otherCount = zone.items.filter(it => {
+    const filledMat = [];
+    if (S.chMat.text) filledMat.push('text');
+    if (S.chMat.word) filledMat.push('word');
+    if (S.chMat.sent) filledMat.push('sent');
+    if (S.chMat.para) filledMat.push('para');
+    return !it.mat.some(m => filledMat.includes(m));
+  }).length;
+
+  if (el.classList.contains('hide')) {
+    el.classList.remove('hide');
+    btn.textContent = '▼ 收合';
+  } else {
+    el.classList.add('hide');
+    btn.textContent = `▶ 顯示其他 ${otherCount} 個向度`;
+  }
+}
+
+function updChScore(key, val) {
+  const v = parseInt(val) || 0;
+  if (v > 0) S.chScores[key] = v;
+  else delete S.chScores[key];
+  updChTotal();
+}
+
+function updChTotal() {
+  const total = Object.values(S.chScores).reduce((a, v) => a + v, 0);
+  const el = document.getElementById('ch-total');
+  if (el) {
+    el.textContent = total + ' 分';
+    el.style.color = total === 100 ? 'var(--accent)' : 'var(--err)';
+  }
+  const btn = document.getElementById('btn-s2ch-next');
+  if (btn) btn.disabled = total !== 100;
+}
+
+// ═══════════════════════════════════════
+// 檔案上傳
 // ═══════════════════════════════════════
 const upzone = document.getElementById('upzone');
 const fileIn = document.getElementById('fileIn');
 
 upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag'); });
-upzone.addEventListener('dragleave', () => { upzone.classList.remove('drag'); });
+upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'));
 upzone.addEventListener('drop', e => { e.preventDefault(); upzone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 fileIn.addEventListener('change', e => handleFiles(e.target.files));
 
@@ -813,36 +1045,28 @@ async function handleFiles(files) {
     const name = f.name.toLowerCase();
     const isDocx = name.endsWith('.docx');
     const isPdf = name.endsWith('.pdf');
-    const isDoc = name.endsWith('.doc');
-
     if (!isDocx && !isPdf) {
-      if (isDoc) {
-        document.getElementById('docModal').classList.remove('hide');
-      } else {
-        alert('支援 .docx 與 .pdf 格式：' + f.name);
-      }
+      if (name.endsWith('.doc')) document.getElementById('docModal').classList.remove('hide');
+      else alert('支援 .docx 與 .pdf 格式：' + f.name);
       continue;
     }
     if (S.files.length >= 20) { alert('最多上傳 20 個檔案'); break; }
-
     try {
       const ab = await f.arrayBuffer();
       let text = '';
-
       if (isDocx) {
         const result = await mammoth.extractRawText({ arrayBuffer: ab });
         text = result.value.trim();
-      } else if (isPdf) {
+      } else {
         text = await extractPdfText(ab);
       }
-
       if (text.length < 20) {
         alert(`「${f.name}」內容過少（${text.length} 字），可能是掃描檔或純圖片 PDF。\n請改用文字貼上方式。`);
         continue;
       }
       S.files.push({ name: f.name, size: f.size, text });
     } catch (err) {
-      alert(`「${f.name}」讀取失敗：${err.message}\n請確認檔案格式正確`);
+      alert(`「${f.name}」讀取失敗：${err.message}`);
     }
   }
   fileIn.value = '';
@@ -857,27 +1081,18 @@ async function extractPdfText(arrayBuffer) {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    // 修復：PDF 斷詞加上空格，避免英文/國字黏在一起
-    const pageText = content.items.map(item => item.str).join(' ');
-    fullText += pageText + '\n';
+    fullText += content.items.map(item => item.str).join(' ') + '\n';
   }
   return fullText.trim();
 }
 
-function rmFile(i) { 
-  S.files.splice(i, 1); 
-  renderFiles(); 
-  updMatSt(); 
-  // 修復：刪除檔案後也要重新檢查長度
-  checkMatLength();
-}
+function rmFile(i) { S.files.splice(i, 1); renderFiles(); updMatSt(); checkMatLength(); }
 
 function previewFile(i) {
   const f = S.files[i];
   const preview = f.text.substring(0, 2000) + (f.text.length > 2000 ? '\n\n...（僅顯示前 2000 字）' : '');
   const modal = document.createElement('div');
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;';
-  // 修復：使用 escHTML 避免 XSS
   modal.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:700px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;">
     <div style="padding:16px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
       <strong>📄 ${escHTML(f.name)}（${f.text.length.toLocaleString()} 字）</strong>
@@ -894,11 +1109,9 @@ function renderFiles() {
   if (!S.files.length) { el.innerHTML = ''; return; }
   el.innerHTML = S.files.map((f, i) => {
     const sz = f.size < 1048576 ? (f.size/1024).toFixed(0)+' KB' : (f.size/1048576).toFixed(1)+' MB';
-    // 修復：使用 escHTML 避免檔名注入攻擊
-    const safeName = escHTML(f.name);
     return `<div class="fitem">
       <span class="fitem-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
-      <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" onclick="previewFile(${i})" title="點擊預覽擷取內容">${safeName}</span>
+      <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;" onclick="previewFile(${i})">${escHTML(f.name)}</span>
       <span class="fitem-info">${sz} · ${f.text.length.toLocaleString()} 字</span>
       <button class="fitem-rm" onclick="rmFile(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
@@ -906,7 +1119,7 @@ function renderFiles() {
 }
 
 // ═══════════════════════════════════════
-// Material Tabs & Status
+// 素材 Tab 切換
 // ═══════════════════════════════════════
 function swTab(t) {
   document.querySelectorAll('.mtab').forEach(e => e.classList.remove('on'));
@@ -915,36 +1128,72 @@ function swTab(t) {
   document.getElementById(t === 'up' ? 'tab-up' : 'tab-tx').classList.add('on');
 }
 
-// 修復：貼上文字時也一併檢查長度
-document.getElementById('matTxt').addEventListener('input', () => {
-  updMatSt();
-  checkMatLength();
-});
-
+// ═══════════════════════════════════════
+// 科目切換：國語/一般 介面切換
+// ═══════════════════════════════════════
 const MAT_TIPS = {
-  '國語': '建議上傳：課本課文 + 習作。教案也可以，AI 會自動擷取學習目標。',
-  '數學': '建議上傳：學生版課本 + 習作（含計算題與應用題）。AI 會自動抓取數字範圍與情境模板來命題。',
-  '自然': '建議上傳：教案（含學習目標）或課本。AI 會優先擷取教案中的學習目標。',
-  '社會': '建議上傳：課本 + 習作。地圖或圖表題需搭配文字描述。',
-  '英語': '建議上傳：課本（含單字表、句型）+ 習作。聽力題 AI 會產生文字腳本，由老師錄音施測。',
+  '國語': '請依向度分區貼入素材，系統會自動推薦對應的評量向度。',
+  '數學': '建議上傳：課本 + 習作（含計算題與應用題）。',
+  '自然': '建議上傳：教案（含學習目標）或課本。',
+  '社會': '建議上傳：課本 + 習作。',
+  '英語': '建議上傳：課本（含單字表、句型）+ 習作。',
 };
+
 document.getElementById('subject').addEventListener('change', function() {
+  const isChinese = this.value === '國語';
+  // 提示
   const tip = MAT_TIPS[this.value];
-  const el = document.getElementById('matTip');
-  const tx = document.getElementById('matTipTx');
-  if (tip) { tx.textContent = tip; el.classList.remove('hide'); }
-  else { el.classList.add('hide'); }
+  const tipEl = document.getElementById('matTip');
+  if (tip) { document.getElementById('matTipTx').textContent = tip; tipEl.classList.remove('hide'); }
+  else { tipEl.classList.add('hide'); }
+  // 介面切換
+  document.getElementById('normalMatArea').classList.toggle('hide', isChinese);
+  document.getElementById('chineseMatArea').classList.toggle('hide', !isChinese);
+  document.getElementById('objInputArea').classList.toggle('hide', isChinese);
+  // 下一步按鈕文字
+  document.querySelector('#s1 .btn-p').innerHTML = isChinese
+    ? '下一步：設定評量向度 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>'
+    : '下一步 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>';
+  updMatSt();
 });
 
-function hasMat() { return S.files.length > 0 || document.getElementById('matTxt').value.trim().length > 0; }
+// 國語素材 textarea 即時更新狀態
+['ch-text','ch-word','ch-sent','ch-para'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updMatSt);
+});
+document.getElementById('matTxt').addEventListener('input', () => { updMatSt(); checkMatLength(); });
+
+// ═══════════════════════════════════════
+// 素材狀態顯示
+// ═══════════════════════════════════════
+function hasMat() {
+  if (S.subject === '國語' || document.getElementById('subject').value === '國語') {
+    return ['ch-text','ch-word','ch-sent','ch-para'].some(id => document.getElementById(id).value.trim().length > 0);
+  }
+  return S.files.length > 0 || document.getElementById('matTxt').value.trim().length > 0;
+}
 
 function updMatSt() {
   const el = document.getElementById('matSt');
   const tx = document.getElementById('matStTx');
+  const subj = document.getElementById('subject').value;
+
+  if (subj === '國語') {
+    const filled = ['ch-text','ch-word','ch-sent','ch-para']
+      .filter(id => document.getElementById(id).value.trim().length > 0);
+    if (filled.length > 0) {
+      el.className = 'mat-st ok';
+      tx.textContent = `已填入 ${filled.length} 個向度的素材`;
+    } else {
+      el.className = 'mat-st no';
+      tx.textContent = '尚未提供素材';
+    }
+    return;
+  }
+
   const txt = document.getElementById('matTxt').value.trim();
   const fc = S.files.length;
   const ftotal = S.files.reduce((a, f) => a + f.text.length, 0);
-
   if (fc > 0 && txt.length > 0) {
     el.className = 'mat-st ok';
     tx.textContent = `已上傳 ${fc} 個檔案（${ftotal.toLocaleString()} 字）+ 貼上文字（${txt.length.toLocaleString()} 字）`;
@@ -963,37 +1212,42 @@ function updMatSt() {
 var MAX_MAT_CHARS = 50000;
 function checkMatLength() {
   const total = S.files.reduce((a, f) => a + f.text.length, 0)
-    + (document.getElementById('matTxt').value.trim().length);
+    + document.getElementById('matTxt').value.trim().length;
   if (total > MAX_MAT_CHARS) {
-    alert(`教材文字共 ${total.toLocaleString()} 字，超過建議上限（${(MAX_MAT_CHARS/10000).toFixed(0)} 萬字）。\n過多文字會增加費用且可能影響品質。\n建議只上傳出題範圍的教材。`);
+    alert(`教材文字共 ${total.toLocaleString()} 字，超過建議上限。\n建議只上傳出題範圍的教材。`);
   }
 }
 
 // ═══════════════════════════════════════
-// Navigation
+// 導航
 // ═══════════════════════════════════════
 function goStep(n) {
-  for (let i = 1; i <= 5; i++) document.getElementById('s'+i).classList.add('hide');
-  document.getElementById('s'+n).classList.remove('hide');
+  // 隱藏所有步驟
+  [1,2,3,4,5].forEach(i => document.getElementById('s'+i).classList.add('hide'));
+  document.getElementById('s2ch').classList.add('hide');
+  // 顯示目標步驟
+  const el = document.getElementById('s' + n);
+  if (el) el.classList.remove('hide');
   S.step = n;
   updSteps();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updSteps() {
+  const stepNum = S.step === '2ch' ? 2 : (typeof S.step === 'number' ? S.step : 1);
   document.querySelectorAll('.stp').forEach(e => {
     const s = parseInt(e.dataset.s);
     e.classList.remove('on','ok');
-    if (s === S.step) e.classList.add('on');
-    else if (s < S.step) e.classList.add('ok');
+    if (s === stepNum) e.classList.add('on');
+    else if (s < stepNum) e.classList.add('ok');
   });
   document.querySelectorAll('.stp-c').forEach((e, i) => {
-    e.classList.toggle('ok', i + 1 < S.step);
+    e.classList.toggle('ok', i + 1 < stepNum);
   });
 }
 
 // ═══════════════════════════════════════
-// Step 1 → 2: Analyze Objectives
+// Step 1 → 2
 // ═══════════════════════════════════════
 async function toStep2() {
   const subj = document.getElementById('subject').value;
@@ -1009,29 +1263,38 @@ async function toStep2() {
   S.matText = document.getElementById('matTxt').value.trim();
   S.objInput = document.getElementById('objInput').value.trim();
 
+  // 國語科走獨立流程
+  if (subj === '國語') {
+    S.chMat = {
+      text: document.getElementById('ch-text').value.trim(),
+      word: document.getElementById('ch-word').value.trim(),
+      sent: document.getElementById('ch-sent').value.trim(),
+      para: document.getElementById('ch-para').value.trim(),
+    };
+    S.chScores = {};
+    S.step = '2ch';
+    // 先隱藏所有
+    [1,2,3,4,5].forEach(i => document.getElementById('s'+i).classList.add('hide'));
+    document.getElementById('s2ch').classList.remove('hide');
+    updSteps();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderChZones();
+    return;
+  }
+
+  // 一般科目
   goStep(2);
-
-  if (S.objInput) {
-    doManualObjectives();
-    return;
-  }
-
-  if (!S.apiSecret) {
-    document.getElementById('keyModal').classList.remove('hide');
-    return;
-  }
-
+  if (S.objInput) { doManualObjectives(); return; }
+  if (!S.apiSecret) { document.getElementById('keyModal').classList.remove('hide'); return; }
   doAnalyze();
 }
 
+// ═══════════════════════════════════════
+// 手動學習目標解析
+// ═══════════════════════════════════════
 function doManualObjectives() {
   const text = S.objInput.trim();
-  if (!text) {
-    alert('學習目標內容為空，請重新輸入');
-    goStep(1);
-    return;
-  }
-
+  if (!text) { alert('學習目標內容為空'); goStep(1); return; }
   S.objectives = [];
   S.totalHours = 0;
 
@@ -1039,57 +1302,30 @@ function doManualObjectives() {
     const blocks = text.split(/【單元名稱】/).filter(b => b.trim());
     blocks.forEach(block => {
       const lines = block.split('\n').map(l => l.trim()).filter(l => l);
-      if(lines.length === 0) return;
-      
-      const unitName = lines[0].replace(/^：|:/, '').trim(); 
-      let hours = 0;
-      let objsStartIdx = 1;
-
+      if (!lines.length) return;
+      const unitName = lines[0].replace(/^：|:/, '').trim();
+      let hours = 0, objsStartIdx = 1;
       if (lines[1] && lines[1].includes('【節數】')) {
         hours = parseInt(lines[1].replace(/[^\d]/g, '')) || 0;
-        S.totalHours += hours;
-        objsStartIdx = 2;
+        S.totalHours += hours; objsStartIdx = 2;
       }
-
       for (let i = objsStartIdx; i < lines.length; i++) {
-        let objName = lines[i].replace(/^[-*•\d.、\s]+/, '').replace(/。$/, '').trim(); 
+        let objName = lines[i].replace(/^[-*•\d.、\s]+/, '').replace(/。$/, '').trim();
         if (objName && !objName.includes('節數】')) {
-           S.objectives.push({
-             name: objName,
-             source: unitName,
-             detail: '',
-             hours: hours, 
-             weight: 0,
-             checked: true,
-           });
+          S.objectives.push({ name: objName, source: unitName, detail: '', hours, weight: 0, checked: true });
         }
       }
     });
   } else {
-    const lines = text.split('\n').map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()).filter(l => l.length > 0);
-    lines.forEach((name) => {
-      S.objectives.push({
-        name: name.replace(/。$/, ''),
-        source: '老師輸入',
-        detail: '',
-        hours: 0,
-        weight: 0,
-        checked: true,
-      });
+    text.split('\n').map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()).filter(l => l).forEach(name => {
+      S.objectives.push({ name: name.replace(/。$/, ''), source: '老師輸入', detail: '', hours: 0, weight: 0, checked: true });
     });
   }
 
-  if (S.objectives.length === 0) {
-     alert('無法解析學習目標，請確認格式是否正確');
-     goStep(1);
-     return;
-  }
-
-  const avgWeight = Math.floor(100 / S.objectives.length);
-  const remainder = 100 - avgWeight * S.objectives.length;
-  S.objectives.forEach((o, i) => {
-    o.weight = avgWeight + (i < remainder ? 1 : 0);
-  });
+  if (!S.objectives.length) { alert('無法解析學習目標，請確認格式'); goStep(1); return; }
+  const avg = Math.floor(100 / S.objectives.length);
+  const rem = 100 - avg * S.objectives.length;
+  S.objectives.forEach((o, i) => { o.weight = avg + (i < rem ? 1 : 0); });
 
   document.getElementById('s2-ld').classList.add('hide');
   document.getElementById('s2-err').classList.add('hide');
@@ -1098,12 +1334,14 @@ function doManualObjectives() {
   renderObjectives();
 }
 
+// ═══════════════════════════════════════
+// AI 分析學習目標
+// ═══════════════════════════════════════
 async function doAnalyze() {
   document.getElementById('s2-ld').classList.remove('hide');
   document.getElementById('s2-result').classList.add('hide');
   document.getElementById('s2-err').classList.add('hide');
   document.getElementById('btn-s2next').disabled = true;
-
   try {
     const matContent = getMaterialText();
     const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze', 'flash');
@@ -1117,11 +1355,9 @@ async function doAnalyze() {
     if (err.message === 'NEED_SECRET') return;
     document.getElementById('s2-ld').classList.add('hide');
     document.getElementById('s2-err').classList.remove('hide');
-    let debugInfo = err.message;
-    if (S._lastRaw) {
-      debugInfo += '\n\n【AI 原始回傳（前500字）】\n' + S._lastRaw.substring(0, 500);
-    }
-    document.getElementById('s2-errMsg').textContent = debugInfo;
+    let msg = err.message;
+    if (S._lastRaw) msg += '\n\n【AI 原始回傳（前500字）】\n' + S._lastRaw.substring(0, 500);
+    document.getElementById('s2-errMsg').textContent = msg;
   }
 }
 
@@ -1135,46 +1371,29 @@ function getMaterialText() {
 function buildAnalysisPrompt(material) {
   return `你是一位資深國小課程分析專家。請以繁體中文閱讀以下教材內容，分析其中包含的學習目標。
 
-【教材資訊】
-科目：${S.subject}
-年級：${S.grade}
-範圍：${S.scope}
+【教材資訊】科目：${S.subject} / 年級：${S.grade} / 範圍：${S.scope}
 
 【教材內容】
 ${material}
 
 【重要：教材比對檢查】
 請先判斷教材內容是否與上方的「科目」和「年級」大致相符。
-- 如果教材明顯不符，請直接回傳：
-  {"error":"教材內容與設定不符：[具體說明不符原因]"}
-- 如果大致相符或無法確定，則正常進行分析。
+如果教材明顯不符，請直接回傳：{"error":"教材內容與設定不符：[具體說明]"}
+如果大致相符或無法確定，則正常進行分析。
 
-【學習目標擷取規則（最高優先級！）】
+【學習目標擷取規則】
+1. 逐行掃描全文，尋找「學習目標」字樣附近，通常以「我能」「能夠」「學會」「認識」等開頭的完整句子。
+2. 禁止自行歸納、合併、改寫目標，每條必須是教材中「逐字可查」的原句。
+3. 完全找不到時才自行歸納 3-5 個，並在 detail 標註「AI 歸納」。
 
-＜第一步：逐行掃描，找出教材中的原始學習目標＞
-請仔細掃描全文，尋找以下特徵的文字：
-- 出現在「學 習 目 標」或「學習目標」字樣附近
-- 通常以「我能」「能夠」「學會」「認識」「了解」「理解」等開頭
-- 每條目標通常是一句完整的話，以句號結尾
-
-＜第二步：絕對禁止的行為＞
-- 禁止自行歸納、合併、改寫目標。
-- 每一條都必須是教材中「逐字可查」的原句。
-
-＜第三步：找不到目標時的備案＞
-只有在完全找不到任何「學習目標」相關字樣時，才根據內容自行歸納 3-5 個目標，並在 detail 標註「AI 歸納」。
-
-【輸出格式】
-請輸出 JSON 格式（繁體中文），包含：
-1. total_hours: 預估總授課節數（每節 40 分鐘）
-2. objectives: 學習目標陣列，每個目標包含：
-   - name: 目標名稱（必須是教材原文，去掉多餘空格後的完整句子）
-   - source: 來源標示（例如「L01」或單元名稱）
-   - detail: 依據說明（說明教材中哪些段落對應此目標，50字以內）
-   - hours: 此目標預估授課節數
-   - weight: 建議比重百分比（所有目標的 weight 加總必須等於 100）
-
-請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。`;
+【輸出格式】請嚴格只輸出 JSON，不要加任何前言、後語、markdown：
+{
+  "total_hours": 預估總授課節數,
+  "objectives": [
+    { "name": "目標名稱", "source": "來源", "detail": "依據說明50字內", "hours": 節數, "weight": 比重百分比 }
+  ]
+}
+所有目標的 weight 加總必須等於 100。`;
 }
 
 function parseObjectives(raw) {
@@ -1182,43 +1401,29 @@ function parseObjectives(raw) {
     let clean = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
     const jsonMatch = clean.match(/\{[\s\S]*"objectives"[\s\S]*\}/);
     if (jsonMatch) clean = jsonMatch[0];
-
     let data;
-    try {
-      data = JSON.parse(clean);
-    } catch (_) {
-      const objArrMatch = clean.match(/"objectives"\s*:\s*\[/);
-      if (objArrMatch) {
-        const arrStart = clean.indexOf(objArrMatch[0]);
-        const afterArr = clean.substring(arrStart + objArrMatch[0].length);
+    try { data = JSON.parse(clean); }
+    catch (_) {
+      const m = clean.match(/"objectives"\s*:\s*\[/);
+      if (m) {
+        const after = clean.substring(clean.indexOf(m[0]) + m[0].length);
         const items = [];
         let depth = 0, start = -1;
-        for (let i = 0; i < afterArr.length; i++) {
-          if (afterArr[i] === '{') { if (depth === 0) start = i; depth++; }
-          else if (afterArr[i] === '}') { depth--; if (depth === 0 && start >= 0) { items.push(afterArr.substring(start, i + 1)); start = -1; } }
+        for (let i = 0; i < after.length; i++) {
+          if (after[i] === '{') { if (depth === 0) start = i; depth++; }
+          else if (after[i] === '}') { depth--; if (depth === 0 && start >= 0) { items.push(after.substring(start, i+1)); start = -1; } }
         }
         if (items.length > 0) {
-          const hoursMatch = clean.match(/"total_hours"\s*:\s*(\d+)/);
-          const totalHours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
-          const rebuilt = '{"total_hours":' + totalHours + ',"objectives":[' + items.join(',') + ']}';
-          data = JSON.parse(rebuilt);
-        } else {
-          throw new Error('無法修復截斷的 JSON');
-        }
-      } else {
-        throw new Error('找不到 objectives 陣列');
-      }
+          const hm = clean.match(/"total_hours"\s*:\s*(\d+)/);
+          data = JSON.parse('{"total_hours":' + (hm ? hm[1] : 0) + ',"objectives":[' + items.join(',') + ']}');
+        } else throw new Error('無法修復截斷的 JSON');
+      } else throw new Error('找不到 objectives 陣列');
     }
-
     if (data.error) throw new Error(data.error);
     S.totalHours = data.total_hours || 0;
     return (data.objectives || []).map(o => ({
-      name: o.name,
-      source: o.source || '',
-      detail: o.detail,
-      hours: o.hours,
-      weight: o.weight,
-      checked: true,
+      name: o.name, source: o.source || '', detail: o.detail,
+      hours: o.hours, weight: o.weight, checked: true,
     }));
   } catch (e) {
     if (e.message && e.message.startsWith('教材內容與設定不符')) throw e;
@@ -1229,22 +1434,20 @@ function parseObjectives(raw) {
 function renderObjectives() {
   document.getElementById('s2-summary').textContent =
     `本範圍預估總授課 ${S.totalHours} 節，包含 ${S.objectives.length} 個學習目標：`;
-  const el = document.getElementById('objList');
-  el.innerHTML = S.objectives.map((o, i) => `
+  document.getElementById('objList').innerHTML = S.objectives.map((o, i) => `
     <div class="obj-card${o.checked ? '' : ' unchecked'}" id="obj-${i}">
       <div class="obj-top">
         <div class="obj-chk${o.checked ? ' on' : ''}" onclick="togObj(${i})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <span class="obj-name">${o.name}</span>
+        <span class="obj-name">${escHTML(o.name)}</span>
         <div class="obj-weight">
           <input type="number" value="${o.weight}" min="0" max="100" onchange="updObjW(${i}, this.value)">
           <span>%</span>
         </div>
       </div>
-      <div class="obj-detail">${o.source && o.source !== '老師輸入' ? `<span style="display:inline-block;background:#e0f2fe;color:#1e3a8a;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:6px;">單元：${o.source}</span>` : ''}${o.hours > 0 ? o.hours+' 節 ｜ ' : ''}${o.detail}</div>
-    </div>
-  `).join('');
+      <div class="obj-detail">${o.source && o.source !== '老師輸入' ? `<span style="display:inline-block;background:#e0f2fe;color:#1e3a8a;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:6px;">單元：${escHTML(o.source)}</span>` : ''}${o.hours > 0 ? o.hours+' 節 ｜ ' : ''}${escHTML(o.detail)}</div>
+    </div>`).join('');
   updObjTotal();
 }
 
@@ -1253,16 +1456,10 @@ function togObj(i) {
   const card = document.getElementById('obj-' + i);
   card.classList.toggle('unchecked');
   card.querySelector('.obj-chk').classList.toggle('on');
-  const inp = card.querySelector('.obj-weight input');
-  inp.disabled = !S.objectives[i].checked;
+  card.querySelector('.obj-weight input').disabled = !S.objectives[i].checked;
   updObjTotal();
 }
-
-function updObjW(i, v) {
-  S.objectives[i].weight = parseInt(v) || 0;
-  updObjTotal();
-}
-
+function updObjW(i, v) { S.objectives[i].weight = parseInt(v) || 0; updObjTotal(); }
 function updObjTotal() {
   const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
   const el = document.getElementById('objTotal');
@@ -1272,35 +1469,33 @@ function updObjTotal() {
 }
 
 // ═══════════════════════════════════════
-// Step 2 → 3: Question Types
+// Step 2 → 3（一般科目）
 // ═══════════════════════════════════════
 function toStep3() {
   const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
   if (total !== 100) { alert('學習目標比重合計需等於 100%'); return; }
-
   const recs = SUBJ_QT[S.subject] || [];
   const all = [...BASE_QT, ...recs.map(r => ({ ...r, rec: true }))];
-  const grid = document.getElementById('qtGrid');
-  grid.innerHTML = all.map(t => `
+  document.getElementById('qtGrid').innerHTML = all.map(t => `
     <div class="qti" data-id="${t.id}" onclick="togQt(this)">
       <input type="checkbox" value="${t.id}" style="display:none">
       <span class="qti-c"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
       <span class="qti-info">
-        <span class="qti-name">${t.name}${t.rec ? '<span class="qti-badge">推薦</span>' : ''}</span>
-        <span class="qti-desc">${t.desc}</span>
+        <span class="qti-name">${escHTML(t.name)}${t.rec ? '<span class="qti-badge">推薦</span>' : ''}</span>
+        <span class="qti-desc">${escHTML(t.desc)}</span>
       </span>
-    </div>
-  `).join('');
+    </div>`).join('');
 
   if (S.selTypeIds && S.selTypeIds.length > 0) {
     S.selTypeIds.forEach(id => {
-      const el = grid.querySelector(`[data-id="${id}"]`);
+      const el = document.getElementById('qtGrid').querySelector(`[data-id="${id}"]`);
       if (el) { el.classList.add('on'); el.querySelector('input').checked = true; }
     });
   } else {
-    grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
+    document.querySelectorAll('#qtGrid [data-id="MC"],[data-id="TF"]').forEach(e => {
+      e.classList.add('on'); e.querySelector('input').checked = true;
+    });
   }
-
   document.getElementById('s3-info').textContent = `${S.grade}${S.subject}科「${S.scope}」`;
   goStep(3);
 }
@@ -1308,63 +1503,48 @@ function toStep3() {
 function togQt(el) { el.classList.toggle('on'); el.querySelector('input').checked = el.classList.contains('on'); }
 
 // ═══════════════════════════════════════
-// Step 3 → 4: Score Allocation
+// Step 3 → 4
 // ═══════════════════════════════════════
 function toStep4() {
   const checked = document.querySelectorAll('#qtGrid .qti.on');
   if (!checked.length) { alert('請至少選擇一種題型'); return; }
-
   S.selTypeIds = Array.from(checked).map(e => e.dataset.id);
-
   const all = [...BASE_QT, ...(SUBJ_QT[S.subject] || [])];
   const map = Object.fromEntries(all.map(t => [t.id, t]));
   S.selTypes = Array.from(checked).map(e => map[e.dataset.id]);
-
-  renderScTable();
-  updSc();
-  goStep(4);
+  renderScTable(); updSc(); goStep(4);
 }
 
 function renderScTable() {
-  const tb = document.getElementById('scBody');
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
-  const len = S.selTypes.length;
-  tb.innerHTML = S.selTypes.map((t, i) => `
+  document.getElementById('scBody').innerHTML = S.selTypes.map((t, i) => `
     <tr>
       <td><div class="sc-ord">
         <button onclick="moveType(${i},-1)" ${i===0?'disabled':''}>▲</button>
-        <button onclick="moveType(${i},1)" ${i===len-1?'disabled':''}>▼</button>
+        <button onclick="moveType(${i},1)" ${i===S.selTypes.length-1?'disabled':''}>▼</button>
       </div></td>
-      <td>${ord[i]||i+1}、${t.name}</td>
+      <td>${ord[i]||i+1}、${escHTML(t.name)}</td>
       <td><input type="number" value="${t.dc}" min="1" max="30" onchange="updSc()"></td>
       <td><input type="number" value="${t.de}" min="1" max="50" onchange="updSc()"></td>
       <td style="text-align:right;font-weight:600" class="sub">${t.dc*t.de}</td>
-    </tr>
-  `).join('');
+    </tr>`).join('');
 }
 
 function moveType(idx, dir) {
   const newIdx = idx + dir;
   if (newIdx < 0 || newIdx >= S.selTypes.length) return;
   updSc();
-  const temp = S.selTypes[idx];
-  S.selTypes[idx] = S.selTypes[newIdx];
-  S.selTypes[newIdx] = temp;
-  const tempSc = S.scores[idx];
-  S.scores[idx] = S.scores[newIdx];
-  S.scores[newIdx] = tempSc;
-  
-  const tb = document.getElementById('scBody');
+  [S.selTypes[idx], S.selTypes[newIdx]] = [S.selTypes[newIdx], S.selTypes[idx]];
+  [S.scores[idx], S.scores[newIdx]] = [S.scores[newIdx], S.scores[idx]];
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
-  const len = S.selTypes.length;
-  tb.innerHTML = S.selTypes.map((t, i) => {
+  document.getElementById('scBody').innerHTML = S.selTypes.map((t, i) => {
     const sc = S.scores[i] || { count: t.dc, each: t.de };
     return `<tr>
       <td><div class="sc-ord">
         <button onclick="moveType(${i},-1)" ${i===0?'disabled':''}>▲</button>
-        <button onclick="moveType(${i},1)" ${i===len-1?'disabled':''}>▼</button>
+        <button onclick="moveType(${i},1)" ${i===S.selTypes.length-1?'disabled':''}>▼</button>
       </div></td>
-      <td>${ord[i]||i+1}、${t.name}</td>
+      <td>${ord[i]||i+1}、${escHTML(t.name)}</td>
       <td><input type="number" value="${sc.count}" min="1" max="30" onchange="updSc()"></td>
       <td><input type="number" value="${sc.each}" min="1" max="50" onchange="updSc()"></td>
       <td style="text-align:right;font-weight:600" class="sub">${sc.count*sc.each}</td>
@@ -1374,39 +1554,31 @@ function moveType(idx, dir) {
 }
 
 function updSc() {
-  let total = 0;
-  S.scores = [];
+  let total = 0; S.scores = [];
   document.querySelectorAll('#scBody tr').forEach((row, i) => {
     const ins = row.querySelectorAll('input');
-    const c = parseInt(ins[0].value) || 0, e = parseInt(ins[1].value) || 0, sub = c * e;
+    const c = parseInt(ins[0].value)||0, e = parseInt(ins[1].value)||0, sub = c*e;
     row.querySelector('.sub').textContent = sub;
     total += sub;
     S.scores.push({ name: S.selTypes[i].name, id: S.selTypes[i].id, count: c, each: e, subtotal: sub });
   });
   const el = document.getElementById('scTotal');
-  if (total === 100) {
-    el.textContent = '合計：100 分 ✓';
-    el.classList.remove('err');
-  } else {
-    const diff = total - 100;
-    el.textContent = `合計：${total} 分（${diff > 0 ? '超出' : '不足'} ${Math.abs(diff)} 分）`;
-    el.classList.add('err');
-  }
+  if (total === 100) { el.textContent = '合計：100 分 ✓'; el.classList.remove('err'); }
+  else { el.textContent = `合計：${total} 分（${total>100?'超出':'不足'} ${Math.abs(total-100)} 分）`; el.classList.add('err'); }
   document.getElementById('btnGen').disabled = total !== 100;
 }
 
 // ═══════════════════════════════════════
-// Step 4 → 5: Generate Exam
+// Step 4 → 5：一般科目出題
 // ═══════════════════════════════════════
 async function generate() {
   if (!S.apiSecret) { document.getElementById('keyModal').classList.remove('hide'); return; }
-
   goStep(5);
   document.getElementById('s5-ld').classList.remove('hide');
   document.getElementById('s5-ok').classList.add('hide');
   document.getElementById('s5-err').classList.add('hide');
 
-  const hints = ['正在分析教材與學習目標...', '正在規劃題型分布與難度...', '正在撰寫題目與選項...', '正在檢查誘答力與品質...', '即將完成，請稍候...'];
+  const hints = ['正在分析教材與學習目標...','正在規劃題型分布與難度...','正在撰寫題目與選項...','正在檢查誘答力與品質...','即將完成，請稍候...'];
   let hintIdx = 0;
   const hintTimer = setInterval(() => {
     hintIdx = Math.min(hintIdx + 1, hints.length - 1);
@@ -1415,10 +1587,8 @@ async function generate() {
   }, 8000);
 
   try {
-    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ', 'MC_PRO']; 
-    const flashScores = [];
-    const proScores = [];
-    
+    const proTypes = ['RG','SCENARIO','EXP','DIALOG','READ','MC_PRO'];
+    const flashScores = [], proScores = [];
     const ord = ['一','二','三','四','五','六','七','八','九','十'];
     S.scores.forEach((s, idx) => {
       const item = { ...s, ordName: ord[idx] || (idx+1).toString() };
@@ -1427,7 +1597,6 @@ async function generate() {
     });
 
     let finalOutput = '';
-
     if (flashScores.length > 0 && proScores.length > 0) {
       document.getElementById('s5-ldMsg').textContent = 'AI 雙引擎同步運算中...';
       document.getElementById('s5-ldSub').textContent = 'Flash 處理基礎題，Pro 深度運算素養題';
@@ -1438,17 +1607,15 @@ async function generate() {
       finalOutput = mergeExam(flashText, proText);
     } else if (proScores.length > 0) {
       document.getElementById('s5-ldMsg').textContent = '啟動高階引擎：Pro 深度運算中...';
-      document.getElementById('s5-ldSub').textContent = '全卷採用 Pro 模型深度出題';
       finalOutput = await callAPI(buildExamPrompt(proScores, true), 'generate', 'pro');
     } else {
       document.getElementById('s5-ldMsg').textContent = '啟動極速引擎：Flash 產出考卷...';
-      document.getElementById('s5-ldSub').textContent = '全卷採用 Flash 模型極速出題';
       finalOutput = await callAPI(buildExamPrompt(flashScores, true), 'generate', 'flash');
     }
 
     clearInterval(hintTimer);
     S.output = finalOutput;
-    document.getElementById('outTxt').textContent = finalOutput;
+    document.getElementById('outTxt').textContent = finalOutput.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch (err) {
@@ -1459,164 +1626,201 @@ async function generate() {
   }
 }
 
-// ★ 雙向細目表 JSON 擷取與融合功能
+// ═══════════════════════════════════════
+// 國語科出題流程
+// ═══════════════════════════════════════
+async function toStep5Ch() {
+  if (!S.apiSecret) {
+    S.step = '2ch';
+    document.getElementById('keyModal').classList.remove('hide');
+    return;
+  }
+  const total = Object.values(S.chScores).reduce((a, v) => a + v, 0);
+  if (total !== 100) { alert('配分合計需等於 100 分'); return; }
+
+  goStep(5);
+  document.getElementById('s5-ld').classList.remove('hide');
+  document.getElementById('s5-ok').classList.add('hide');
+  document.getElementById('s5-err').classList.add('hide');
+  document.getElementById('s5-ldMsg').textContent = 'AI 正在依許育健教授評量架構命題中...';
+  document.getElementById('s5-ldSub').textContent = '國語科採整合式出題，通常需要 30-60 秒';
+
+  try {
+    const result = await callAPI(buildChineseExamPrompt(), 'generate', 'pro');
+    S.output = result;
+    document.getElementById('outTxt').textContent = result.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
+    document.getElementById('s5-ld').classList.add('hide');
+    document.getElementById('s5-ok').classList.remove('hide');
+  } catch (err) {
+    document.getElementById('s5-ld').classList.add('hide');
+    document.getElementById('s5-err').classList.remove('hide');
+    document.getElementById('s5-errMsg').textContent = '出題失敗：' + err.message;
+  }
+}
+
+function buildChineseExamPrompt() {
+  const level = getGradeLevel(S.grade);
+  const levelLabel = { low: '低年級', mid: '中年級', high: '高年級' }[level];
+  const zoneScore = { word: 0, sent: 0, para: 0 };
+  const scoredItems = [];
+
+  Object.entries(S.chScores).forEach(([key, val]) => {
+    if (val <= 0) return;
+    scoredItems.push(`${key}：${val} 分`);
+    CH_ZONES.forEach(z => {
+      if (z.items.find(it => it.key === key)) zoneScore[z.id] = (zoneScore[z.id] || 0) + val;
+    });
+  });
+
+  const mat = S.chMat || {};
+  const matParts = [];
+  if (mat.text) matParts.push(`【01 課文】\n${mat.text}`);
+  if (mat.word) matParts.push(`【05形音／06字義／07成語】\n${mat.word}`);
+  if (mat.sent) matParts.push(`【08句型／10修辭／11修辭總表】\n${mat.sent}`);
+  if (mat.para) matParts.push(`【12大意／13結構表／15閱讀理解】\n${mat.para}`);
+
+  const d = DIFF[S.difficulty];
+
+  return `你是一位具備教育心理學背景的國小國語科首席命題專家。你的命題哲學是：課文只是媒介，能力才是地基。
+請完全忽略抽象的教學目標，嚴格以「許育健教授國語科評量向度」作為試卷骨架，根據素材彈藥庫出題。
+【警告】絕對禁止輸出任何開場白（如「好的」「收到」）、結尾語或思考過程，請嚴格只輸出指定區塊。
+
+【基本資訊】
+學校：內湖國小 ／ 科目：國語 ／ 年級：${S.grade}（${levelLabel}）／ 範圍：${S.scope}
+難度：${d.label}（基礎 ${d.basic}%／中階 ${d.mid}%／進階 ${d.adv}%）
+
+【三向度配分規格】
+字詞短語區：${zoneScore.word || 0} 分 ／ 句式語法區：${zoneScore.sent || 0} 分 ／ 段篇讀寫區：${zoneScore.para || 0} 分 ／ 總分：100 分
+
+【本次命題向度與配分】
+${scoredItems.join('\n')}
+
+【命題鐵則】（違反將導致試卷作廢）
+1. 基礎題緊扣素材：字音字形、字詞釋義必須從【05/06/07】素材中挑選，確保有誘答力。
+2. 句型與素養題強制換殼：使用【08/11】句型與【12/13】結構出題時，絕對禁止出現教材人名或課文原句！必須創作「全新的校園或生活情境」測驗學生能否將知識遷移應用。
+3. 指標絕對吻合：標註的對應向度必須與題目真實測驗內容 100% 吻合，禁止張冠李戴。
+4. 選擇題嚴格遵守三行式排版：
+   第一行：題幹
+   第二行：(A) 選項一  (B) 選項二  (C) 選項三  (D) 選項四
+   第三行：[對應向度：向度名稱]
+
+【素材彈藥庫】
+${matParts.join('\n\n')}
+
+【輸出格式】請嚴格依照以下結構輸出，不可遺漏分隔線：
+
+=== 正式試題 ===
+內湖國小 114 學年度第___學期 定期評量 國語科試卷
+${S.grade}___班 座號：_______ 姓名：_______
+
+（依字詞短語→句式語法→段篇讀寫順序出題）
+
+═══ 答案卷 ═══
+（列出所有答案與評分標準）
+
+═══ 學習目標對應統計 ═══
+（列出各向度實際佔分與百分比）
+
+═══ 防洩漏自檢報告 ═══
+（檢查是否有題幹洩漏答案）
+
+═══ 圖片生成指令 ═══
+（如無需配圖請留白）
+
+═══ 國語科雙向細目表對應 ═══
+請將所有題目配分對應許育健教授評量項目，輸出嚴格 JSON 格式。
+只能使用以下 key 值：正確字音、近字音、多字音、變字音、確認字形、筆畫筆順、分辨部首、部件組合、造字原則、字詞釋義、近義字詞、反義字詞、類詞應用、句意理解、文句組成、句型辨識、句式變化、標點符號、句群關係、四字詞語、結構詞語、常用修辭、提取訊息、推論訊息、整合詮釋、比較評估、摘要整合、推估主旨、文體應用、語文工具、句子變化、看圖寫作、限制習寫
+\`\`\`json
+{
+  "向度名稱": 配分數字
+}
+\`\`\``;
+}
+
+// ═══════════════════════════════════════
+// 雙引擎合併（一般科目用）
+// ═══════════════════════════════════════
 function mergeExam(flashText, proText) {
   function extract(text) {
     let outline = '', ex = '', ans = '', st = '', leak = '', img = '';
     let matrixJson = {};
-    
-    // 擷取隱藏的雙向細目表 JSON
     const matrixMatch = text.match(/═══ 國語科雙向細目表對應 ═══[\s\S]*?```json\n([\s\S]*?)\n```/);
     if (matrixMatch && matrixMatch[1]) {
-        try { matrixJson = JSON.parse(matrixMatch[1]); } catch(e) {}
+      try { matrixJson = JSON.parse(matrixMatch[1]); } catch(e) {}
     }
-
-    const parts = text.split(/=== 正式試題 ===|═══ 正式試題 ═══/);
-    if (parts.length > 1) {
-        outline = parts[0].trim();
-    }
-    
-    let mainBody = parts.length > 1 ? parts[1] : parts[0]; 
-    
-    const p1 = mainBody.split(/═══ 答案卷 ═══/);
+    // 強化版切割：允許分隔線前後有空格換行
+    const parts = text.split(/={3,}\s*正式試題\s*={3,}|═{3,}\s*正式試題\s*═{3,}/);
+    if (parts.length > 1) outline = parts[0].trim();
+    let mainBody = parts.length > 1 ? parts[1] : parts[0];
+    const p1 = mainBody.split(/═{3,}\s*答案卷\s*═{3,}/);
     ex = p1[0] || '';
     if (p1[1]) {
-      const p2 = p1[1].split(/═══ 學習目標對應統計 ═══/);
+      const p2 = p1[1].split(/═{3,}\s*學習目標對應統計\s*═{3,}/);
       ans = p2[0] || '';
       if (p2[1]) {
-        const p3 = p2[1].split(/═══ 防洩漏自檢報告 ═══/);
+        const p3 = p2[1].split(/═{3,}\s*防洩漏自檢報告\s*═{3,}/);
         st = p3[0] || '';
         if (p3[1]) {
-          const p4 = p3[1].split(/═══ 圖片生成指令.*═══|═══ 圖片生成指令/);
+          const p4 = p3[1].split(/═{3,}\s*圖片生成指令.*═{3,}|═{3,}\s*圖片生成指令/);
           leak = p4[0] || '';
-          // 把後面的 JSON 區塊切掉，避免顯示在前端畫面
-          const imgRaw = p4[1] ? p4[1].replace(/^[^\n]*\n/, '') : '';
-          img = imgRaw.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
+          img = (p4[1] || '').split(/═{3,}\s*國語科雙向細目表對應\s*═{3,}/)[0].trim();
         }
       }
     }
-    return { outline: outline, ex: ex.trim(), ans: ans.trim(), st: st.trim(), leak: leak.trim(), img: img.trim(), matrixJson: matrixJson };
+    return { outline: outline.trim(), ex: ex.trim(), ans: ans.trim(), st: st.trim(), leak: leak.trim(), img, matrixJson };
   }
-  
+
   const f = extract(flashText);
   const p = extract(proText);
-  
-  let cleanPSt = p.st.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
-  let cleanPLeak = p.leak.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
-
-  let finalOutline = f.outline ? (f.outline + '\n\n=== 正式試題 ===\n\n') : '';
-  if (!finalOutline && p.outline) finalOutline = p.outline + '\n\n=== 正式試題 ===\n\n';
-
-  // 融合兩個 AI 產出的雙向細目表分數
   let combinedMatrix = {};
-  for (let key in f.matrixJson) { combinedMatrix[key] = (combinedMatrix[key] || 0) + f.matrixJson[key]; }
-  for (let key in p.matrixJson) { combinedMatrix[key] = (combinedMatrix[key] || 0) + p.matrixJson[key]; }
-  
-  let matrixOutput = '';
-  if (Object.keys(combinedMatrix).length > 0) {
-      matrixOutput = `\n\n═══ 國語科雙向細目表對應 ═══\n\`\`\`json\n${JSON.stringify(combinedMatrix, null, 2)}\n\`\`\``;
-  }
-
-  return `${finalOutline}${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}${matrixOutput}`;
+  for (let key in f.matrixJson) combinedMatrix[key] = (combinedMatrix[key]||0) + f.matrixJson[key];
+  for (let key in p.matrixJson) combinedMatrix[key] = (combinedMatrix[key]||0) + p.matrixJson[key];
+  let matrixOutput = Object.keys(combinedMatrix).length > 0
+    ? `\n\n═══ 國語科雙向細目表對應 ═══\n\`\`\`json\n${JSON.stringify(combinedMatrix, null, 2)}\n\`\`\`` : '';
+  const outline = f.outline || p.outline;
+  return `${outline ? outline + '\n\n=== 正式試題 ===\n\n' : ''}${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${p.st}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${p.leak}${f.img||p.img ? '\n\n═══ 圖片生成指令 ═══\n'+f.img+'\n'+p.img : ''}${matrixOutput}`;
 }
 
-// 核心 Prompt 升級：加入鐵則與排版限制，以及 JSON 輸出指令
+// ═══════════════════════════════════════
+// 一般科目 Prompt
+// ═══════════════════════════════════════
 function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
   const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
   const objSpec = S.objectives.filter(o => o.checked).map(o => `- ${o.name}（比重 ${o.weight}%）`).join('\n');
   const matContent = getMaterialText();
-
   const subjectRules = {
-    '國語': `
-【國語科專屬命題規則】
-＜字音字形命題細則＞
-1. 必須從教材萃取的核心生字出題，改錯字的替換必須是小學生常犯的合理同音錯誤。
-＜防洩漏檢查＞
-2. 注音/國字題的答案不可出現在同份考卷的選擇題題幹中。`,
-
-    '數學': `
-【數學科專屬命題規則】
-＜計算與應用＞
-1. 數字大小須符合該年級的數字範圍，應用題情境數字不可與其他題重複。`,
-
-    '自然': `
-【自然科專屬命題規則】
-1. 變因控制題必須明確區分操縱、控制、應變變因。是非題敘述不可透露選擇題答案。`,
-
-    '社會': `
-【社會科專屬命題規則】
-1. 時間排序題答案不可在其他題目暗示。配合題正確配對不可在選擇題提及。`,
-
-    '英語': `
-【英語科專屬命題規則】
-1. 不可出現未學過的單字（若必要須加註中文）。克漏字答案不可出現在閱讀題幹中。`,
+    '數學': `【數學科專屬命題規則】\n1. 數字大小須符合該年級的數字範圍，應用題情境數字不可與其他題重複。`,
+    '自然': `【自然科專屬命題規則】\n1. 變因控制題必須明確區分操縱、控制、應變變因。是非題敘述不可透露選擇題答案。`,
+    '社會': `【社會科專屬命題規則】\n1. 時間排序題答案不可在其他題目暗示。配合題正確配對不可在選擇題提及。`,
+    '英語': `【英語科專屬命題規則】\n1. 不可出現未學過的單字（若必要須加註中文）。克漏字答案不可出現在閱讀題幹中。`,
   };
-
-  const currentSubjectRules = subjectRules[S.subject] || '';
-
-  const extractGuide = {
-    '國語': `1. 核心生字與語詞清單：請挑選適合考注音與錯字的詞彙。
-2. 核心知識點與重要情境。
-3. 課文主旨與寫作手法。`,
-    '數學': `1. 數字難度邊界與代表性算式。
-2. 核心運算規則與易錯點。
-3. 應用題情境模板與數學結構。`,
-    '自然': `1. 核心科學概念與術語。
-2. 實驗與觀察項目（步驟、變因）。`,
-    '社會': `1. 核心知識點：歷史事件、地理概念、公民素養。
-2. 圖表與地圖資訊。`,
-    '英語': `1. 核心單字與片語清單。
-2. 核心句型結構。`,
-  };
-
-  const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重點。\n2. 課文主旨與情境。`;
-
-  const formatStr = isMain 
-    ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題，並嚴格遵守【排版格式嚴格要求】）` 
-    : `（依序輸出分配給你的大題，並嚴格遵守【排版格式嚴格要求】）`;
-
-  let chineseJsonInstruction = '';
-  if (S.subject === '國語') {
-      chineseJsonInstruction = `
-═══ 國語科雙向細目表對應 ═══
-（因為本試卷為國語科，請務必將你負責的這部分考卷【所有題目的配分】，依據真實測驗的認知歷程，精準對應到下列「許育健教授評量項目」中，並輸出成嚴格的 JSON 格式。）
-請只使用以下官方給定的 key 值（絕對不可發明新詞）：
-["正確字音", "近字音", "多字音", "變字音", "確認字形", "筆畫筆順", "分辨部首", "部件組合", "造字原則", "書法字體", "書法故事", "字詞釋義", "近義字詞", "反義字詞", "類詞應用", "句意理解", "文句組成", "句型辨識", "句式變化", "標點符號", "句群關係", "四字詞語", "結構詞語", "常用修辭", "提取訊息", "推論訊息", "整合詮釋", "比較評估", "閱讀技巧", "預測推論", "摘要整合", "推估主旨", "辨識文類", "詳略閱讀", "文體應用", "語文工具", "句子變化", "看圖寫作", "限制習寫", "主題習寫", "感想心得", "寫作技巧"]
-輸出範例：
-\`\`\`json
-{
-  "正確字音": 10,
-  "確認字形": 5,
-  "提取訊息": 4
-}
-\`\`\``;
-  }
+  const formatStr = isMain
+    ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題）`
+    : `（依序輸出分配給你的大題）`;
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
-請嚴格執行以下「兩階段命題任務」。
-【警告】絕對禁止輸出任何開場白（如「好的」、「收到」）、結尾語、或你的「思考過程」。請嚴格只輸出指定的標題區塊！
+【警告】絕對禁止輸出任何開場白或結尾語，請嚴格只輸出指定的標題區塊。
 
 <任務一：知識萃取>
-請仔細閱讀最下方的【教材內容】。在正式出題前，請先萃取知識大綱。
-${currentExtractGuide}
+請仔細閱讀【教材內容】，先萃取知識大綱。
 
 <任務二：正式命題>
-請嚴格「只」根據你在任務一萃取出的知識點，以及下方的配分條件，產出正式考卷。
+嚴格根據任務一萃取出的知識點，以及下方配分條件，產出正式考卷。
 
-【題型設計與指標配對鐵則】（若違反將導致試卷作廢！）
-1. 素養題必須換殼：「選擇題（情境素養）」或「情境探究題」，【絕對禁止】出現教材中的人名或課文原句！你必須創作「全新的生活情境」（例如：小華去超市、班級運動會、新聞報導）作為題幹，來測驗學生是否能將該課的生字、語詞或道理「應用」在生活中。
-2. 基礎題緊扣教材：「選擇題（基本知能）」、「寫國字注音」等基礎題，則必須直接使用教材原文出題。
-3. 指標絕對吻合：你標註的 [對應指標] 必須與題目的「真實測驗內容」100% 吻合。
-   - 考「字音/字形/字義」，只能配「學會生字語詞」。
-   - 考「誰做了什麼/細節」，只能配「提取訊息/了解內容」。
-   - 考「文章主要說什麼」，才能配「說出課文大意/主旨」。
-   - 【嚴重警告】絕對禁止為了湊配分，把「字詞填空」硬標上「說出大意」，寧可分數比例有誤差，也絕不允許指標張冠李戴！
+【命題鐵則】
+1. 素養題必須換殼：情境素養題絕對禁止出現教材中的人名或課文原句！必須自己編造「全新的生活情境」作為題幹。
+2. 基礎題緊扣教材：基礎題則必須直接使用教材原文出題。
+3. 指標絕對吻合：標註的對應指標必須與題目真實測驗內容 100% 吻合。
+4. 選擇題三行式排版：
+   第一行：題幹
+   第二行：(A) 選項一  (B) 選項二  (C) 選項三  (D) 選項四
+   第三行：[對應指標：學習目標名稱]
 
-${currentSubjectRules}
+${subjectRules[S.subject] || ''}
 
-【基本資訊】
-學校：內湖國小 / 科目：${S.subject} / 年級：${S.grade} / 範圍：${S.scope}
+【基本資訊】學校：內湖國小 ／ 科目：${S.subject} ／ 年級：${S.grade} ／ 範圍：${S.scope}
+難度：${d.label}（基礎 ${d.basic}%／中階 ${d.mid}%／進階 ${d.adv}%）
 
 【你負責的題型配分清單】
 ${scoreSpec}
@@ -1624,14 +1828,7 @@ ${scoreSpec}
 【學習目標與配分比重】
 ${objSpec}
 
-【排版格式嚴格要求】
-選擇題請務必依照以下「標準三行」格式排版，絕對不可將指標寫在題目或選項同一行：
-1. （這是題幹敘述內容......）
-(A) 選項一  (B) 選項二  (C) 選項三  (D) 選項四
-[對應指標：學習目標名稱]
-
-【輸出格式】
-請嚴格依照以下結構與分隔線輸出，不可遺漏或修改分隔線名稱：
+【輸出格式】請嚴格依照以下結構輸出：
 
 === 知識萃取大綱 ===
 （此處輸出任務一的結果）
@@ -1650,43 +1847,35 @@ ${formatStr}
 
 ═══ 圖片生成指令 ═══
 （如無需配圖請留白）
-${chineseJsonInstruction}
 
 === 教材內容開始 ===
 ${matContent}
 === 教材內容結束 ===`;
 }
 
+// ═══════════════════════════════════════
+// API 呼叫
+// ═══════════════════════════════════════
 async function callAPI(prompt, action, model = 'flash') {
   if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
     throw new Error('NEED_SECRET');
   }
-
   if (S.workshopMode) {
     const delay = Math.floor(Math.random() * 15000);
     const ldSub = document.getElementById(S.step === 2 ? 's2-ldSub' : 's5-ldSub');
     if (ldSub) ldSub.textContent = `研習模式：排隊中（約 ${Math.ceil(delay/1000)} 秒後開始）...`;
     await new Promise(r => setTimeout(r, delay));
   }
-
   const res = await fetch(S.apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({
-      action: action || 'generate',
-      prompt: prompt,
-      secret: S.apiSecret,
-      model: model 
-    }),
+    body: JSON.stringify({ action, prompt, secret: S.apiSecret, model }),
   });
-
   const text = await res.text();
   let data;
-  try { data = JSON.parse(text); } catch (e) {
-    throw new Error('後端回傳格式異常，請確認 Apps Script 網址正確');
-  }
-
+  try { data = JSON.parse(text); }
+  catch (e) { throw new Error('後端回傳格式異常，請確認 Apps Script 網址正確'); }
   if (data.error) throw new Error(data.error);
   if (!data.text) throw new Error('AI 未回傳內容，請重試');
   return data.text;
@@ -1698,35 +1887,36 @@ function saveKey() {
   S.apiSecret = sec;
   document.getElementById('keyModal').classList.add('hide');
   if (S.step === 2) doAnalyze();
+  else if (S.step === '2ch') toStep5Ch();
   else if (S.step === 5) generate();
 }
 
+// ═══════════════════════════════════════
+// 複製功能
+// ═══════════════════════════════════════
 function copyAll(e) { doCopy(e, S.output.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製完整考卷！'); }
+
 function copyAns(e) {
-  const m = '═══ 答案卷';
-  const m2 = '═══ 學習目標對應統計';
-  let i = S.output.indexOf(m);
-  let end = S.output.indexOf(m2);
-  if (i < 0) return doCopy(e, S.output.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製！');
-  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i);
+  const m1 = S.output.search(/═{3,}\s*答案卷\s*═{3,}/);
+  const m2 = S.output.search(/═{3,}\s*學習目標對應統計\s*═{3,}/);
+  if (m1 < 0) { doCopy(e, S.output.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製！'); return; }
+  const text = m2 > m1 ? S.output.substring(m1, m2).trim() : S.output.substring(m1).trim();
   doCopy(e, text.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製答案卷！');
 }
+
 function copyObj(e) {
-  const m = '═══ 學習目標對應統計';
-  const m2 = '═══ 圖片生成指令';
-  const i = S.output.indexOf(m);
-  if (i < 0) { alert('未找到學習目標統計'); return; }
-  const end = S.output.indexOf(m2);
-  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
+  const m1 = S.output.search(/═{3,}\s*學習目標對應統計\s*═{3,}/);
+  const m2 = S.output.search(/═{3,}\s*圖片生成指令/);
+  if (m1 < 0) { alert('未找到學習目標統計'); return; }
+  const text = m2 > m1 ? S.output.substring(m1, m2).trim() : S.output.substring(m1).trim();
   doCopy(e, text.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製目標統計！');
 }
+
 function copyImg(e) {
-  const m = '═══ 圖片生成指令';
-  const m2 = '═══ 國語科雙向細目表對應 ═══';
-  const i = S.output.indexOf(m);
-  if (i < 0) { alert('本份考卷無需配圖'); return; }
-  const end = S.output.indexOf(m2);
-  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
+  const m1 = S.output.search(/═{3,}\s*圖片生成指令/);
+  const m2 = S.output.search(/═{3,}\s*國語科雙向細目表對應\s*═{3,}/);
+  if (m1 < 0) { alert('本份考卷 AI 未產出圖片指令（可能無需配圖，或請重新出題）'); return; }
+  const text = m2 > m1 ? S.output.substring(m1, m2).trim() : S.output.substring(m1).trim();
   doCopy(e, text, '已複製圖片指令！');
 }
 
@@ -1737,18 +1927,15 @@ function doCopy(e, text, msg) {
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
     btn.style.background = 'var(--accent-l)'; btn.style.color = 'var(--accent)';
     setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
-  }).catch(err => alert('複製失敗：瀏覽器未授權剪貼簿，請檢查權限設定或手動選取複製。'));
+  }).catch(() => alert('複製失敗：瀏覽器未授權剪貼簿，請手動選取複製。'));
 }
 
 // ═══════════════════════════════════════
-// ★ Download Review Sheet (Excel) - 自動對位算分版
+// 下載審核表
 // ═══════════════════════════════════════
 function downloadReview() {
-  if (S.subject === '國語') {
-    downloadChineseReview();
-  } else {
-    downloadGenericReview();
-  }
+  if (S.subject === '國語') downloadChineseReview();
+  else downloadGenericReview();
 }
 
 function downloadGenericReview() {
@@ -1762,59 +1949,44 @@ function downloadGenericReview() {
     [],
     ['大單元名稱', '授課節數', '出題佔分', '佔比(%)', '教學目標/學習目標'],
   ];
-  
   const objRows = objs.map(o => [
-    o.source && o.source !== '老師輸入' ? o.source : S.scope, 
-    o.hours || '',
-    o.weight + ' 分',
-    o.weight + '%',
-    o.name,                                                  
+    o.source && o.source !== '老師輸入' ? o.source : S.scope,
+    o.hours || '', o.weight + ' 分', o.weight + '%', o.name,
   ]);
-  
-  const typeHeader = [[], ['題型配分明細']];
-  const typeRows = [['大題', '題型', '題數', '每題分數', '小計']];
+  const typeRows = [[], ['題型配分明細'], ['大題', '題型', '題數', '每題分數', '小計']];
   const ord = ['一','二','三','四','五','六','七','八','九','十'];
-  S.scores.forEach((s, i) => {
-    typeRows.push([ord[i] || (i+1), s.name, s.count, s.each, s.subtotal]);
-  });
-  typeRows.push(['', '', '', '合計', S.scores.reduce((a, s) => a + s.subtotal, 0)]);
-  
+  S.scores.forEach((s, i) => typeRows.push([ord[i]||(i+1), s.name, s.count, s.each, s.subtotal]));
+  typeRows.push(['', '', '', '合計', S.scores.reduce((a,s)=>a+s.subtotal,0)]);
   const checkRows = [
-    [],
-    ['★ 命題者自評（打√表示達成）'],
+    [], ['★ 命題者自評（打√表示達成）'],
     ['□ 扣緊教學目標（或學習目標）與合於節數比例之配分。'],
     ['□ 教師自行命題，未直接使用教科書廠商提供之試題。'],
     ['□ 預估試題鑑別度指數（高分組答對率－低分組答對率）在20以上。'],
     ['□ 預估應試時間為每份卷40至60分鐘之間。'],
     ['□ 內容符合學生能力與真實情境，無爭議性、悖於常理或違背法規。'],
     ['□ 遵守迴避原則與保密原則。'],
-    [],
-    ['命題者簽名：'],
-    [],
+    [], ['命題者簽名：'], [],
     ['一審  □傳閱 □共同討論', '審題教師簽名：'],
     ['二審  □傳閱 □共同討論', '審題教師簽名：'],
     ['三審  □傳閱 □共同討論', '審題教師簽名：'],
   ];
-  
-  const allRows = [...headerRows, ...objRows, ...typeHeader, ...typeRows, ...checkRows];
+  const allRows = [...headerRows, ...objRows, ...typeRows, ...checkRows];
   const ws = XLSX.utils.aoa_to_sheet(allRows);
-  
   ws['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 }];
-  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }];
-  
+  ws['!merges'] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }
+  ];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '試題審核表');
   XLSX.writeFile(wb, `審核表_${S.grade}${S.subject}_${S.scope}.xlsx`);
 }
 
 function downloadChineseReview() {
-  const objs = S.objectives.filter(o => o.checked);
-  
-  // 從系統紀錄的結果中抓出 AI 算好的 JSON
   let matrixScores = {};
   const matrixMatch = S.output.match(/═══ 國語科雙向細目表對應 ═══[\s\S]*?```json\n([\s\S]*?)\n```/);
   if (matrixMatch && matrixMatch[1]) {
-      try { matrixScores = JSON.parse(matrixMatch[1]); } catch(e) { console.error("JSON 解析失敗", e); }
+    try { matrixScores = JSON.parse(matrixMatch[1]); } catch(e) {}
   }
 
   const topRows = [
@@ -1826,14 +1998,13 @@ function downloadChineseReview() {
     ['大單元名稱', '授課節數', '出題佔分', '佔比(%)', '教學目標/學習目標', '', ''],
   ];
 
-  const objRows = objs.map(o => [
-    o.source && o.source !== '老師輸入' ? o.source : S.scope,
-    o.hours || '',
-    o.weight + ' 分',
-    o.weight + '%',
-    o.name,
-    '', ''
+  // 用 chScores 當作目標列（國語科不走 objectives）
+  const objRows = Object.entries(S.chScores).filter(([,v])=>v>0).map(([k,v]) => [
+    S.scope, '', v + ' 分', v + '%', k, '', ''
   ]);
+  if (objRows.length === 0) {
+    objRows.push([S.scope, '', '', '', '（未設定向度配分）', '', '']);
+  }
 
   const matrixRows = [
     [],
@@ -1848,12 +2019,12 @@ function downloadChineseReview() {
     ['', '', '分辨部首', '部首意義/常用部首/罕用部首', '', '', ''],
     ['', '', '部件組合', '常見部件/部件結構原則', '', '', ''],
     ['', '', '造字原則', '(六書)象形指事/會意形聲/轉注假借', '', '', ''],
-    ['', '', '書法字體', '楷行/草/隸篆', '', '', ''],
-    ['', '', '書法故事', '書法家故事/書體演變', '', '', ''],
     ['', '字詞義', '字詞釋義', '字詞義解釋', '', '', ''],
     ['', '', '近義字詞', '辨識/比較應用', '', '', ''],
     ['', '', '反義字詞', '區別/比較應用', '', '', ''],
     ['', '', '類詞應用', '量詞/疊詞/狀聲詞/形容詞', '', '', ''],
+    ['', '', '四字詞語', '解釋句義/指認句義', '', '', ''],
+    ['', '', '結構詞語', '聯合結構/偏正結構/動實結構/特殊結構', '', '', ''],
     [],
     ['句 式 語 法', '', '', '', '', '', ''],
     ['分數佔比', '評量向度', '評量項目', '細項舉例', '入題(請打勾)', '佔分', '小計'],
@@ -1863,9 +2034,7 @@ function downloadChineseReview() {
     ['', '', '句式變化', '換句話說/倒裝句/被動句/省略句/合併句子', '', '', ''],
     ['', '', '標點符號', '常用符號理解及應用', '', '', ''],
     ['', '', '句群關係', '對話練習/句群關係判斷', '', '', ''],
-    ['', '語法', '四字詞語', '解釋句義/指認句義', '', '', ''],
-    ['', '', '結構詞語', '聯合結構/偏正結構/動實結構/特殊結構', '', '', ''],
-    ['', '', '常用修辭', '擬人/設問/類疊/誇飾/摹寫/排比/借代', '', '', ''],
+    ['', '語法', '常用修辭', '擬人/設問/類疊/誇飾/摹寫/排比/借代', '', '', ''],
     [],
     ['段 篇 讀 寫', '', '', '', '', '', ''],
     ['分數佔比', '評量向度', '評量項目', '細項舉例', '入題(請打勾)', '佔分', '小計'],
@@ -1873,20 +2042,11 @@ function downloadChineseReview() {
     ['', '', '推論訊息', '事件因果/段意簡述/指稱代詞/角色關係', '', '', ''],
     ['', '', '整合詮釋', '全文主題/人物特質/跨段比較/氣氛推測', '', '', ''],
     ['', '', '比較評估', '虛擬辨識/情節評估/文章評析/作者意圖', '', '', ''],
-    ['', '閱讀策略', '閱讀技巧', '標註劃記/筆記/圖示', '', '', ''],
-    ['', '', '預測推論', '標題/圖表/圖片', '', '', ''],
-    ['', '', '摘要整合', '中心句/意義段/文章結構/段落大意', '', '', ''],
+    ['', '寫作練習', '摘要整合', '中心句/意義段/文章結構/段落大意', '', '', ''],
     ['', '', '推估主旨', '作者意圖/寫作目的/隱含道理', '', '', ''],
-    ['', '', '辨識文類', '記敘/說明/議論/抒情/應用', '', '', ''],
-    ['', '', '詳略閱讀', '略讀/精讀/選讀', '', '', ''],
-    ['', '語文應用', '文體應用', '便條/日記/書信/劇本', '', '', ''],
-    ['', '', '語文工具', '字詞典/成語典', '', '', ''],
-    ['', '寫作練習', '句子變化', '擴寫/縮寫/續寫/改寫', '', '', ''],
-    ['', '', '看圖寫作', '連續圖/多圖/單圖', '', '', ''],
+    ['', '', '文體應用', '便條/日記/書信/劇本', '', '', ''],
+    ['', '', '句子變化', '擴寫/縮寫/續寫/改寫', '', '', ''],
     ['', '', '限制習寫', '限內容/限形式', '', '', ''],
-    ['', '', '主題習寫', '人/事/物/景', '', '', ''],
-    ['', '', '感想心得', '讀書心得/旅遊心得', '', '', ''],
-    ['', '', '寫作技巧', '具體描述/開頭結尾/聯想想像/問題解決', '', '', ''],
     ['總分', '', '', '', '', '', ''],
     [],
     ['★ 命題者自評（打v表示達成）', '簽名：', '', '', '', '', ''],
@@ -1899,74 +2059,67 @@ function downloadChineseReview() {
     [],
     ['一審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', ''],
     ['二審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', ''],
-    ['三審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', '']
+    ['三審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', ''],
   ];
-  
-  // ★ 自動配分邏輯：將 JSON 內的數字填入對應儲存格
+
+  // 填入 AI 回傳的配分
   let subtotalA = 0, subtotalB = 0, subtotalC = 0;
   matrixRows.forEach((row, idx) => {
-      let key = row[2]; // 評量項目
-      if (key && matrixScores[key]) {
-          row[4] = 'V'; 
-          row[5] = matrixScores[key]; 
-          if (idx >= 3 && idx <= 16) subtotalA += matrixScores[key];
-          if (idx >= 20 && idx <= 28) subtotalB += matrixScores[key];
-          if (idx >= 32 && idx <= 49) subtotalC += matrixScores[key];
-      }
+    const key = row[2];
+    if (key && matrixScores[key]) {
+      row[4] = 'V';
+      row[5] = matrixScores[key];
+      if (idx >= 3 && idx <= 17) subtotalA += matrixScores[key];
+      if (idx >= 21 && idx <= 27) subtotalB += matrixScores[key];
+      if (idx >= 31 && idx <= 39) subtotalC += matrixScores[key];
+    }
   });
-  
-  // 填寫小計與總分
-  matrixRows[3][6] = subtotalA;
-  matrixRows[20][6] = subtotalB;
-  matrixRows[32][6] = subtotalC;
-  matrixRows[50][1] = subtotalA + subtotalB + subtotalC; // 總分欄位
+  matrixRows[3][6] = subtotalA || '';
+  matrixRows[21][6] = subtotalB || '';
+  matrixRows[31][6] = subtotalC || '';
+  matrixRows[40][1] = subtotalA + subtotalB + subtotalC;
 
   const allRows = [...topRows, ...objRows, ...matrixRows];
   const ws = XLSX.utils.aoa_to_sheet(allRows);
-  
   ws['!cols'] = [{ wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 35 }, { wch: 15 }, { wch: 10 }, { wch: 10 }];
-  
-  // 動態推算矩陣的起始列座標，確保不會重疊
-  const shift = topRows.length + objRows.length; 
-  
+
+  const shift = topRows.length + objRows.length;
   ws['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }, 
-    { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } }, 
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } },
     ...objRows.map((_, idx) => ({ s: { r: 5 + idx, c: 4 }, e: { r: 5 + idx, c: 6 } })),
-    
-    // 大標題合併
-    { s: { r: shift + 1, c: 0 }, e: { r: shift + 1, c: 6 } },       
-    { s: { r: shift + 18, c: 0 }, e: { r: shift + 18, c: 6 } }, 
-    { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } }, 
-    
-    // 左側合併
-    { s: { r: shift + 3, c: 0 }, e: { r: shift + 16, c: 0 } },  
-    { s: { r: shift + 20, c: 0 }, e: { r: shift + 28, c: 0 } }, 
-    { s: { r: shift + 31, c: 0 }, e: { r: shift + 49, c: 0 } }, 
-    
-    // 評量向度合併
-    { s: { r: shift + 3, c: 1 }, e: { r: shift + 6, c: 1 } },   
-    { s: { r: shift + 7, c: 1 }, e: { r: shift + 13, c: 1 } },  
-    { s: { r: shift + 14, c: 1 }, e: { r: shift + 16, c: 1 } }, 
-    { s: { r: shift + 20, c: 1 }, e: { r: shift + 25, c: 1 } }, 
-    { s: { r: shift + 26, c: 1 }, e: { r: shift + 28, c: 1 } }, 
-    { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } }, 
-    { s: { r: shift + 35, c: 1 }, e: { r: shift + 40, c: 1 } }, 
-    { s: { r: shift + 41, c: 1 }, e: { r: shift + 42, c: 1 } }, 
-    { s: { r: shift + 43, c: 1 }, e: { r: shift + 48, c: 1 } }  
+    { s: { r: shift + 1,  c: 0 }, e: { r: shift + 1,  c: 6 } },
+    { s: { r: shift + 19, c: 0 }, e: { r: shift + 19, c: 6 } },
+    { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } },
+    { s: { r: shift + 3,  c: 0 }, e: { r: shift + 17, c: 0 } },
+    { s: { r: shift + 21, c: 0 }, e: { r: shift + 27, c: 0 } },
+    { s: { r: shift + 31, c: 0 }, e: { r: shift + 39, c: 0 } },
+    { s: { r: shift + 3,  c: 1 }, e: { r: shift + 6,  c: 1 } },
+    { s: { r: shift + 7,  c: 1 }, e: { r: shift + 11, c: 1 } },
+    { s: { r: shift + 12, c: 1 }, e: { r: shift + 17, c: 1 } },
+    { s: { r: shift + 21, c: 1 }, e: { r: shift + 26, c: 1 } },
+    { s: { r: shift + 27, c: 1 }, e: { r: shift + 27, c: 1 } },
+    { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } },
+    { s: { r: shift + 35, c: 1 }, e: { r: shift + 39, c: 1 } },
   ];
-  
+
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '試題審核表');
   XLSX.writeFile(wb, `國語科專屬審核表_${S.grade}_${S.scope}.xlsx`);
 }
 
+// ═══════════════════════════════════════
+// 研習模式
+// ═══════════════════════════════════════
 function toggleWorkshop() {
   const on = document.getElementById('wsToggle').checked;
   S.workshopMode = on;
-  localStorage.setItem('nhps_workshop', on ? 'true' : 'false');
+  safeSet('nhps_workshop', on ? 'true' : 'false');
 }
 
+// ═══════════════════════════════════════
+// 初始化
+// ═══════════════════════════════════════
 updSteps();
 document.getElementById('wsToggle').checked = S.workshopMode;
 </script>
