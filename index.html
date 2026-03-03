@@ -895,7 +895,7 @@ function swTab(t) {
 
 document.getElementById('matTxt').addEventListener('input', updMatSt);
 
-// 科目切換時顯示教材建議
+// 科目切換時顯示教材建議與防呆機制
 const MAT_TIPS = {
   '國語': '建議上傳：課本課文 + 習作。教案也可以，AI 會自動擷取學習目標。',
   '數學': '建議上傳：學生版課本 + 習作（含計算題與應用題）。AI 會自動抓取數字範圍與情境模板來命題。',
@@ -903,12 +903,25 @@ const MAT_TIPS = {
   '社會': '建議上傳：課本 + 習作。地圖或圖表題需搭配文字描述。',
   '英語': '建議上傳：課本（含單字表、句型）+ 習作。聽力題 AI 會產生文字腳本，由老師錄音施測。',
 };
+
 document.getElementById('subject').addEventListener('change', function() {
   const tip = MAT_TIPS[this.value];
   const el = document.getElementById('matTip');
   const tx = document.getElementById('matTipTx');
   if (tip) { tx.textContent = tip; el.classList.remove('hide'); }
   else { el.classList.add('hide'); }
+
+  // ★ 終極防呆機制：只要變更科目，立刻清空後方步驟的所有暫存狀態
+  S.objectives = [];
+  S.selTypeIds = [];
+  S.selTypes = [];
+  S.scores = [];
+
+  // 同時重置畫面上的已分析結果，強迫必須重新點擊「下一步：分析學習目標」
+  const s2Result = document.getElementById('s2-result');
+  const btnS2Next = document.getElementById('btn-s2next');
+  if (s2Result) s2Result.classList.add('hide');
+  if (btnS2Next) btnS2Next.disabled = true;
 });
 
 function hasMat() { return S.files.length > 0 || document.getElementById('matTxt').value.trim().length > 0; }
@@ -1242,8 +1255,18 @@ function toStep3() {
   const total = S.objectives.filter(o => o.checked).reduce((a, o) => a + o.weight, 0);
   if (total !== 100) { alert('學習目標比重合計需等於 100%'); return; }
 
+  // ★ 動態過濾基礎題型：根據當前科目，剃除不適合的通用選項
+  let currentBaseQT = [...BASE_QT];
+  if (S.subject === '數學') {
+    // 數學科剃除「簡答題」與「閱讀理解」，由下方的專屬「應用題」與「素養題」取代
+    currentBaseQT = currentBaseQT.filter(t => t.id !== 'SA' && t.id !== 'RG');
+  } else if (S.subject === '英語') {
+    // 英語科剃除「填充題」，由下方的專屬「克漏字填空」取代
+    currentBaseQT = currentBaseQT.filter(t => t.id !== 'FILL');
+  }
+
   const recs = SUBJ_QT[S.subject] || [];
-  const all = [...BASE_QT, ...recs.map(r => ({ ...r, rec: true }))];
+  const all = [...currentBaseQT, ...recs.map(r => ({ ...r, rec: true }))];
   const grid = document.getElementById('qtGrid');
   grid.innerHTML = all.map(t => `
     <div class="qti" data-id="${t.id}" onclick="togQt(this)">
@@ -1256,12 +1279,20 @@ function toStep3() {
     </div>
   `).join('');
 
-  // 恢復之前的選擇，或預設勾選 MC 和 TF
+  // 恢復之前的選擇，若無有效選擇則預設勾選 MC 和 TF
   if (S.selTypeIds && S.selTypeIds.length > 0) {
+    let hasValidSelection = false;
     S.selTypeIds.forEach(id => {
       const el = grid.querySelector(`[data-id="${id}"]`);
-      if (el) { el.classList.add('on'); el.querySelector('input').checked = true; }
+      if (el) { 
+        el.classList.add('on'); 
+        el.querySelector('input').checked = true; 
+        hasValidSelection = true;
+      }
     });
+    if (!hasValidSelection) {
+      grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
+    }
   } else {
     grid.querySelectorAll('[data-id="MC"],[data-id="TF"]').forEach(e => { e.classList.add('on'); e.querySelector('input').checked = true; });
   }
