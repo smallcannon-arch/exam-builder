@@ -792,7 +792,7 @@ const upzone = document.getElementById('upzone');
 const fileIn = document.getElementById('fileIn');
 
 upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag'); });
-upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'));
+upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'); });
 upzone.addEventListener('drop', e => { e.preventDefault(); upzone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 fileIn.addEventListener('change', e => handleFiles(e.target.files));
 
@@ -998,7 +998,6 @@ async function toStep2() {
   doAnalyze();
 }
 
-// ★ 升級版解析器：能看懂 Gems 產生的【單元名稱】與【節數】並精準歸檔
 function doManualObjectives() {
   const text = S.objInput.trim();
   if (!text) {
@@ -1010,32 +1009,28 @@ function doManualObjectives() {
   S.objectives = [];
   S.totalHours = 0;
 
-  // 判斷是否為新版包含【單元名稱】的格式
   if (text.includes('【單元名稱】')) {
     const blocks = text.split(/【單元名稱】/).filter(b => b.trim());
     blocks.forEach(block => {
       const lines = block.split('\n').map(l => l.trim()).filter(l => l);
       if(lines.length === 0) return;
       
-      // 提取單元名稱
       const unitName = lines[0].replace(/^：|:/, '').trim(); 
       let hours = 0;
       let objsStartIdx = 1;
 
-      // 提取節數
       if (lines[1] && lines[1].includes('【節數】')) {
         hours = parseInt(lines[1].replace(/[^\d]/g, '')) || 0;
         S.totalHours += hours;
         objsStartIdx = 2;
       }
 
-      // 提取學習目標
       for (let i = objsStartIdx; i < lines.length; i++) {
         let objName = lines[i].replace(/^[-*•\d.、\s]+/, '').replace(/。$/, '').trim(); 
         if (objName && !objName.includes('節數】')) {
            S.objectives.push({
              name: objName,
-             source: unitName, // 這裡將單元名稱綁定給這條目標
+             source: unitName,
              detail: '',
              hours: hours, 
              weight: 0,
@@ -1045,7 +1040,6 @@ function doManualObjectives() {
       }
     });
   } else {
-    // 舊版單純條列式格式相容
     const lines = text.split('\n').map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()).filter(l => l.length > 0);
     lines.forEach((name) => {
       S.objectives.push({
@@ -1065,7 +1059,6 @@ function doManualObjectives() {
      return;
   }
 
-  // 自動平均分配比重
   const avgWeight = Math.floor(100 / S.objectives.length);
   const remainder = 100 - avgWeight * S.objectives.length;
   S.objectives.forEach((o, i) => {
@@ -1207,7 +1200,6 @@ function parseObjectives(raw) {
   }
 }
 
-// 畫面上顯示單元名稱與節數
 function renderObjectives() {
   document.getElementById('s2-summary').textContent =
     `本範圍預估總授課 ${S.totalHours} 節，包含 ${S.objectives.length} 個學習目標：`;
@@ -1378,7 +1370,7 @@ function updSc() {
 }
 
 // ═══════════════════════════════════════
-// Step 4 → 5: Generate Exam (雙引擎分流版)
+// Step 4 → 5: Generate Exam
 // ═══════════════════════════════════════
 async function generate() {
   if (!S.apiSecret) { document.getElementById('keyModal').classList.remove('hide'); return; }
@@ -1474,6 +1466,7 @@ function mergeExam(flashText, proText) {
   return `${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
 }
 
+// 核心 Prompt 升級：加入鐵則與排版限制
 function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
   const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
@@ -1483,127 +1476,55 @@ function buildExamPrompt(targetScores, isMain) {
   const subjectRules = {
     '國語': `
 【國語科專屬命題規則】
-＜素養化命題原則＞
-你可以（也鼓勵）基於教材中的核心字詞與知識點，「重新創作」一段全新的短文、情境或故事，用來出以下題型：
-- 寫國字或注音：將目標字詞嵌入新創的生活化句子或短文中
-- 改錯字題：創作含有目標字詞的新句子，替換為同音錯字
-- 閱讀理解題組：基於課文主題延伸創作新的閱讀素材
-- 選詞填空/語詞應用：在新情境中測驗學生對語詞的理解
-但必須遵守：新創內容使用的字詞和知識點必須源自教材，不可憑空出現教材未教過的生字或概念。
 ＜字音字形命題細則＞
-1. 從<任務一>萃取的核心生字語詞中挑選目標字詞。
-2. 可以使用教材原句，也可以重新創作融入目標字詞的新句子。
-3. 改錯字的替換必須是小學生常犯的合理同音錯誤。
+1. 必須從教材萃取的核心生字出題，改錯字的替換必須是小學生常犯的合理同音錯誤。
 ＜防洩漏檢查＞
-- 注音/國字題的答案不可出現在同份考卷的選擇題選項或其他題目的題幹中。
-- 改錯字的正確字不可在其他題目中被直接呈現。
-＜進階題指南＞
-進階題請著重「跨段落的主旨比較」或「人物情緒推論」，用語須符合國小學童理解。`,
+2. 注音/國字題的答案不可出現在同份考卷的選擇題題幹中。`,
 
     '數學': `
 【數學科專屬命題規則】
-＜計算題＞
-- 直式計算必須標明「用直式算算看」，並預留作答空間提示。
-- 數字大小須符合該年級的數字範圍。
-＜應用題＞
-- 必須使用生活化情境（購物、測量、分配等），情境須完整且數據充分。
-- 列式部分必須標明「寫出做法與答案」。
-- 單位必須前後一致。
-＜圖形題＞
-- 需搭配圖片的題目請標示 [見配圖 X]。
-- 圖形描述必須精確到可以重現。
-＜防洩漏檢查＞
-- 計算題的中間步驟答案不可出現在選擇題選項中。
-- 應用題的情境數字不可與其他題重複。
-＜進階題指南＞
-進階題請設計為「需要兩步以上運算的真實生活情境題」，不可超出國小數學課綱。`,
+＜計算與應用＞
+1. 數字大小須符合該年級的數字範圍，應用題情境數字不可與其他題重複。`,
 
     '自然': `
 【自然科專屬命題規則】
-＜實驗題＞
-- 實驗題組必須提供完整的實驗情境描述（目的、器材、步驟）。
-- 變因控制題必須明確區分操縱變因、控制變因、應變變因。
-＜圖表題＞
-- 數據表格或觀察記錄必須清楚完整。
-- 圖表判讀題的數據必須合理且符合科學事實。
-＜分類題＞
-- 分類標準必須明確，不可有模糊地帶。
-＜防洩漏檢查＞
-- 是非題的敘述不可直接透露選擇題的答案。
-- 題組的子題答案不可互相提示。
-＜進階題指南＞
-進階題請給予一個簡單的實驗情境，要求學生判斷「變因」或「預測結果」。`,
+1. 變因控制題必須明確區分操縱、控制、應變變因。是非題敘述不可透露選擇題答案。`,
 
     '社會': `
 【社會科專屬命題規則】
-＜地圖與圖表題＞
-- 地圖題必須標示方位、比例尺等必要資訊。
-- 統計圖表的數據必須清楚可讀。
-＜配合題＞
-- 配對項目數量應大於正確答案數，提供合理干擾項。
-＜情境題＞
-- 公民素養情境必須貼近學生生活經驗。
-- 歷史事件排序必須有明確的時序線索。
-＜防洩漏檢查＞
-- 時間排序題的答案不可在其他題目的題幹中被暗示。
-- 配合題的正確配對不可在選擇題中被直接提及。
-＜進階題指南＞
-進階題請給予一段生活情境對話或短文，讓學生判斷對應的歷史事件或公民觀念。`,
+1. 時間排序題答案不可在其他題目暗示。配合題正確配對不可在選擇題提及。`,
 
     '英語': `
 【英語科專屬命題規則】
-＜聽力題＞
-- 聽力腳本必須使用該年級已學過的單字和句型。
-- 語速提示：建議標註 (Read slowly and clearly)。
-- 每題唸兩次。
-＜克漏字與閱讀題＞
-- 文章長度須符合該年級程度（中年級 30-50 字，高年級 50-80 字）。
-- 不可出現該年級未學過的單字（若必要，須加註中文）。
-＜句子重組題＞
-- 打散的單字數量：中年級 4-5 個，高年級 5-7 個。
-- 必須有唯一正確答案。
-＜防洩漏檢查＞
-- 克漏字的答案不可出現在閱讀測驗的題幹中。
-- 圖文配對的答案不可在其他題型中被拼寫出來。
-＜進階題指南＞
-進階題請測試學生在簡短情境對話中的「語意推論」，避免考冷僻單字。`,
+1. 不可出現未學過的單字（若必要須加註中文）。克漏字答案不可出現在閱讀題幹中。`,
   };
 
   const currentSubjectRules = subjectRules[S.subject] || '';
 
   const extractGuide = {
-    '國語': `1. 核心生字與語詞清單：請特別挑選適合考注音與錯字的詞彙，標註注音。
-2. 核心知識點與重要情境（羅列 3-5 點，這是後續出題的唯一依據）。
-3. 課文主旨與寫作手法（用於閱讀理解題）。
-注意：若教材包含多篇課文，請務必分開羅列，絕對不可將不同課文的人物或情境混雜。`,
-    '數學': `1. 數字難度邊界：從教材的計算題與範例中，整理出本單元使用的數字範圍（例：小數到第幾位、分數分母最大到幾、整數位數範圍）。請列出 3-5 個代表性算式作為難度基準。
-2. 核心運算規則與易錯點（例：先乘除後加減、通分、小數對位等）。
-3. 應用題情境模板：從教材的文字題中，萃取 2-3 個生活情境模板（例：購物找錢、測量比較、分配問題），標註其數學結構（幾步驟、哪些運算）。
-4. 圖形題描述（若有）：精確描述圖形的邊長、角度等數據。
-注意：出題時的數字必須嚴格在萃取出的「數字難度邊界」內，絕不可超出。AI 可以替換應用題的生活情境（如改為校園、市場、運動等），但數學結構和數字範圍必須與教材一致。`,
-    '自然': `1. 核心科學概念與術語（羅列 3-5 點，含定義）。
-2. 實驗與觀察項目：萃取教材中的實驗名稱、步驟、變因、預期結果。
-3. 分類與比較項目（若有）：萃取教材中的分類標準與比較項目。
-注意：若教材包含多個單元，請分開羅列，不可混雜。`,
-    '社會': `1. 核心知識點：歷史事件（含時序）、地理概念、公民素養重點。
-2. 圖表與地圖資訊（若有）：萃取教材中的統計數據、地理位置等。
-3. 人物與事件關聯：列出重要人物、事件、年代的對應關係。
-注意：若教材包含多個單元，請分開羅列，不可混雜。`,
-    '英語': `1. 核心單字與片語清單（含中文意思）。
-2. 核心句型結構（列出 2-3 個本課重點句型，含範例句）。
-3. 對話情境模板（若有）：萃取教材中的對話主題與常用問答。
-注意：出題時不可使用本課未教過的單字（若必要須加註中文）。`,
+    '國語': `1. 核心生字與語詞清單：請挑選適合考注音與錯字的詞彙。
+2. 核心知識點與重要情境。
+3. 課文主旨與寫作手法。`,
+    '數學': `1. 數字難度邊界與代表性算式。
+2. 核心運算規則與易錯點。
+3. 應用題情境模板與數學結構。`,
+    '自然': `1. 核心科學概念與術語。
+2. 實驗與觀察項目（步驟、變因）。`,
+    '社會': `1. 核心知識點：歷史事件、地理概念、公民素養。
+2. 圖表與地圖資訊。`,
+    '英語': `1. 核心單字與片語清單。
+2. 核心句型結構。`,
   };
 
   const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重點。\n2. 課文主旨與情境。`;
 
   const formatStr = isMain 
-    ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題，並嚴格遵守【題目排版格式要求】）` 
-    : `（依序輸出分配給你的大題，並嚴格遵守【題目排版格式要求】）`;
+    ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題，並嚴格遵守【排版格式嚴格要求】）` 
+    : `（依序輸出分配給你的大題，並嚴格遵守【排版格式嚴格要求】）`;
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
 請嚴格執行以下「兩階段命題任務」。
-【警告】絕對禁止輸出任何開場白（如「好的」、「收到」）、結尾語、或你的「思考過程」、「難度計算評估」。請嚴格只輸出指定的標題區塊！
+【警告】絕對禁止輸出任何開場白（如「好的」、「收到」）、結尾語、或你的「思考過程」。請嚴格只輸出指定的標題區塊！
 
 <任務一：知識萃取>
 請仔細閱讀最下方的【教材內容】。在正式出題前，請先萃取知識大綱。
@@ -1612,13 +1533,15 @@ ${currentExtractGuide}
 <任務二：正式命題>
 請嚴格「只」根據你在任務一萃取出的知識點，以及下方的配分條件，產出正式考卷。
 
-【命題核心最高準則】
-1. 來源唯一性：每一題的正確答案，都必須能在【教材內容】中找到知識依據，不可憑空捏造。
-2. 知識防火牆：絕不可將不同課文單元的人物或情境混雜在同一題。
-3. 難度控制：用語必須絕對符合國小 ${S.grade} 學生的認知程度。
-4. 選擇題品質：題幹為完整問句，4 選項長度接近，誘答選項對應常見迷思，(A)(B)(C)(D) 分布均勻。
-5. 防洩漏鐵則：完成所有題目後，逐題交叉檢查，確保沒有任何題目的題幹、選項或敘述洩漏了其他題目的答案。
-6. 避免文化偏見或性別刻板印象。
+【題型設計與指標配對鐵則】（若違反將導致試卷作廢！）
+1. 素養題必須換殼：「選擇題（情境素養）」或「情境探究題」，【絕對禁止】出現教材中的人名或課文原句！你必須創作「全新的生活情境」（例如：小華去超市、班級運動會、新聞報導）作為題幹，來測驗學生是否能將該課的生字、語詞或道理「應用」在生活中。
+2. 基礎題緊扣教材：「選擇題（基本知能）」、「寫國字注音」等基礎題，則必須直接使用教材原文出題。
+3. 指標絕對吻合：你標註的 [對應指標] 必須與題目的「真實測驗內容」100% 吻合。
+   - 考「字音/字形/字義」，只能配「學會生字語詞」。
+   - 考「誰做了什麼/細節」，只能配「提取訊息/了解內容」。
+   - 考「文章主要說什麼」，才能配「說出課文大意/主旨」。
+   - 【嚴重警告】絕對禁止為了湊配分，把「字詞填空」硬標上「說出大意」，寧可分數比例有誤差，也絕不允許指標張冠李戴！
+
 ${currentSubjectRules}
 
 【基本資訊】
@@ -1630,16 +1553,13 @@ ${scoreSpec}
 【學習目標與配分比重】
 ${objSpec}
 
-【難度分布】
-${d.label}：基礎 ${d.basic}% / 中等 ${d.mid}% / 進階 ${d.adv}%
-
-【題目排版格式要求】
-每一題請務必依照以下三行格式排版，絕對不可將指標寫在題目同一行：
-1. 題目敘述內容......
+【排版格式嚴格要求】
+選擇題請務必依照以下「標準三行」格式排版，絕對不可將指標寫在題目或選項同一行：
+1. （這是題幹敘述內容......）
 (A) 選項一  (B) 選項二  (C) 選項三  (D) 選項四
 [對應指標：學習目標名稱]
 
-【排版與輸出格式】
+【輸出格式】
 請嚴格依照以下結構與分隔線輸出，不可遺漏或修改分隔線名稱：
 
 === 知識萃取大綱 ===
@@ -1700,10 +1620,6 @@ async function callAPI(prompt, action, model = 'flash') {
   return data.text;
 }
 
-// ═══════════════════════════════════════
-// API URL & Secret
-// ═══════════════════════════════════════
-
 function saveKey() {
   const sec = document.getElementById('secIn').value.trim();
   if (!sec) { alert('請輸入存取密碼'); return; }
@@ -1713,11 +1629,7 @@ function saveKey() {
   else if (S.step === 5) generate();
 }
 
-// ═══════════════════════════════════════
-// Copy Actions
-// ═══════════════════════════════════════
 function copyAll(e) { doCopy(e, S.output, '已複製完整考卷！'); }
-
 function copyAns(e) {
   const m = '═══ 答案卷';
   const m2 = '═══ 學習目標對應統計';
@@ -1727,7 +1639,6 @@ function copyAns(e) {
   const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i);
   doCopy(e, text, '已複製答案卷！');
 }
-
 function copyObj(e) {
   const m = '═══ 學習目標對應統計';
   const m2 = '═══ 圖片生成指令';
@@ -1737,7 +1648,6 @@ function copyObj(e) {
   const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
   doCopy(e, text, '已複製目標統計！');
 }
-
 function copyImg(e) {
   const m = '═══ 圖片生成指令';
   const i = S.output.indexOf(m);
@@ -1756,7 +1666,7 @@ function doCopy(e, text, msg) {
 }
 
 // ═══════════════════════════════════════
-// ★ Download Review Sheet (Excel) - 修正與客製化版
+// ★ Download Review Sheet (Excel) - 終極修復防亂碼版
 // ═══════════════════════════════════════
 function downloadReview() {
   if (S.subject === '國語') {
@@ -1766,7 +1676,6 @@ function downloadReview() {
   }
 }
 
-// 通用版審核表 (修正欄位錯位)
 function downloadGenericReview() {
   const objs = S.objectives.filter(o => o.checked);
   const headerRows = [
@@ -1780,11 +1689,11 @@ function downloadGenericReview() {
   ];
   
   const objRows = objs.map(o => [
-    o.source && o.source !== '老師輸入' ? o.source : S.scope,  // 第一格：單元名稱或範圍
+    o.source && o.source !== '老師輸入' ? o.source : S.scope, 
     o.hours || '',
     o.weight + ' 分',
     o.weight + '%',
-    o.name,                                                  // 第五格：學習目標
+    o.name,                                                  
   ]);
   
   const typeHeader = [[], ['題型配分明細']];
@@ -1823,11 +1732,9 @@ function downloadGenericReview() {
   XLSX.writeFile(wb, `審核表_${S.grade}${S.subject}_${S.scope}.xlsx`);
 }
 
-// 國語科專屬許育健教授版審核表
 function downloadChineseReview() {
   const objs = S.objectives.filter(o => o.checked);
   
-  // 上半部：基本資料與目標清單
   const topRows = [
     [`新竹市內湖國小 ${S.grade} 國語科試題審核表`],
     ['參照許育健教授國語科評量向度佔分比例建議擬定(114.05)'],
@@ -1846,7 +1753,6 @@ function downloadChineseReview() {
     '', ''
   ]);
 
-  // 下半部：許育健教授雙向細目表
   const matrixRows = [
     [],
     ['字 詞 短 語', '', '', '', '', '', ''],
@@ -1919,35 +1825,35 @@ function downloadChineseReview() {
   
   ws['!cols'] = [{ wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 35 }, { wch: 15 }, { wch: 10 }, { wch: 10 }];
   
-  // 計算動態合併儲存格的起始行數 (因為 objRows 數量不固定)
-  const shift = topRows.length + objRows.length + 1; // matrixRows 起始位置
+  // ★ 精密計算動態合併座標 (徹底解決重疊崩潰問題)
+  const shift = topRows.length + objRows.length + 1; // 動態推算 matrixRows 的起始列座標
   
   ws['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }, // 標題
-    { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } }, // 副標題
-    // 教學目標區塊的目標名稱跨欄合併
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }, 
+    { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } }, 
+    // 學習目標區塊的跨欄合併
     ...objRows.map((_, idx) => ({ s: { r: 5 + idx, c: 4 }, e: { r: 5 + idx, c: 6 } })),
     
-    // 許育健教授表格的大標題合併
-    { s: { r: shift, c: 0 }, e: { r: shift, c: 6 } },       // 字詞短語 大標
-    { s: { r: shift + 18, c: 0 }, e: { r: shift + 18, c: 6 } }, // 句式語法 大標
-    { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } }, // 段篇讀寫 大標
+    // 雙向細目表大標題合併
+    { s: { r: shift, c: 0 }, e: { r: shift, c: 6 } },       
+    { s: { r: shift + 18, c: 0 }, e: { r: shift + 18, c: 6 } }, 
+    { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } }, 
     
-    // 左側「分數佔比」直向合併
-    { s: { r: shift + 2, c: 0 }, e: { r: shift + 16, c: 0 } },  // 字詞短語-分數佔比
-    { s: { r: shift + 20, c: 0 }, e: { r: shift + 27, c: 0 } }, // 句式語法-分數佔比
-    { s: { r: shift + 31, c: 0 }, e: { r: shift + 48, c: 0 } }, // 段篇讀寫-分數佔比
+    // 左側「分數佔比」合併
+    { s: { r: shift + 2, c: 0 }, e: { r: shift + 16, c: 0 } },  
+    { s: { r: shift + 20, c: 0 }, e: { r: shift + 27, c: 0 } }, 
+    { s: { r: shift + 31, c: 0 }, e: { r: shift + 48, c: 0 } }, 
     
-    // 評量向度 直向合併
-    { s: { r: shift + 2, c: 1 }, e: { r: shift + 5, c: 1 } },   // 字音
-    { s: { r: shift + 6, c: 1 }, e: { r: shift + 12, c: 1 } },  // 字形
-    { s: { r: shift + 13, c: 1 }, e: { r: shift + 16, c: 1 } }, // 字詞義
-    { s: { r: shift + 20, c: 1 }, e: { r: shift + 25, c: 1 } }, // 句式
-    { s: { r: shift + 26, c: 1 }, e: { r: shift + 28, c: 1 } }, // 語法
-    { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } }, // 閱讀理解
-    { s: { r: shift + 35, c: 1 }, e: { r: shift + 40, c: 1 } }, // 閱讀策略
-    { s: { r: shift + 41, c: 1 }, e: { r: shift + 42, c: 1 } }, // 語文應用
-    { s: { r: shift + 43, c: 1 }, e: { r: shift + 48, c: 1 } }  // 寫作練習
+    // 「評量向度」合併
+    { s: { r: shift + 2, c: 1 }, e: { r: shift + 5, c: 1 } },   
+    { s: { r: shift + 6, c: 1 }, e: { r: shift + 12, c: 1 } },  
+    { s: { r: shift + 13, c: 1 }, e: { r: shift + 16, c: 1 } }, 
+    { s: { r: shift + 20, c: 1 }, e: { r: shift + 25, c: 1 } }, 
+    { s: { r: shift + 26, c: 1 }, e: { r: shift + 28, c: 1 } }, 
+    { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } }, 
+    { s: { r: shift + 35, c: 1 }, e: { r: shift + 40, c: 1 } }, 
+    { s: { r: shift + 41, c: 1 }, e: { r: shift + 42, c: 1 } }, 
+    { s: { r: shift + 43, c: 1 }, e: { r: shift + 48, c: 1 } }  
   ];
   
   const wb = XLSX.utils.book_new();
