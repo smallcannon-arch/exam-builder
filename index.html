@@ -792,7 +792,7 @@ const upzone = document.getElementById('upzone');
 const fileIn = document.getElementById('fileIn');
 
 upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag'); });
-upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'); });
+upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'));
 upzone.addEventListener('drop', e => { e.preventDefault(); upzone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 fileIn.addEventListener('change', e => handleFiles(e.target.files));
 
