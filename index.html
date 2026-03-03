@@ -209,6 +209,18 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .ch-zone-badge.z3 { background: #f0fdf4; color: #166534; }
 .ch-zone-badge.z4 { background: #fdf4ff; color: #7e22ce; }
 .ch-zone-hint { font-size: 11px; color: var(--text-3); margin-bottom: 8px; }
+.ch-upload-btn {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; color: var(--accent);
+  background: var(--accent-l); border-radius: 6px;
+  padding: 3px 10px; cursor: pointer; transition: all var(--t);
+  white-space: nowrap;
+}
+.ch-upload-btn:hover { background: var(--accent); color: #fff; }
+.ch-upload-st {
+  font-size: 11px; color: var(--text-3); margin-left: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;
+}
 .ch-zone textarea {
   width: 100%; min-height: 80px; font-size: 13px;
   border: 1.5px solid var(--border); border-radius: var(--r-sm);
@@ -514,39 +526,67 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <!-- 國語科素材分區上傳 -->
     <div id="chineseMatArea" class="hide">
       <div class="ch-zones">
-        <div class="ch-zone">
-          <div class="ch-zone-hd">
-            <span class="ch-zone-badge z1">課文</span>
-            01 課文 Word 檔
-          </div>
-          <div class="ch-zone-hint">貼上本次出題範圍的課文內容</div>
-          <textarea id="ch-text" placeholder="貼上課文..."></textarea>
-        </div>
-        <div class="ch-zone">
-          <div class="ch-zone-hd">
-            <span class="ch-zone-badge z2">字詞短語</span>
-            05 形音 ／ 06 字義 ／ 07 成語
-          </div>
-          <div class="ch-zone-hint">貼上易錯字、多音字、字義分析、成語等內容</div>
-          <textarea id="ch-word" placeholder="貼上形音、字義、成語..."></textarea>
-        </div>
-        <div class="ch-zone">
-          <div class="ch-zone-hd">
-            <span class="ch-zone-badge z3">句式語法</span>
-            08 句型 ／ 10 修辭 ／ 11 修辭總表
-          </div>
-          <div class="ch-zone-hint">貼上句型練習、修辭手法等內容</div>
-          <textarea id="ch-sent" placeholder="貼上句型、修辭..."></textarea>
-        </div>
-        <div class="ch-zone">
-          <div class="ch-zone-hd">
-            <span class="ch-zone-badge z4">段篇讀寫</span>
-            12 大意 ／ 13 結構表 ／ 15 閱讀理解
-          </div>
-          <div class="ch-zone-hint">貼上課文大意、結構表、閱讀理解提問等內容</div>
-          <textarea id="ch-para" placeholder="貼上大意、結構、閱讀理解..."></textarea>
-        </div>
-      </div>
+       <div class="ch-zones">
+  <div class="ch-zone">
+    <div class="ch-zone-hd">
+      <span class="ch-zone-badge z1">課文</span>
+      01 課文 Word 檔
+      <label class="ch-upload-btn" title="上傳檔案">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上傳檔案
+        <input type="file" accept=".docx,.pdf" style="display:none" onchange="uploadChZone(this,'ch-text')">
+      </label>
+      <span class="ch-upload-st" id="ch-text-st"></span>
+    </div>
+    <div class="ch-zone-hint">貼上或上傳本次出題範圍的課文內容（.docx / .pdf）</div>
+    <textarea id="ch-text" placeholder="貼上課文，或點右上角上傳檔案..."></textarea>
+  </div>
+
+  <div class="ch-zone">
+    <div class="ch-zone-hd">
+      <span class="ch-zone-badge z2">字詞短語</span>
+      05 形音 ／ 06 字義 ／ 07 成語
+      <label class="ch-upload-btn" title="上傳檔案">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上傳檔案
+        <input type="file" accept=".docx,.pdf" style="display:none" onchange="uploadChZone(this,'ch-word')">
+      </label>
+      <span class="ch-upload-st" id="ch-word-st"></span>
+    </div>
+    <div class="ch-zone-hint">貼上或上傳易錯字、多音字、字義分析、成語等內容（.docx / .pdf）</div>
+    <textarea id="ch-word" placeholder="貼上形音、字義、成語，或點右上角上傳檔案..."></textarea>
+  </div>
+
+  <div class="ch-zone">
+    <div class="ch-zone-hd">
+      <span class="ch-zone-badge z3">句式語法</span>
+      08 句型 ／ 10 修辭 ／ 11 修辭總表
+      <label class="ch-upload-btn" title="上傳檔案">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上傳檔案
+        <input type="file" accept=".docx,.pdf" style="display:none" onchange="uploadChZone(this,'ch-sent')">
+      </label>
+      <span class="ch-upload-st" id="ch-sent-st"></span>
+    </div>
+    <div class="ch-zone-hint">貼上或上傳句型練習、修辭手法等內容（.docx / .pdf）</div>
+    <textarea id="ch-sent" placeholder="貼上句型、修辭，或點右上角上傳檔案..."></textarea>
+  </div>
+
+  <div class="ch-zone">
+    <div class="ch-zone-hd">
+      <span class="ch-zone-badge z4">段篇讀寫</span>
+      12 大意 ／ 13 結構表 ／ 15 閱讀理解
+      <label class="ch-upload-btn" title="上傳檔案">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上傳檔案
+        <input type="file" accept=".docx,.pdf" style="display:none" onchange="uploadChZone(this,'ch-para')">
+      </label>
+      <span class="ch-upload-st" id="ch-para-st"></span>
+    </div>
+    <div class="ch-zone-hint">貼上或上傳課文大意、結構表、閱讀理解提問等內容（.docx / .pdf）</div>
+    <textarea id="ch-para" placeholder="貼上大意、結構、閱讀理解，或點右上角上傳檔案..."></textarea>
+  </div>
+</div>
     </div>
 
     <!-- 學習目標（非國語科用） -->
@@ -989,6 +1029,35 @@ function renderChScoreItem(it, isRec) {
   </div>`;
 }
 
+async function uploadChZone(input, targetId) {
+  const f = input.files[0];
+  if (!f) return;
+  const stEl = document.getElementById(targetId + '-st');
+  stEl.textContent = '讀取中...';
+  try {
+    const ab = await f.arrayBuffer();
+    let text = '';
+    if (f.name.toLowerCase().endsWith('.docx')) {
+      const result = await mammoth.extractRawText({ arrayBuffer: ab });
+      text = result.value.trim();
+    } else if (f.name.toLowerCase().endsWith('.pdf')) {
+      text = await extractPdfText(ab);
+    }
+    if (text.length < 20) {
+      stEl.textContent = '⚠️ 內容過少';
+      alert(`「${f.name}」擷取內容過少，可能是掃描檔，請改用文字貼上。`);
+      return;
+    }
+    const ta = document.getElementById(targetId);
+    ta.value = (ta.value.trim() ? ta.value + '\n\n' : '') + text;
+    stEl.textContent = '✅ ' + f.name.substring(0, 15) + (f.name.length > 15 ? '...' : '');
+    updMatSt();
+  } catch (err) {
+    stEl.textContent = '❌ 讀取失敗';
+    alert(`讀取失敗：${err.message}`);
+  }
+  input.value = '';
+}
 function toggleChOther(zoneId, btn) {
   const el = document.getElementById('ch-other-' + zoneId);
   const zone = CH_ZONES.find(z => z.id === zoneId);
