@@ -256,7 +256,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .obj-weight span { font-size: 12px; color: var(--text-3); }
 
 .obj-detail {
-  font-size: 12px; color: var(--text-2); line-height: 1.6;
+  font-size: 13px; color: var(--text-2); line-height: 1.6;
   padding-left: 30px;
 }
 
@@ -474,7 +474,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       </div>
       <div>
         <label class="fl">範圍 <span class="req">*</span></label>
-        <input type="text" id="scope" placeholder="第二單元、期中考範圍...">
+        <input type="text" id="scope" placeholder="第一單元、期中考範圍...">
       </div>
     </div>
 
@@ -523,11 +523,11 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           啟動 AI 學習目標擷取器
           <span style="color: var(--text-2); font-size: 12px; font-weight: normal; margin-left: 4px;">
-            (上傳教案電子檔，自動轉為可貼上的格式)
+            (上傳教案電子檔，自動轉為含單元名稱的貼上格式)
           </span>
         </a>
       </div>
-      <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="從課本複製學習目標，每行一條，例如：&#10;我能領會「用心看世界」的道理。&#10;我能理解現代散文的特色與意涵。&#10;我能掌握如何找尋文本主旨的方法。&#10;&#10;💡 可一次貼上多課的目標，AI 會自動分配比重。&#10;若留空，AI 將從教材中自動擷取。"></textarea>
+      <textarea id="objInput" rows="5" style="width:100%;border:1.5px solid #d1d5db;border-radius:8px;padding:10px 12px;font-size:14px;line-height:1.7;resize:vertical;font-family:inherit;" placeholder="將 Gems 擷取器的結果直接貼在這裡（包含【單元名稱】與【節數】）。&#10;&#10;💡 若留空，系統將自動從下方教材中幫您歸納。"></textarea>
     </div>
 
     <div class="mat-st no" id="matSt">
@@ -549,7 +549,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       學習目標分析
     </div>
-    <p class="pnl-desc">AI 已分析教材，請確認學習目標與授課比重。可勾選/取消、調整比重。</p>
+    <p class="pnl-desc">系統已成功擷取單元與目標，請確認目標內容與配分比重（可自由勾選或修改%數）。</p>
 
     <div id="s2-ld" class="ld-wrap">
       <div class="ld-spin"></div>
@@ -649,7 +649,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
         <button class="btn btn-s" onclick="copyImg(event)">複製圖片指令</button>
         <button class="btn btn-s" onclick="downloadReview()">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          下載審核表
+          下載專屬審核表
         </button>
         <button class="btn btn-s" onclick="goStep(1)">重新出題</button>
       </div>
@@ -710,9 +710,9 @@ var API_URL = 'https://script.google.com/macros/s/AKfycbyHfCOBAybbPFIW621lMUmAte
 const S = {
   step: 1,
   subject: '', grade: '', scope: '', difficulty: 'balanced',
-  files: [],       // [{name, size, text}]
+  files: [],       
   matText: '',
-  objectives: [],  // [{name, detail, hours, weight, checked}]
+  objectives: [],  
   totalHours: 0,
   selTypes: [],
   selTypeIds: [],
@@ -736,7 +736,8 @@ const DIFF = {
 // Question Types
 // ═══════════════════════════════════════
 const BASE_QT = [
-  { id:'MC', name:'選擇題（單選）', desc:'4選項選1正確答案', dc:10, de:2 },
+  { id:'MC', name:'選擇題（基本知能）', desc:'測驗字詞義、標點、修辭、課文記憶等基礎概念', dc:10, de:2 },
+  { id:'MC_PRO', name:'選擇題（情境素養）', desc:'✨【啟動 Pro 引擎】AI 創作全新生活情境或短文出題', dc:3, de:2 },
   { id:'TF', name:'是非題', desc:'○/✕ 判斷對錯', dc:5, de:2 },
   { id:'FILL', name:'填充題', desc:'在空格中填入正確答案', dc:5, de:2 },
   { id:'SA', name:'簡答題', desc:'簡短文字作答', dc:2, de:5 },
@@ -894,7 +895,6 @@ function swTab(t) {
 
 document.getElementById('matTxt').addEventListener('input', updMatSt);
 
-// 科目切換時顯示教材建議
 const MAT_TIPS = {
   '國語': '建議上傳：課本課文 + 習作。教案也可以，AI 會自動擷取學習目標。',
   '數學': '建議上傳：學生版課本 + 習作（含計算題與應用題）。AI 會自動抓取數字範圍與情境模板來命題。',
@@ -998,29 +998,79 @@ async function toStep2() {
   doAnalyze();
 }
 
+// ★ 升級版解析器：能看懂 Gems 產生的【單元名稱】與【節數】並精準歸檔
 function doManualObjectives() {
-  const lines = S.objInput.split('\n')
-    .map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim())
-    .filter(l => l.length > 0);
-  
-  if (lines.length === 0) {
+  const text = S.objInput.trim();
+  if (!text) {
     alert('學習目標內容為空，請重新輸入');
     goStep(1);
     return;
   }
 
-  const avgWeight = Math.floor(100 / lines.length);
-  const remainder = 100 - avgWeight * lines.length;
-
-  S.objectives = lines.map((name, i) => ({
-    name: name.replace(/。$/, ''),
-    source: '老師輸入',
-    detail: '',
-    hours: 0,
-    weight: avgWeight + (i < remainder ? 1 : 0),
-    checked: true,
-  }));
+  S.objectives = [];
   S.totalHours = 0;
+
+  // 判斷是否為新版包含【單元名稱】的格式
+  if (text.includes('【單元名稱】')) {
+    const blocks = text.split(/【單元名稱】/).filter(b => b.trim());
+    blocks.forEach(block => {
+      const lines = block.split('\n').map(l => l.trim()).filter(l => l);
+      if(lines.length === 0) return;
+      
+      // 提取單元名稱
+      const unitName = lines[0].replace(/^：|:/, '').trim(); 
+      let hours = 0;
+      let objsStartIdx = 1;
+
+      // 提取節數
+      if (lines[1] && lines[1].includes('【節數】')) {
+        hours = parseInt(lines[1].replace(/[^\d]/g, '')) || 0;
+        S.totalHours += hours;
+        objsStartIdx = 2;
+      }
+
+      // 提取學習目標
+      for (let i = objsStartIdx; i < lines.length; i++) {
+        let objName = lines[i].replace(/^[-*•\d.、\s]+/, '').replace(/。$/, '').trim(); 
+        if (objName && !objName.includes('節數】')) {
+           S.objectives.push({
+             name: objName,
+             source: unitName, // 這裡將單元名稱綁定給這條目標
+             detail: '',
+             hours: hours, 
+             weight: 0,
+             checked: true,
+           });
+        }
+      }
+    });
+  } else {
+    // 舊版單純條列式格式相容
+    const lines = text.split('\n').map(l => l.replace(/^\d+[\.\、\)\）]\s*/, '').trim()).filter(l => l.length > 0);
+    lines.forEach((name) => {
+      S.objectives.push({
+        name: name.replace(/。$/, ''),
+        source: '老師輸入',
+        detail: '',
+        hours: 0,
+        weight: 0,
+        checked: true,
+      });
+    });
+  }
+
+  if (S.objectives.length === 0) {
+     alert('無法解析學習目標，請確認格式是否正確');
+     goStep(1);
+     return;
+  }
+
+  // 自動平均分配比重
+  const avgWeight = Math.floor(100 / S.objectives.length);
+  const remainder = 100 - avgWeight * S.objectives.length;
+  S.objectives.forEach((o, i) => {
+    o.weight = avgWeight + (i < remainder ? 1 : 0);
+  });
 
   document.getElementById('s2-ld').classList.add('hide');
   document.getElementById('s2-err').classList.add('hide');
@@ -1037,7 +1087,6 @@ async function doAnalyze() {
 
   try {
     const matContent = getMaterialText();
-    // 目標分析一律交給 flash
     const rawResult = await callAPI(buildAnalysisPrompt(matContent), 'analyze', 'flash');
     S._lastRaw = rawResult;
     S.objectives = parseObjectives(rawResult);
@@ -1084,32 +1133,26 @@ ${material}
 【學習目標擷取規則（最高優先級！）】
 
 ＜第一步：逐行掃描，找出教材中的原始學習目標＞
-教材文字可能來自 PDF 擷取，格式會比較混亂（字之間有空格、標點不規則）。
-請你仔細掃描全文，尋找以下特徵的文字：
+請仔細掃描全文，尋找以下特徵的文字：
 - 出現在「學 習 目 標」或「學習目標」字樣附近
 - 通常以「我能」「能夠」「學會」「認識」「了解」「理解」等開頭
 - 每條目標通常是一句完整的話，以句號結尾
-- 每課/每單元通常有 2-4 個目標
 
 ＜第二步：絕對禁止的行為＞
-- 禁止自行歸納、合併、改寫目標。「理解文體特色與意涵」是歸納句，不是教材原文。
-- 禁止把不同課的目標合併成一條。
+- 禁止自行歸納、合併、改寫目標。
 - 每一條都必須是教材中「逐字可查」的原句。
 
 ＜第三步：找不到目標時的備案＞
-只有在教材中完全找不到任何「學習目標」相關字樣時，才根據教材內容自行分析出 3-5 個核心學習目標，並在 detail 中標註「AI 歸納」。
-
-＜第四步：授課節數＞
-如果教材中有標示節數，請直接採用；若無，請預估。
+只有在完全找不到任何「學習目標」相關字樣時，才根據內容自行歸納 3-5 個目標，並在 detail 標註「AI 歸納」。
 
 【輸出格式】
 請輸出 JSON 格式（繁體中文），包含：
 1. total_hours: 預估總授課節數（每節 40 分鐘）
 2. objectives: 學習目標陣列，每個目標包含：
    - name: 目標名稱（必須是教材原文，去掉多餘空格後的完整句子）
-   - source: 來源標示（例如「L01課本P5」「第二課習作」，若為AI歸納則寫「AI歸納」）
+   - source: 來源標示（例如「L01」或單元名稱）
    - detail: 依據說明（說明教材中哪些段落對應此目標，50字以內）
-   - hours: 預估授課節數
+   - hours: 此目標預估授課節數
    - weight: 建議比重百分比（所有目標的 weight 加總必須等於 100）
 
 請嚴格只輸出 JSON，不要加任何前言、後語、markdown 格式。`;
@@ -1164,6 +1207,7 @@ function parseObjectives(raw) {
   }
 }
 
+// 畫面上顯示單元名稱與節數
 function renderObjectives() {
   document.getElementById('s2-summary').textContent =
     `本範圍預估總授課 ${S.totalHours} 節，包含 ${S.objectives.length} 個學習目標：`;
@@ -1180,7 +1224,7 @@ function renderObjectives() {
           <span>%</span>
         </div>
       </div>
-      <div class="obj-detail">${o.source ? `<span style="display:inline-block;background:${o.source === 'AI歸納' ? '#fef3c7' : '#dcfce7'};color:${o.source === 'AI歸納' ? '#92400e' : '#166534'};font-size:11px;padding:1px 6px;border-radius:4px;margin-right:6px;">${o.source}</span>` : ''}${o.hours} 節 ｜ ${o.detail}</div>
+      <div class="obj-detail">${o.source && o.source !== '老師輸入' ? `<span style="display:inline-block;background:#e0f2fe;color:#1e3a8a;font-size:11px;padding:2px 6px;border-radius:4px;margin-right:6px;">單元：${o.source}</span>` : ''}${o.hours > 0 ? o.hours+' 節 ｜ ' : ''}${o.detail}</div>
     </div>
   `).join('');
   updObjTotal();
@@ -1353,7 +1397,7 @@ async function generate() {
   }, 8000);
 
   try {
-    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ']; 
+    const proTypes = ['RG', 'SCENARIO', 'EXP', 'DIALOG', 'READ', 'MC_PRO']; 
     const flashScores = [];
     const proScores = [];
     
@@ -1397,11 +1441,13 @@ async function generate() {
   }
 }
 
-// 將兩份考卷完美拼接的輔助函數 (強化防呆切除版)
 function mergeExam(flashText, proText) {
   function extract(text) {
-    let ex = text, ans = '', st = '', leak = '', img = '';
-    const p1 = text.split(/═══ 答案卷 ═══/);
+    let ex = '', ans = '', st = '', leak = '', img = '';
+    const parts = text.split(/=== 正式試題 ===|═══ 正式試題 ═══/);
+    let mainBody = parts.length > 1 ? parts[1] : parts[0]; 
+    
+    const p1 = mainBody.split(/═══ 答案卷 ═══/);
     ex = p1[0] || '';
     if (p1[1]) {
       const p2 = p1[1].split(/═══ 學習目標對應統計 ═══/);
@@ -1422,22 +1468,12 @@ function mergeExam(flashText, proText) {
   const f = extract(flashText);
   const p = extract(proText);
   
-  // 暴力切除 Pro 考卷題目區塊的廢話與大綱
-  let cleanPEx = p.ex;
-  // 尋找第一個大題的開頭（例如：「四、」、「**四、」、「七、」）
-  const match = cleanPEx.match(/(?:\*\*|)?[一二三四五六七八九十]、/);
-  if (match) {
-    cleanPEx = cleanPEx.substring(match.index);
-  }
-  
-  // 清除 Pro 統計與防洩漏區塊可能夾帶的「難度分布估計」等內心戲
   let cleanPSt = p.st.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
   let cleanPLeak = p.leak.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
 
-  return `${f.ex}\n\n${cleanPEx}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
+  return `${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
 }
 
-// 產生 Prompt 
 function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
   const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
@@ -1561,25 +1597,27 @@ function buildExamPrompt(targetScores, isMain) {
 
   const currentExtractGuide = extractGuide[S.subject] || `1. 核心知識點與重點。\n2. 課文主旨與情境。`;
 
-  let headerOutput = isMain ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n` : '';
+  const formatStr = isMain 
+    ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題，並嚴格遵守【題目排版格式要求】）` 
+    : `（依序輸出分配給你的大題，並嚴格遵守【題目排版格式要求】）`;
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
 請嚴格執行以下「兩階段命題任務」。
 【警告】絕對禁止輸出任何開場白（如「好的」、「收到」）、結尾語、或你的「思考過程」、「難度計算評估」。請嚴格只輸出指定的標題區塊！
 
 <任務一：知識萃取>
-請仔細閱讀最下方的【教材內容】。在正式出題前，請先輸出一段「=== 知識萃取大綱 ===」。
+請仔細閱讀最下方的【教材內容】。在正式出題前，請先萃取知識大綱。
 ${currentExtractGuide}
 
 <任務二：正式命題>
 請嚴格「只」根據你在任務一萃取出的知識點，以及下方的配分條件，產出正式考卷。
 
-【命題核心最高準則】（違反將導致試卷作廢）
+【命題核心最高準則】
 1. 來源唯一性：每一題的正確答案，都必須能在【教材內容】中找到知識依據，不可憑空捏造。
 2. 知識防火牆：絕不可將不同課文單元的人物或情境混雜在同一題。
 3. 難度控制：用語必須絕對符合國小 ${S.grade} 學生的認知程度。
 4. 選擇題品質：題幹為完整問句，4 選項長度接近，誘答選項對應常見迷思，(A)(B)(C)(D) 分布均勻。
-5. 防洩漏鐵則：完成所有題目後，請逐題交叉檢查，確保沒有任何題目的題幹、選項或敘述洩漏了其他題目的答案。若發現洩漏，必須修改措辭。
+5. 防洩漏鐵則：完成所有題目後，逐題交叉檢查，確保沒有任何題目的題幹、選項或敘述洩漏了其他題目的答案。
 6. 避免文化偏見或性別刻板印象。
 ${currentSubjectRules}
 
@@ -1595,10 +1633,20 @@ ${objSpec}
 【難度分布】
 ${d.label}：基礎 ${d.basic}% / 中等 ${d.mid}% / 進階 ${d.adv}%
 
-【排版與輸出格式】
-${isMain ? '請在「=== 知識萃取大綱 ===」結束後，立刻輸出考卷，格式如下：' : '請在「=== 知識萃取大綱 ===」結束後，直接輸出分配給你的大題，格式如下：'}
+【題目排版格式要求】
+每一題請務必依照以下三行格式排版，絕對不可將指標寫在題目同一行：
+1. 題目敘述內容......
+(A) 選項一  (B) 選項二  (C) 選項三  (D) 選項四
+[對應指標：學習目標名稱]
 
-${headerOutput}（依序輸出各大題，每題題號後方標註 [學習目標名稱]）
+【排版與輸出格式】
+請嚴格依照以下結構與分隔線輸出，不可遺漏或修改分隔線名稱：
+
+=== 知識萃取大綱 ===
+（此處輸出任務一的結果）
+
+=== 正式試題 ===
+${formatStr}
 
 ═══ 答案卷 ═══
 （列出所有答案與評分標準）
@@ -1610,13 +1658,13 @@ ${headerOutput}（依序輸出各大題，每題題號後方標註 [學習目標
 （檢查題幹是否有洩漏答案）
 
 ═══ 圖片生成指令 ═══
+（如無需配圖請留白）
 
 === 教材內容開始 ===
 ${matContent}
 === 教材內容結束 ===`;
 }
 
-// 支援接收 model 參數的 API 呼叫器
 async function callAPI(prompt, action, model = 'flash') {
   if (!S.apiSecret) {
     document.getElementById('keyModal').classList.remove('hide');
@@ -1708,13 +1756,19 @@ function doCopy(e, text, msg) {
 }
 
 // ═══════════════════════════════════════
-// Download Review Sheet (Excel)
+// ★ Download Review Sheet (Excel) - 修正與客製化版
 // ═══════════════════════════════════════
 function downloadReview() {
+  if (S.subject === '國語') {
+    downloadChineseReview();
+  } else {
+    downloadGenericReview();
+  }
+}
+
+// 通用版審核表 (修正欄位錯位)
+function downloadGenericReview() {
   const objs = S.objectives.filter(o => o.checked);
-  
-  const statSection = S.output.substring(S.output.indexOf('═══ 學習目標對應統計 ═══') || 0);
-  
   const headerRows = [
     ['新竹市香山區內湖國小'],
     ['學年度第___學期 第___次學習評量 試題審核表'],
@@ -1726,11 +1780,11 @@ function downloadReview() {
   ];
   
   const objRows = objs.map(o => [
-    o.name,
+    o.source && o.source !== '老師輸入' ? o.source : S.scope,  // 第一格：單元名稱或範圍
     o.hours || '',
     o.weight + ' 分',
     o.weight + '%',
-    o.detail || '',
+    o.name,                                                  // 第五格：學習目標
   ]);
   
   const typeHeader = [[], ['題型配分明細']];
@@ -1759,23 +1813,146 @@ function downloadReview() {
   ];
   
   const allRows = [...headerRows, ...objRows, ...typeHeader, ...typeRows, ...checkRows];
-  
   const ws = XLSX.utils.aoa_to_sheet(allRows);
   
-  ws['!cols'] = [
-    { wch: 20 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 },
+  ws['!cols'] = [{ wch: 20 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 }];
+  ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }];
+  
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '試題審核表');
+  XLSX.writeFile(wb, `審核表_${S.grade}${S.subject}_${S.scope}.xlsx`);
+}
+
+// 國語科專屬許育健教授版審核表
+function downloadChineseReview() {
+  const objs = S.objectives.filter(o => o.checked);
+  
+  // 上半部：基本資料與目標清單
+  const topRows = [
+    [`新竹市內湖國小 ${S.grade} 國語科試題審核表`],
+    ['參照許育健教授國語科評量向度佔分比例建議擬定(114.05)'],
+    [],
+    ['評量範圍：', S.scope, '', '命題教師：', '', '', ''],
+    [],
+    ['大單元名稱', '授課節數', '出題佔分', '佔比(%)', '教學目標/學習目標', '', ''],
+  ];
+
+  const objRows = objs.map(o => [
+    o.source && o.source !== '老師輸入' ? o.source : S.scope,
+    o.hours || '',
+    o.weight + ' 分',
+    o.weight + '%',
+    o.name,
+    '', ''
+  ]);
+
+  // 下半部：許育健教授雙向細目表
+  const matrixRows = [
+    [],
+    ['字 詞 短 語', '', '', '', '', '', ''],
+    ['分數佔比', '評量向度', '評量項目', '細項舉例', '入題(請打勾)', '佔分', '小計'],
+    ['低年級50％ / 中年級30％ / 高年級20％', '字音', '正確字音', '指認/習寫', '', '', ''],
+    ['', '', '近字音', '語境辨析', '', '', ''],
+    ['', '', '多字音', '語境辨析', '', '', ''],
+    ['', '', '變字音', '語境辨析', '', '', ''],
+    ['', '字形', '確認字形', '指認/習寫', '', '', ''],
+    ['', '', '筆畫筆順', '筆畫名稱/習寫/筆順原則', '', '', ''],
+    ['', '', '分辨部首', '部首意義/常用部首/罕用部首', '', '', ''],
+    ['', '', '部件組合', '常見部件/部件結構原則', '', '', ''],
+    ['', '', '造字原則', '(六書)象形指事/會意形聲/轉注假借', '', '', ''],
+    ['', '', '書法字體', '楷行/草/隸篆', '', '', ''],
+    ['', '', '書法故事', '書法家故事/書體演變', '', '', ''],
+    ['', '字詞義', '字詞釋義', '字詞義解釋', '', '', ''],
+    ['', '', '近義字詞', '辨識/比較應用', '', '', ''],
+    ['', '', '反義字詞', '區別/比較應用', '', '', ''],
+    ['', '', '類詞應用', '量詞/疊詞/狀聲詞/形容詞', '', '', ''],
+    [],
+    ['句 式 語 法', '', '', '', '', '', ''],
+    ['分數佔比', '評量向度', '評量項目', '細項舉例', '入題(請打勾)', '佔分', '小計'],
+    ['低年級30％ / 中年級50％ / 高年級30％', '句式', '句意理解', '解釋句義/指認句義', '', '', ''],
+    ['', '', '文句組成', '完成句子/語詞造句/標點造句', '', '', ''],
+    ['', '', '句型辨識', '句型練習/照樣造句/單句複句關聯句型', '', '', ''],
+    ['', '', '句式變化', '換句話說/倒裝句/被動句/省略句/合併句子', '', '', ''],
+    ['', '', '標點符號', '常用符號理解及應用', '', '', ''],
+    ['', '', '句群關係', '對話練習/句群關係判斷', '', '', ''],
+    ['', '語法', '四字詞語', '解釋句義/指認句義', '', '', ''],
+    ['', '', '結構詞語', '聯合結構/偏正結構/動實結構/特殊結構', '', '', ''],
+    ['', '', '常用修辭', '擬人/設問/類疊/誇飾/摹寫/排比/借代', '', '', ''],
+    [],
+    ['段 篇 讀 寫', '', '', '', '', '', ''],
+    ['分數佔比', '評量向度', '評量項目', '細項舉例', '入題(請打勾)', '佔分', '小計'],
+    ['低年級20％ / 中年級20％ / 高年級50％', '閱讀理解', '提取訊息', '特定詞句/詞句定義/事件細節/主題觀點', '', '', ''],
+    ['', '', '推論訊息', '事件因果/段意簡述/指稱代詞/角色關係', '', '', ''],
+    ['', '', '整合詮釋', '全文主題/人物特質/跨段比較/氣氛推測', '', '', ''],
+    ['', '', '比較評估', '虛擬辨識/情節評估/文章評析/作者意圖', '', '', ''],
+    ['', '閱讀策略', '閱讀技巧', '標註劃記/筆記/圖示', '', '', ''],
+    ['', '', '預測推論', '標題/圖表/圖片', '', '', ''],
+    ['', '', '摘要整合', '中心句/意義段/文章結構/段落大意', '', '', ''],
+    ['', '', '推估主旨', '作者意圖/寫作目的/隱含道理', '', '', ''],
+    ['', '', '辨識文類', '記敘/說明/議論/抒情/應用', '', '', ''],
+    ['', '', '詳略閱讀', '略讀/精讀/選讀', '', '', ''],
+    ['', '語文應用', '文體應用', '便條/日記/書信/劇本', '', '', ''],
+    ['', '', '語文工具', '字詞典/成語典', '', '', ''],
+    ['', '寫作練習', '句子變化', '擴寫/縮寫/續寫/改寫', '', '', ''],
+    ['', '', '看圖寫作', '連續圖/多圖/單圖', '', '', ''],
+    ['', '', '限制習寫', '限內容/限形式', '', '', ''],
+    ['', '', '主題習寫', '人/事/物/景', '', '', ''],
+    ['', '', '感想心得', '讀書心得/旅遊心得', '', '', ''],
+    ['', '', '寫作技巧', '具體描述/開頭結尾/聯想想像/問題解決', '', '', ''],
+    ['總分', '', '', '', '', '', ''],
+    [],
+    ['★ 命題者自評（打v表示達成）', '簽名：', '', '', '', '', ''],
+    ['□ 扣緊教學目標(或學習目標)與合於節數比例之配分。', '', '', '', '', '', ''],
+    ['□ 教師自行命題，未直接使用教科書廠商提供之試題。', '', '', '', '', '', ''],
+    ['□ 預估試題鑑別度指數(高分組答對率-低分組答對率)在20以上。', '', '', '', '', '', ''],
+    ['□ 預估應試時間為每份卷40至60分鐘之間。', '', '', '', '', '', ''],
+    ['□ 內容符合學生能力與真實情境，無爭議性、悖於常理或違背法規。', '', '', '', '', '', ''],
+    ['□ 遵守迴避原則與保密原則。', '', '', '', '', '', ''],
+    [],
+    ['一審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', ''],
+    ['二審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', ''],
+    ['三審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', '']
   ];
   
+  const allRows = [...topRows, ...objRows, ...matrixRows];
+  const ws = XLSX.utils.aoa_to_sheet(allRows);
+  
+  ws['!cols'] = [{ wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 35 }, { wch: 15 }, { wch: 10 }, { wch: 10 }];
+  
+  // 計算動態合併儲存格的起始行數 (因為 objRows 數量不固定)
+  const shift = topRows.length + objRows.length + 1; // matrixRows 起始位置
+  
   ws['!merges'] = [
-    { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
-    { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } },
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }, // 標題
+    { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } }, // 副標題
+    // 教學目標區塊的目標名稱跨欄合併
+    ...objRows.map((_, idx) => ({ s: { r: 5 + idx, c: 4 }, e: { r: 5 + idx, c: 6 } })),
+    
+    // 許育健教授表格的大標題合併
+    { s: { r: shift, c: 0 }, e: { r: shift, c: 6 } },       // 字詞短語 大標
+    { s: { r: shift + 18, c: 0 }, e: { r: shift + 18, c: 6 } }, // 句式語法 大標
+    { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } }, // 段篇讀寫 大標
+    
+    // 左側「分數佔比」直向合併
+    { s: { r: shift + 2, c: 0 }, e: { r: shift + 16, c: 0 } },  // 字詞短語-分數佔比
+    { s: { r: shift + 20, c: 0 }, e: { r: shift + 27, c: 0 } }, // 句式語法-分數佔比
+    { s: { r: shift + 31, c: 0 }, e: { r: shift + 48, c: 0 } }, // 段篇讀寫-分數佔比
+    
+    // 評量向度 直向合併
+    { s: { r: shift + 2, c: 1 }, e: { r: shift + 5, c: 1 } },   // 字音
+    { s: { r: shift + 6, c: 1 }, e: { r: shift + 12, c: 1 } },  // 字形
+    { s: { r: shift + 13, c: 1 }, e: { r: shift + 16, c: 1 } }, // 字詞義
+    { s: { r: shift + 20, c: 1 }, e: { r: shift + 25, c: 1 } }, // 句式
+    { s: { r: shift + 26, c: 1 }, e: { r: shift + 28, c: 1 } }, // 語法
+    { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } }, // 閱讀理解
+    { s: { r: shift + 35, c: 1 }, e: { r: shift + 40, c: 1 } }, // 閱讀策略
+    { s: { r: shift + 41, c: 1 }, e: { r: shift + 42, c: 1 } }, // 語文應用
+    { s: { r: shift + 43, c: 1 }, e: { r: shift + 48, c: 1 } }  // 寫作練習
   ];
   
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, '試題審核表');
-  
-  const filename = `審核表_${S.grade}${S.subject}_${S.scope}.xlsx`;
-  XLSX.writeFile(wb, filename);
+  XLSX.writeFile(wb, `國語科專屬審核表_${S.grade}_${S.scope}.xlsx`);
 }
 
 // ═══════════════════════════════════════
