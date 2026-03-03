@@ -519,7 +519,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
       </div>
 
       <div style="margin-bottom: 10px; padding: 10px 14px; background-color: var(--accent-bg); border-radius: 8px; border-left: 4px solid var(--accent);">
-        <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px;">
+        <a href="https://gemini.google.com/gem/1Xd6a-3N4dZvvzC7TdgP1yBjAa2IXDUFb?usp=sharing" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: var(--accent); font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 6px;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           啟動 AI 學習目標擷取器
           <span style="color: var(--text-2); font-size: 12px; font-weight: normal; margin-left: 4px;">
@@ -693,12 +693,24 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
     <h3>不支援 .doc 格式</h3>
     <p>本系統僅支援 <strong>.docx</strong> 格式。<br><br>
     <strong>轉檔方式：</strong>用 Word 開啟 → 檔案 → 另存新檔 → 格式選「Word 文件 (.docx)」<br><br>
-    <strong>線上轉檔：</strong><a href="https://cloudconvert.com/doc-to-docx" target="_blank">cloudconvert.com</a></p>
+    <strong>線上轉檔：</strong><a href="https://cloudconvert.com/doc-to-docx" target="_blank" rel="noopener noreferrer">cloudconvert.com</a></p>
     <div class="brow"><span></span><button class="btn btn-s" onclick="document.getElementById('docModal').classList.add('hide')">了解</button></div>
   </div>
 </div>
 
 <script>
+// ═══════════════════════════════════════
+// Utility & Security (XSS 防護)
+// ═══════════════════════════════════════
+function escHTML(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ═══════════════════════════════════════
 // API Configuration
 // ═══════════════════════════════════════
@@ -792,7 +804,7 @@ const upzone = document.getElementById('upzone');
 const fileIn = document.getElementById('fileIn');
 
 upzone.addEventListener('dragover', e => { e.preventDefault(); upzone.classList.add('drag'); });
-upzone.addEventListener('dragleave', () => upzone.classList.remove('drag'));
+upzone.addEventListener('dragleave', () => { upzone.classList.remove('drag'); });
 upzone.addEventListener('drop', e => { e.preventDefault(); upzone.classList.remove('drag'); handleFiles(e.dataTransfer.files); });
 fileIn.addEventListener('change', e => handleFiles(e.target.files));
 
@@ -845,25 +857,33 @@ async function extractPdfText(arrayBuffer) {
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const pageText = content.items.map(item => item.str).join('');
+    // 修復：PDF 斷詞加上空格，避免英文/國字黏在一起
+    const pageText = content.items.map(item => item.str).join(' ');
     fullText += pageText + '\n';
   }
   return fullText.trim();
 }
 
-function rmFile(i) { S.files.splice(i, 1); renderFiles(); updMatSt(); }
+function rmFile(i) { 
+  S.files.splice(i, 1); 
+  renderFiles(); 
+  updMatSt(); 
+  // 修復：刪除檔案後也要重新檢查長度
+  checkMatLength();
+}
 
 function previewFile(i) {
   const f = S.files[i];
   const preview = f.text.substring(0, 2000) + (f.text.length > 2000 ? '\n\n...（僅顯示前 2000 字）' : '');
   const modal = document.createElement('div');
   modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  // 修復：使用 escHTML 避免 XSS
   modal.innerHTML = `<div style="background:#fff;border-radius:12px;max-width:700px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;">
     <div style="padding:16px 20px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;">
-      <strong>📄 ${f.name}（${f.text.length.toLocaleString()} 字）</strong>
+      <strong>📄 ${escHTML(f.name)}（${f.text.length.toLocaleString()} 字）</strong>
       <button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:none;font-size:20px;cursor:pointer;padding:4px;">✕</button>
     </div>
-    <pre style="padding:16px 20px;margin:0;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:13px;line-height:1.6;color:#374151;">${preview.replace(/</g,'&lt;')}</pre>
+    <pre style="padding:16px 20px;margin:0;overflow:auto;white-space:pre-wrap;word-break:break-all;font-size:13px;line-height:1.6;color:#374151;">${escHTML(preview)}</pre>
   </div>`;
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
   document.body.appendChild(modal);
@@ -874,9 +894,11 @@ function renderFiles() {
   if (!S.files.length) { el.innerHTML = ''; return; }
   el.innerHTML = S.files.map((f, i) => {
     const sz = f.size < 1048576 ? (f.size/1024).toFixed(0)+' KB' : (f.size/1048576).toFixed(1)+' MB';
+    // 修復：使用 escHTML 避免檔名注入攻擊
+    const safeName = escHTML(f.name);
     return `<div class="fitem">
       <span class="fitem-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
-      <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" onclick="previewFile(${i})" title="點擊預覽擷取內容">${f.name}</span>
+      <span class="fitem-name" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" onclick="previewFile(${i})" title="點擊預覽擷取內容">${safeName}</span>
       <span class="fitem-info">${sz} · ${f.text.length.toLocaleString()} 字</span>
       <button class="fitem-rm" onclick="rmFile(${i})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>`;
@@ -893,7 +915,11 @@ function swTab(t) {
   document.getElementById(t === 'up' ? 'tab-up' : 'tab-tx').classList.add('on');
 }
 
-document.getElementById('matTxt').addEventListener('input', updMatSt);
+// 修復：貼上文字時也一併檢查長度
+document.getElementById('matTxt').addEventListener('input', () => {
+  updMatSt();
+  checkMatLength();
+});
 
 const MAT_TIPS = {
   '國語': '建議上傳：課本課文 + 習作。教案也可以，AI 會自動擷取學習目標。',
@@ -1433,10 +1459,23 @@ async function generate() {
   }
 }
 
+// ★ 雙向細目表 JSON 擷取與融合功能
 function mergeExam(flashText, proText) {
   function extract(text) {
-    let ex = '', ans = '', st = '', leak = '', img = '';
+    let outline = '', ex = '', ans = '', st = '', leak = '', img = '';
+    let matrixJson = {};
+    
+    // 擷取隱藏的雙向細目表 JSON
+    const matrixMatch = text.match(/═══ 國語科雙向細目表對應 ═══[\s\S]*?```json\n([\s\S]*?)\n```/);
+    if (matrixMatch && matrixMatch[1]) {
+        try { matrixJson = JSON.parse(matrixMatch[1]); } catch(e) {}
+    }
+
     const parts = text.split(/=== 正式試題 ===|═══ 正式試題 ═══/);
+    if (parts.length > 1) {
+        outline = parts[0].trim();
+    }
+    
     let mainBody = parts.length > 1 ? parts[1] : parts[0]; 
     
     const p1 = mainBody.split(/═══ 答案卷 ═══/);
@@ -1450,11 +1489,13 @@ function mergeExam(flashText, proText) {
         if (p3[1]) {
           const p4 = p3[1].split(/═══ 圖片生成指令.*═══|═══ 圖片生成指令/);
           leak = p4[0] || '';
-          img = p4[1] ? p4[1].replace(/^[^\n]*\n/, '') : '';
+          // 把後面的 JSON 區塊切掉，避免顯示在前端畫面
+          const imgRaw = p4[1] ? p4[1].replace(/^[^\n]*\n/, '') : '';
+          img = imgRaw.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
         }
       }
     }
-    return { ex: ex.trim(), ans: ans.trim(), st: st.trim(), leak: leak.trim(), img: img.trim() };
+    return { outline: outline, ex: ex.trim(), ans: ans.trim(), st: st.trim(), leak: leak.trim(), img: img.trim(), matrixJson: matrixJson };
   }
   
   const f = extract(flashText);
@@ -1463,10 +1504,23 @@ function mergeExam(flashText, proText) {
   let cleanPSt = p.st.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
   let cleanPLeak = p.leak.replace(/\*\*難度分布估計：\*\*[\s\S]*/, '');
 
-  return `${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}`;
+  let finalOutline = f.outline ? (f.outline + '\n\n=== 正式試題 ===\n\n') : '';
+  if (!finalOutline && p.outline) finalOutline = p.outline + '\n\n=== 正式試題 ===\n\n';
+
+  // 融合兩個 AI 產出的雙向細目表分數
+  let combinedMatrix = {};
+  for (let key in f.matrixJson) { combinedMatrix[key] = (combinedMatrix[key] || 0) + f.matrixJson[key]; }
+  for (let key in p.matrixJson) { combinedMatrix[key] = (combinedMatrix[key] || 0) + p.matrixJson[key]; }
+  
+  let matrixOutput = '';
+  if (Object.keys(combinedMatrix).length > 0) {
+      matrixOutput = `\n\n═══ 國語科雙向細目表對應 ═══\n\`\`\`json\n${JSON.stringify(combinedMatrix, null, 2)}\n\`\`\``;
+  }
+
+  return `${finalOutline}${f.ex}\n\n${p.ex}\n\n═══ 答案卷 ═══\n${f.ans}\n\n${p.ans}\n\n═══ 學習目標對應統計 ═══\n${f.st}\n\n${cleanPSt.trim()}\n\n═══ 防洩漏自檢報告 ═══\n${f.leak}\n\n${cleanPLeak.trim()}${f.img || p.img ? '\n\n═══ 圖片生成指令 ═══\n' + f.img + '\n' + p.img : ''}${matrixOutput}`;
 }
 
-// 核心 Prompt 升級：加入鐵則與排版限制
+// 核心 Prompt 升級：加入鐵則與排版限制，以及 JSON 輸出指令
 function buildExamPrompt(targetScores, isMain) {
   const d = DIFF[S.difficulty];
   const scoreSpec = targetScores.map(s => `${s.ordName}、${s.name}：${s.count} 題 × ${s.each} 分 = ${s.subtotal} 分`).join('\n');
@@ -1521,6 +1575,23 @@ function buildExamPrompt(targetScores, isMain) {
   const formatStr = isMain 
     ? `內湖國小 114 學年度第___學期 定期評量 ${S.subject}科試卷\n${S.grade}___班 座號：_______ 姓名：_______\n\n（依序輸出各大題，並嚴格遵守【排版格式嚴格要求】）` 
     : `（依序輸出分配給你的大題，並嚴格遵守【排版格式嚴格要求】）`;
+
+  let chineseJsonInstruction = '';
+  if (S.subject === '國語') {
+      chineseJsonInstruction = `
+═══ 國語科雙向細目表對應 ═══
+（因為本試卷為國語科，請務必將你負責的這部分考卷【所有題目的配分】，依據真實測驗的認知歷程，精準對應到下列「許育健教授評量項目」中，並輸出成嚴格的 JSON 格式。）
+請只使用以下官方給定的 key 值（絕對不可發明新詞）：
+["正確字音", "近字音", "多字音", "變字音", "確認字形", "筆畫筆順", "分辨部首", "部件組合", "造字原則", "書法字體", "書法故事", "字詞釋義", "近義字詞", "反義字詞", "類詞應用", "句意理解", "文句組成", "句型辨識", "句式變化", "標點符號", "句群關係", "四字詞語", "結構詞語", "常用修辭", "提取訊息", "推論訊息", "整合詮釋", "比較評估", "閱讀技巧", "預測推論", "摘要整合", "推估主旨", "辨識文類", "詳略閱讀", "文體應用", "語文工具", "句子變化", "看圖寫作", "限制習寫", "主題習寫", "感想心得", "寫作技巧"]
+輸出範例：
+\`\`\`json
+{
+  "正確字音": 10,
+  "確認字形": 5,
+  "提取訊息": 4
+}
+\`\`\``;
+  }
 
   return `你是一位資深且嚴謹的國小命題教師，專精 ${S.subject} 科。
 請嚴格執行以下「兩階段命題任務」。
@@ -1579,6 +1650,7 @@ ${formatStr}
 
 ═══ 圖片生成指令 ═══
 （如無需配圖請留白）
+${chineseJsonInstruction}
 
 === 教材內容開始 ===
 ${matContent}
@@ -1629,15 +1701,15 @@ function saveKey() {
   else if (S.step === 5) generate();
 }
 
-function copyAll(e) { doCopy(e, S.output, '已複製完整考卷！'); }
+function copyAll(e) { doCopy(e, S.output.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製完整考卷！'); }
 function copyAns(e) {
   const m = '═══ 答案卷';
   const m2 = '═══ 學習目標對應統計';
   let i = S.output.indexOf(m);
   let end = S.output.indexOf(m2);
-  if (i < 0) return doCopy(e, S.output, '已複製！');
+  if (i < 0) return doCopy(e, S.output.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製！');
   const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i);
-  doCopy(e, text, '已複製答案卷！');
+  doCopy(e, text.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製答案卷！');
 }
 function copyObj(e) {
   const m = '═══ 學習目標對應統計';
@@ -1646,13 +1718,16 @@ function copyObj(e) {
   if (i < 0) { alert('未找到學習目標統計'); return; }
   const end = S.output.indexOf(m2);
   const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
-  doCopy(e, text, '已複製目標統計！');
+  doCopy(e, text.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim(), '已複製目標統計！');
 }
 function copyImg(e) {
   const m = '═══ 圖片生成指令';
+  const m2 = '═══ 國語科雙向細目表對應 ═══';
   const i = S.output.indexOf(m);
   if (i < 0) { alert('本份考卷無需配圖'); return; }
-  doCopy(e, S.output.substring(i), '已複製圖片指令！');
+  const end = S.output.indexOf(m2);
+  const text = end > i ? S.output.substring(i, end).trim() : S.output.substring(i).trim();
+  doCopy(e, text, '已複製圖片指令！');
 }
 
 function doCopy(e, text, msg) {
@@ -1662,11 +1737,11 @@ function doCopy(e, text, msg) {
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
     btn.style.background = 'var(--accent-l)'; btn.style.color = 'var(--accent)';
     setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; btn.style.color = ''; }, 2000);
-  });
+  }).catch(err => alert('複製失敗：瀏覽器未授權剪貼簿，請檢查權限設定或手動選取複製。'));
 }
 
 // ═══════════════════════════════════════
-// ★ Download Review Sheet (Excel) - 終極修復防亂碼版
+// ★ Download Review Sheet (Excel) - 自動對位算分版
 // ═══════════════════════════════════════
 function downloadReview() {
   if (S.subject === '國語') {
@@ -1735,6 +1810,13 @@ function downloadGenericReview() {
 function downloadChineseReview() {
   const objs = S.objectives.filter(o => o.checked);
   
+  // 從系統紀錄的結果中抓出 AI 算好的 JSON
+  let matrixScores = {};
+  const matrixMatch = S.output.match(/═══ 國語科雙向細目表對應 ═══[\s\S]*?```json\n([\s\S]*?)\n```/);
+  if (matrixMatch && matrixMatch[1]) {
+      try { matrixScores = JSON.parse(matrixMatch[1]); } catch(e) { console.error("JSON 解析失敗", e); }
+  }
+
   const topRows = [
     [`新竹市內湖國小 ${S.grade} 國語科試題審核表`],
     ['參照許育健教授國語科評量向度佔分比例建議擬定(114.05)'],
@@ -1820,34 +1902,52 @@ function downloadChineseReview() {
     ['三審', '□ 傳閱    □ 共同討論', '審題者(請遵守迴避與保密原則，並簽名)：', '', '', '', '']
   ];
   
+  // ★ 自動配分邏輯：將 JSON 內的數字填入對應儲存格
+  let subtotalA = 0, subtotalB = 0, subtotalC = 0;
+  matrixRows.forEach((row, idx) => {
+      let key = row[2]; // 評量項目
+      if (key && matrixScores[key]) {
+          row[4] = 'V'; 
+          row[5] = matrixScores[key]; 
+          if (idx >= 3 && idx <= 16) subtotalA += matrixScores[key];
+          if (idx >= 20 && idx <= 28) subtotalB += matrixScores[key];
+          if (idx >= 32 && idx <= 49) subtotalC += matrixScores[key];
+      }
+  });
+  
+  // 填寫小計與總分
+  matrixRows[3][6] = subtotalA;
+  matrixRows[20][6] = subtotalB;
+  matrixRows[32][6] = subtotalC;
+  matrixRows[50][1] = subtotalA + subtotalB + subtotalC; // 總分欄位
+
   const allRows = [...topRows, ...objRows, ...matrixRows];
   const ws = XLSX.utils.aoa_to_sheet(allRows);
   
   ws['!cols'] = [{ wch: 18 }, { wch: 12 }, { wch: 12 }, { wch: 35 }, { wch: 15 }, { wch: 10 }, { wch: 10 }];
   
-  // ★ 精密計算動態合併座標 (徹底解決重疊崩潰問題)
-  const shift = topRows.length + objRows.length + 1; // 動態推算 matrixRows 的起始列座標
+  // 動態推算矩陣的起始列座標，確保不會重疊
+  const shift = topRows.length + objRows.length; 
   
   ws['!merges'] = [
     { s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }, 
     { s: { r: 1, c: 0 }, e: { r: 1, c: 6 } }, 
-    // 學習目標區塊的跨欄合併
     ...objRows.map((_, idx) => ({ s: { r: 5 + idx, c: 4 }, e: { r: 5 + idx, c: 6 } })),
     
-    // 雙向細目表大標題合併
-    { s: { r: shift, c: 0 }, e: { r: shift, c: 6 } },       
+    // 大標題合併
+    { s: { r: shift + 1, c: 0 }, e: { r: shift + 1, c: 6 } },       
     { s: { r: shift + 18, c: 0 }, e: { r: shift + 18, c: 6 } }, 
     { s: { r: shift + 29, c: 0 }, e: { r: shift + 29, c: 6 } }, 
     
-    // 左側「分數佔比」合併
-    { s: { r: shift + 2, c: 0 }, e: { r: shift + 16, c: 0 } },  
-    { s: { r: shift + 20, c: 0 }, e: { r: shift + 27, c: 0 } }, 
-    { s: { r: shift + 31, c: 0 }, e: { r: shift + 48, c: 0 } }, 
+    // 左側合併
+    { s: { r: shift + 3, c: 0 }, e: { r: shift + 16, c: 0 } },  
+    { s: { r: shift + 20, c: 0 }, e: { r: shift + 28, c: 0 } }, 
+    { s: { r: shift + 31, c: 0 }, e: { r: shift + 49, c: 0 } }, 
     
-    // 「評量向度」合併
-    { s: { r: shift + 2, c: 1 }, e: { r: shift + 5, c: 1 } },   
-    { s: { r: shift + 6, c: 1 }, e: { r: shift + 12, c: 1 } },  
-    { s: { r: shift + 13, c: 1 }, e: { r: shift + 16, c: 1 } }, 
+    // 評量向度合併
+    { s: { r: shift + 3, c: 1 }, e: { r: shift + 6, c: 1 } },   
+    { s: { r: shift + 7, c: 1 }, e: { r: shift + 13, c: 1 } },  
+    { s: { r: shift + 14, c: 1 }, e: { r: shift + 16, c: 1 } }, 
     { s: { r: shift + 20, c: 1 }, e: { r: shift + 25, c: 1 } }, 
     { s: { r: shift + 26, c: 1 }, e: { r: shift + 28, c: 1 } }, 
     { s: { r: shift + 31, c: 1 }, e: { r: shift + 34, c: 1 } }, 
@@ -1861,20 +1961,14 @@ function downloadChineseReview() {
   XLSX.writeFile(wb, `國語科專屬審核表_${S.grade}_${S.scope}.xlsx`);
 }
 
-// ═══════════════════════════════════════
-// Workshop Mode
-// ═══════════════════════════════════════
 function toggleWorkshop() {
-  S.workshopMode = document.getElementById('wsToggle').checked;
-  localStorage.setItem('nhps_workshop', S.workshopMode);
+  const on = document.getElementById('wsToggle').checked;
+  S.workshopMode = on;
+  localStorage.setItem('nhps_workshop', on ? 'true' : 'false');
 }
 
-// ═══════════════════════════════════════
-// Init
-// ═══════════════════════════════════════
 updSteps();
 document.getElementById('wsToggle').checked = S.workshopMode;
 </script>
-
 </body>
 </html>
