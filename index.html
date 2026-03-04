@@ -1260,6 +1260,20 @@ function updChScore(key, val) {
   }
 }
 
+function updChZoneTotals() {
+  CH_ZONES.forEach(zone => {
+    const zoneTotal = zone.items
+      .filter(it => S.chScores[it.key])
+      .reduce((a, it) => a + S.chScores[it.key], 0);
+    const el = document.getElementById('ch-zone-total-' + zone.id);
+    if (el) {
+      el.textContent = zoneTotal;
+      const suggested = zone.grades[getGradeLevel(S.grade)];
+      el.style.color = zoneTotal === suggested ? 'var(--accent)' : zoneTotal > suggested ? 'var(--err)' : 'var(--warn)';
+    }
+  });
+}
+
 function updChTotal() {
   const total = Object.values(S.chScores).reduce((a,v)=>a+v,0);
   const el = document.getElementById('ch-total');
