@@ -1835,14 +1835,13 @@ function downloadChineseReview(){
   let matrixScores={};
   const mm=S.output.match(/═══ 國語科雙向細目表對應 ═══[\s\S]*?```json\n([\s\S]*?)\n```/);
   if(mm&&mm[1]){ try{ matrixScores=JSON.parse(mm[1]); }catch(e){} }
-  const topRows=[
+const topRows=[
     [`新竹市內湖國小 ${S.grade} 國語科試題審核表`],
     ['參照許育健教授國語科評量向度佔分比例建議擬定(114.05)'],
     [],['評量範圍：',S.scope,'','命題教師：','','',''],
-    [],['大單元名稱','授課節數','出題佔分','佔比(%)','教學目標/學習目標','',''],
+    [],
   ];
-  const objRows=Object.entries(S.chScores).filter(([,v])=>v>0).map(([k,v])=>[S.scope,'',v+' 分',v+'%',k,'','']);
-  if(objRows.length===0) objRows.push([S.scope,'','','','（未設定向度配分）','','']);
+const objRows=[];
   const matrixRows=[
     [],['字 詞 短 語','','','','','',''],
     ['分數佔比','評量向度','評量項目','細項舉例','入題(請打勾)','佔分','小計'],
