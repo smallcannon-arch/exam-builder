@@ -1247,8 +1247,17 @@ function toggleChOther(zoneId, btn) {
 
 function updChScore(key, val) {
   const v = parseInt(val)||0;
-  if (v>0) S.chScores[key]=v; else delete S.chScores[key];
+  if(v>0) S.chScores[key]=v; else delete S.chScores[key];
   updChTotal();
+  updChZoneTotals();
+  // 奇數配分提示
+  if(v>0 && v%2!==0){
+    const inp = event && event.target;
+    if(inp){ inp.style.borderColor='var(--warn)'; inp.title='⚠️ 奇數分數可能導致單題出現小數，建議改為偶數'; }
+  } else {
+    const inp = event && event.target;
+    if(inp){ inp.style.borderColor=''; inp.title=''; }
+  }
 }
 
 function updChTotal() {
@@ -1620,6 +1629,7 @@ ${scoredItems.join('\n')}
    - 句式語法區：必須包含「造句」或「句型改寫」至少一種，修辭若有配分須含仿寫而非只有辨識
    - 段篇讀寫區：必須包含「簡答題」，若段篇配分超過 30 分須加入「引導寫作」或「結構填空」
    - 手寫大題每題須標明「評分標準」與「參考答案」
+6. 分數規範：每題分數必須為整數，不得出現小數點。若向度配分無法整除預計題數，請自動微調題數或每題分數使其整除，並在試卷中標註調整說明。
 
 【素材彈藥庫】
 ${matParts.join('\n\n')}
