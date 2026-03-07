@@ -60,7 +60,7 @@ body {
 .hdr-badge {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--accent-l); color: var(--accent);
-  font-size: 12px; font-weight: 600; padding: 5px 14px;
+  font-size: 14px; font-weight: 600; padding: 5px 14px;
   border-radius: 20px; margin-bottom: 14px; letter-spacing: 1px;
 }
 .hdr h1 {
@@ -76,14 +76,14 @@ body {
 .steps { display: flex; justify-content: center; align-items: center; gap: 0; margin: 4px 0 24px; }
 .stp {
   display: flex; align-items: center; gap: 5px;
-  font-size: 11px; color: var(--text-3); font-weight: 500; transition: color var(--t);
+  font-size: 13px; color: var(--text-3); font-weight: 500; transition: color var(--t);
 }
 .stp.on { color: var(--accent); font-weight: 700; }
 .stp.ok { color: var(--accent); }
 .stp-n {
   width: 24px; height: 24px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700;
+  font-size: 13px; font-weight: 700;
   background: var(--border); color: var(--text-3);
   transition: all var(--t); flex-shrink: 0;
 }
@@ -149,7 +149,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .upz-icon { color: var(--text-3); margin-bottom: 6px; }
 .upz-icon svg { width: 28px; height: 28px; }
 .upz-main { font-size: 14px; font-weight: 500; color: var(--text-2); }
-.upz-hint { font-size: 11px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
+.upz-hint { font-size: 13px; color: var(--text-3); margin-top: 4px; line-height: 1.5; }
 /* 國語科小型上傳區 */
 .ch-upz {
   border: 2px dashed var(--border); border-radius: var(--r-md);
@@ -159,19 +159,19 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .ch-upz:hover, .ch-upz.drag { border-color: var(--accent); background: var(--accent-bg); }
 .ch-upz input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.ch-upz-main { font-size: 13px; font-weight: 500; color: var(--text-2); display: flex; align-items: center; justify-content: center; gap: 6px; }
-.ch-upz-hint { font-size: 11px; color: var(--text-3); margin-top: 3px; }
-.ch-upz-st { font-size: 12px; color: var(--accent); margin-top: 6px; font-weight: 500; min-height: 18px; }
+.ch-upz-main { font-size: 15px; font-weight: 500; color: var(--text-2); display: flex; align-items: center; justify-content: center; gap: 6px; }
+.ch-upz-hint { font-size: 13px; color: var(--text-3); margin-top: 3px; }
+.ch-upz-st { font-size: 14px; color: var(--accent); margin-top: 6px; font-weight: 500; min-height: 18px; }
 .flist { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
 .fitem {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px; background: var(--surface-alt);
-  border-radius: var(--r-sm); font-size: 13px;
+  border-radius: var(--r-sm); font-size: 15px;
   border: 1px solid var(--border-light);
 }
 .fitem-icon { color: var(--accent); flex-shrink: 0; }
 .fitem-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-.fitem-info { color: var(--text-3); font-size: 11px; flex-shrink: 0; }
+.fitem-info { color: var(--text-3); font-size: 13px; flex-shrink: 0; }
 .fitem-rm {
   background: none; border: none; cursor: pointer; color: var(--text-3);
   padding: 2px; border-radius: 4px; transition: color var(--t); flex-shrink: 0;
@@ -179,7 +179,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .fitem-rm:hover { color: var(--err); }
 .mtabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 2px solid var(--border-light); }
 .mtab {
-  padding: 8px 16px; font-size: 13px; font-weight: 500;
+  padding: 8px 16px; font-size: 15px; font-weight: 500;
   color: var(--text-3); cursor: pointer; border: none;
   background: none; font-family: inherit;
   border-bottom: 2px solid transparent; margin-bottom: -2px;
@@ -192,7 +192,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .mat-st {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 14px; border-radius: var(--r-sm);
-  font-size: 12px; font-weight: 500; margin-top: 10px;
+  font-size: 14px; font-weight: 500; margin-top: 10px;
 }
 .mat-st.ok { background: var(--accent-bg); color: var(--accent); }
 .mat-st.no { background: var(--warn-bg); color: var(--warn); }
@@ -206,18 +206,18 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 .ch-zone-hd {
   display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700; color: var(--text);
+  font-size: 15px; font-weight: 700; color: var(--text);
   margin-bottom: 4px;
 }
 .ch-zone-badge {
-  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  font-size: 12px; font-weight: 700; padding: 2px 8px;
   border-radius: 10px; flex-shrink: 0;
 }
 .ch-zone-badge.z1 { background: #e0f2fe; color: #1e40af; }
 .ch-zone-badge.z2 { background: #fef3c7; color: #92400e; }
 .ch-zone-badge.z3 { background: #f0fdf4; color: #166534; }
 .ch-zone-badge.z4 { background: #fdf4ff; color: #7e22ce; }
-.ch-zone-hint { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+.ch-zone-hint { font-size: 13px; color: var(--text-3); margin-bottom: 6px; }
 /* ═══ Objectives ═══ */
 .obj-card {
   border: 1.5px solid var(--border); border-radius: var(--r-md);
@@ -237,12 +237,12 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .obj-chk.on svg { opacity: 1; }
 .obj-name { flex: 1; font-size: 14px; font-weight: 600; }
 .obj-weight { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.obj-weight input { width: 50px; padding: 4px 6px; text-align: center; font-size: 13px; border-radius: 4px; }
-.obj-detail { font-size: 13px; color: var(--text-2); line-height: 1.6; padding-left: 30px; }
+.obj-weight input { width: 50px; padding: 4px 6px; text-align: center; font-size: 15px; border-radius: 4px; }
+.obj-detail { font-size: 15px; color: var(--text-2); line-height: 1.6; padding-left: 30px; }
 .obj-summary {
   display: flex; justify-content: space-between; align-items: center;
   padding: 12px 0 0; margin-top: 8px; border-top: 1px solid var(--border-light);
-  font-size: 13px;
+  font-size: 15px;
 }
 .obj-total { font-weight: 700; color: var(--accent); }
 .obj-total.err { color: var(--err); }
@@ -267,22 +267,22 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .qti-c svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity var(--t); }
 .qti.on .qti-c svg { opacity: 1; }
 .qti-info { flex: 1; }
-.qti-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
-.qti-desc { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+.qti-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.qti-desc { font-size: 13px; color: var(--text-3); margin-top: 2px; }
 .qti-badge {
   display: inline-block; background: var(--gold-l); color: var(--gold);
-  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  font-size: 12px; font-weight: 700; padding: 1px 6px;
   border-radius: 3px; margin-left: 4px; vertical-align: middle;
 }
 /* ═══ Score Table ═══ */
 .stbl { width: 100%; border-collapse: collapse; margin-top: 6px; }
-.stbl th, .stbl td { padding: 10px 10px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-light); }
-.stbl th { font-weight: 600; color: var(--text-3); font-size: 11px; letter-spacing: 0.5px; }
-.stbl input[type="number"] { width: 56px; padding: 5px 6px; text-align: center; font-size: 13px; }
+.stbl th, .stbl td { padding: 10px 10px; text-align: left; font-size: 15px; border-bottom: 1px solid var(--border-light); }
+.stbl th { font-weight: 600; color: var(--text-3); font-size: 13px; letter-spacing: 0.5px; }
+.stbl input[type="number"] { width: 56px; padding: 5px 6px; text-align: center; font-size: 15px; }
 .stbl-total { font-size: 16px; font-weight: 900; color: var(--accent); text-align: right; padding-top: 12px; }
 .stbl-total.err { color: var(--err); }
 .sc-ord { display: flex; flex-direction: column; gap: 2px; }
-.sc-ord button { background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 12px; color: var(--text-2); line-height: 1; transition: all var(--t); }
+.sc-ord button { background: none; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; padding: 1px 4px; font-size: 14px; color: var(--text-2); line-height: 1; transition: all var(--t); }
 .sc-ord button:hover { background: var(--accent-l); border-color: var(--accent); color: var(--accent); }
 .sc-ord button:disabled { opacity: 0.2; cursor: default; }
 /* ═══ Buttons ═══ */
@@ -333,11 +333,11 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; }
 .ld-sub { font-size: 14px; color: var(--text-3); margin-top: 8px; }
 /* ═══ [修改4] 計時器樣式 ═══ */
-.ld-timer { font-size: 13px; color: var(--text-3); margin-top: 6px; }
+.ld-timer { font-size: 15px; color: var(--text-3); margin-top: 6px; }
 /* ═══ Status Msg ═══ */
 .smsg {
   padding: 10px 14px; border-radius: var(--r-sm);
-  font-size: 12px; font-weight: 500; margin-top: 10px;
+  font-size: 14px; font-weight: 500; margin-top: 10px;
   display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
 }
 .smsg svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 2px; }
@@ -358,7 +358,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 @keyframes scaleIn { from { transform: scale(0.95); opacity: 0; } }
 .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
-.modal p { font-size: 13px; color: var(--text-2); margin-bottom: 14px; line-height: 1.6; }
+.modal p { font-size: 15px; color: var(--text-2); margin-bottom: 14px; line-height: 1.6; }
 .modal a { color: var(--accent); text-decoration: underline; }
 .modal input { margin-bottom: 14px; }
 /* ═══ Chinese Step2 向度設定 ═══ */
@@ -368,15 +368,15 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   flex-wrap: nowrap; min-width: 0;
 }
 .ch-score-label {
-  flex: 1; font-size: 13px; min-width: 0;
+  flex: 1; font-size: 15px; min-width: 0;
   display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
 }
 .ch-score-item:last-child { border-bottom: none; }
-.ch-score-label { flex: 1; font-size: 13px; }
-.ch-score-ex { font-size: 11px; color: var(--text-3); margin-left: 4px; }
+.ch-score-label { flex: 1; font-size: 15px; }
+.ch-score-ex { font-size: 13px; color: var(--text-3); margin-left: 4px; }
 .ch-score-input {
   width: 56px; padding: 4px 6px; text-align: center;
-  font-size: 13px; border: 1.5px solid var(--border);
+  font-size: 15px; border: 1.5px solid var(--border);
   border-radius: 4px; font-family: inherit;
 }
 .ch-score-input:focus { border-color: var(--border-focus); outline: none; }
@@ -392,17 +392,17 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .ch-zone-body { padding: 8px 16px; width: 100%; box-sizing: border-box; }
 .ch-expand-btn {
   background: none; border: none; color: var(--accent);
-  font-size: 12px; cursor: pointer; padding: 6px 0;
+  font-size: 14px; cursor: pointer; padding: 6px 0;
   font-family: inherit; display: flex; align-items: center; gap: 4px;
 }
 .rec-badge {
   display: inline-block; background: var(--gold-l); color: var(--gold);
-  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  font-size: 12px; font-weight: 700; padding: 1px 6px;
   border-radius: 3px; margin-left: 6px;
 }
 /* ═══ [修改1] 向度小計標籤樣式 ═══ */
 .ch-zone-sub {
-  font-size: 12px; font-weight: 700; padding: 2px 8px;
+  font-size: 14px; font-weight: 700; padding: 2px 8px;
   border-radius: 4px; background: var(--border-light);
   color: var(--text-3); min-width: 48px; text-align: center;
   transition: color var(--t);
@@ -410,7 +410,7 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 /* ═══ Footer ═══ */
 .ftr {
   text-align: center; padding: 28px 0 8px;
-  font-size: 11px; color: var(--text-3); letter-spacing: 0.3px;
+  font-size: 13px; color: var(--text-3); letter-spacing: 0.3px;
 }
 .ftr-line { margin-bottom: 4px; }
 /* ═══ Utility ═══ */
