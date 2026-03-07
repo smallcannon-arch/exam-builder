@@ -332,6 +332,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .ld-msg { font-size: 20px; color: var(--accent); font-weight: 700; }
 .ld-sub { font-size: 14px; color: var(--text-3); margin-top: 8px; }
+/* ═══ [修改4] 計時器樣式 ═══ */
+.ld-timer { font-size: 13px; color: var(--text-3); margin-top: 6px; }
 /* ═══ Status Msg ═══ */
 .smsg {
   padding: 10px 14px; border-radius: var(--r-sm);
@@ -397,6 +399,13 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
   display: inline-block; background: var(--gold-l); color: var(--gold);
   font-size: 10px; font-weight: 700; padding: 1px 6px;
   border-radius: 3px; margin-left: 6px;
+}
+/* ═══ [修改1] 向度小計標籤樣式 ═══ */
+.ch-zone-sub {
+  font-size: 12px; font-weight: 700; padding: 2px 8px;
+  border-radius: 4px; background: var(--border-light);
+  color: var(--text-3); min-width: 48px; text-align: center;
+  transition: color var(--t);
 }
 /* ═══ Footer ═══ */
 .ftr {
@@ -719,6 +728,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
         <div class="ld-spin"></div>
         <div class="ld-msg" id="s5-ldMsg">AI 正在根據教材與學習目標命題中...</div>
         <div class="ld-sub" id="s5-ldSub">通常需要 30-60 秒，依題數而定</div>
+        <!-- [修改4] 計時器 -->
+        <div class="ld-timer" id="s5-timer"></div>
       </div>
     </div>
     <div id="s5-ok" class="out-area hide">
@@ -984,7 +995,6 @@ async function handleChFiles(zoneId, stId, files) {
     }
   }
 
-  // 更新狀態顯示
   const total = S.chFiles[zoneId];
   if (total.length > 0) {
     const totalChars = total.reduce((a,f) => a+f.text.length, 0);
@@ -1085,6 +1095,10 @@ document.getElementById('subject').addEventListener('change', function() {
   document.getElementById('btn-s1-next').innerHTML = isChinese
     ? '下一步：設定評量向度 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>'
     : '下一步 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>';
+  // [修改3] 換科目時清空舊題型選擇，避免跨科目殘留
+  S.selTypeIds = [];
+  S.selTypes = [];
+  S.scores = [];
   updMatSt();
 });
 
@@ -1185,6 +1199,7 @@ async function toStep2() {
 
 // ═══════════════════════════════════════
 // 國語科 Step 2ch 渲染
+// [修改1] ch-zone-header 加入向度小計 span（id="ch-zone-total-{zone.id}"）
 // ═══════════════════════════════════════
 function renderChZones() {
   const level = getGradeLevel(S.grade);
@@ -1202,7 +1217,8 @@ function renderChZones() {
       <div class="ch-zone-header">
         <span class="ch-zone-badge ${zone.badgeClass}">${zone.label}</span>
         <span style="font-size:13px;font-weight:700;flex:1;">${zone.label}向度</span>
-        <span style="font-size:12px;color:var(--text-3);">${levelLabel} ${suggested} 分</span>
+        <span style="font-size:12px;color:var(--text-3);margin-right:8px;">${levelLabel} ${suggested} 分</span>
+        <span class="ch-zone-sub" id="ch-zone-total-${zone.id}">0 分</span>
       </div>
       <div class="ch-zone-body">
         ${recItems.length>0
@@ -1222,6 +1238,7 @@ function renderChZones() {
   updChTotal();
 }
 
+// [修改2] renderChScoreItem 的 onchange 傳入 event 參數
 function renderChScoreItem(it, isRec) {
   return `
   <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-light);">
@@ -1231,7 +1248,7 @@ function renderChScoreItem(it, isRec) {
       <span style="font-size:11px;color:var(--text-3);margin-left:4px;">${escHTML(it.ex)}</span>
     </span>
     <input type="number" class="ch-score-input" value="0" min="0" max="100"
-      onchange="updChScore('${escHTML(it.key)}',this.value)" placeholder="0"
+      onchange="updChScore('${escHTML(it.key)}',this.value,this)" placeholder="0"
       style="width:56px;padding:4px 6px;text-align:center;font-size:13px;border:1.5px solid var(--border);border-radius:4px;flex-shrink:0;">
     <span style="font-size:12px;color:var(--text-3);width:16px;flex-shrink:0;">分</span>
   </div>`;
@@ -1246,21 +1263,25 @@ function toggleChOther(zoneId, btn) {
   else { el.classList.add('hide'); btn.textContent=`▶ 顯示其他 ${otherCount} 個向度`; }
 }
 
-function updChScore(key, val) {
+// [修改2] updChScore 接收 ev 參數，不再使用全域 event
+function updChScore(key, val, inp) {
   const v = parseInt(val)||0;
   if(v>0) S.chScores[key]=v; else delete S.chScores[key];
   updChTotal();
   updChZoneTotals();
   // 奇數配分提示
-  if(v>0 && v%2!==0){
-    const inp = event && event.target;
-    if(inp){ inp.style.borderColor='var(--warn)'; inp.title='⚠️ 奇數分數可能導致單題出現小數，建議改為偶數'; }
-  } else {
-    const inp = event && event.target;
-    if(inp){ inp.style.borderColor=''; inp.title=''; }
+  if(inp){
+    if(v>0 && v%2!==0){
+      inp.style.borderColor='var(--warn)';
+      inp.title='⚠️ 奇數分數可能導致單題出現小數，建議改為偶數';
+    } else {
+      inp.style.borderColor='';
+      inp.title='';
+    }
   }
 }
 
+// [修改1] updChZoneTotals 現在能正確找到 DOM 元素並顯示小計
 function updChZoneTotals() {
   CH_ZONES.forEach(zone => {
     const zoneTotal = zone.items
@@ -1268,9 +1289,21 @@ function updChZoneTotals() {
       .reduce((a, it) => a + S.chScores[it.key], 0);
     const el = document.getElementById('ch-zone-total-' + zone.id);
     if (el) {
-      el.textContent = zoneTotal;
+      el.textContent = zoneTotal + ' 分';
       const suggested = zone.grades[getGradeLevel(S.grade)];
-      el.style.color = zoneTotal === suggested ? 'var(--accent)' : zoneTotal > suggested ? 'var(--err)' : 'var(--warn)';
+      if (zoneTotal === 0) {
+        el.style.color = 'var(--text-3)';
+        el.style.background = 'var(--border-light)';
+      } else if (zoneTotal === suggested) {
+        el.style.color = 'var(--accent)';
+        el.style.background = 'var(--accent-l)';
+      } else if (zoneTotal > suggested) {
+        el.style.color = 'var(--err)';
+        el.style.background = 'var(--err-bg)';
+      } else {
+        el.style.color = 'var(--warn)';
+        el.style.background = 'var(--warn-bg)';
+      }
     }
   });
 }
@@ -1529,13 +1562,34 @@ function updSc(){
 
 // ═══════════════════════════════════════
 // Step 4 → 5：一般科目出題
+// [修改4] 加入計時器
 // ═══════════════════════════════════════
+var _genTimerInterval = null;
+
+function startGenTimer() {
+  const el = document.getElementById('s5-timer');
+  if (!el) return;
+  let sec = 0;
+  el.textContent = '已等待 0 秒';
+  _genTimerInterval = setInterval(() => {
+    sec++;
+    el.textContent = `已等待 ${sec} 秒`;
+  }, 1000);
+}
+
+function stopGenTimer() {
+  if (_genTimerInterval) { clearInterval(_genTimerInterval); _genTimerInterval = null; }
+  const el = document.getElementById('s5-timer');
+  if (el) el.textContent = '';
+}
+
 async function generate(){
   if(!S.apiSecret){ document.getElementById('keyModal').classList.remove('hide'); return; }
   goStep(5);
   document.getElementById('s5-ld').classList.remove('hide');
   document.getElementById('s5-ok').classList.add('hide');
   document.getElementById('s5-err').classList.add('hide');
+  startGenTimer(); // [修改4]
   const hints=['正在分析教材與學習目標...','正在規劃題型分布與難度...','正在撰寫題目與選項...','正在檢查誘答力與品質...','即將完成，請稍候...'];
   let hi=0;
   const ht=setInterval(()=>{ hi=Math.min(hi+1,hints.length-1); const s=document.getElementById('s5-ldSub'); if(s) s.textContent=hints[hi]; },8000);
@@ -1560,13 +1614,13 @@ async function generate(){
       document.getElementById('s5-ldMsg').textContent='啟動極速引擎：Flash 產出考卷...';
       out=await callAPI(buildExamPrompt(flashSc,true),'generate','flash');
     }
-    clearInterval(ht);
+    clearInterval(ht); stopGenTimer(); // [修改4]
     S.output=out;
     document.getElementById('outTxt').textContent=out.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch(err){
-    clearInterval(ht);
+    clearInterval(ht); stopGenTimer(); // [修改4]
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-err').classList.remove('hide');
     document.getElementById('s5-errMsg').textContent='出題失敗：'+err.message;
@@ -1575,6 +1629,7 @@ async function generate(){
 
 // ═══════════════════════════════════════
 // 國語科出題
+// [修改4] 國語科也加計時器
 // ═══════════════════════════════════════
 async function toStep5Ch(){
   if(!S.apiSecret){ S.step='2ch'; document.getElementById('keyModal').classList.remove('hide'); return; }
@@ -1586,13 +1641,16 @@ async function toStep5Ch(){
   document.getElementById('s5-err').classList.add('hide');
   document.getElementById('s5-ldMsg').textContent='AI 正在依審核表評量架構命題中...';
   document.getElementById('s5-ldSub').textContent='國語科採整合式出題，通常需要 30-60 秒';
+  startGenTimer(); // [修改4]
   try {
     const result=await callAPI(buildChineseExamPrompt(),'generate','pro');
+    stopGenTimer(); // [修改4]
     S.output=result;
     document.getElementById('outTxt').textContent=result.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch(err){
+    stopGenTimer(); // [修改4]
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-err').classList.remove('hide');
     document.getElementById('s5-errMsg').textContent='出題失敗：'+err.message;
