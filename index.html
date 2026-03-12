@@ -974,8 +974,8 @@ function initChUploadZones() {
 }
 
 async function handleChFiles(zoneId, stId, files) {
-  if (S.chFiles[zoneId].length + files.length > 20) {
-    alert('為確保系統效能，單一向度最多上傳 20 個檔案，請分次處理或合併檔案。');
+  if (S.chFiles[zoneId].length + files.length > 40) {
+    alert('為確保系統效能，單一向度最多上傳 40 個檔案，請分次處理或合併檔案。');
     return;
   }
   const stEl = document.getElementById(stId);
