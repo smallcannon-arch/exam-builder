@@ -10,6 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 <style>
 :root {
   --bg: #F4F1EB;
@@ -312,10 +314,17 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 }
 @media (min-width: 640px) { .out-area { padding: 32px; } }
 .out-txt {
-  font-size: 14px; line-height: 1.85; white-space: pre-wrap;
+  font-size: 14px; line-height: 1.85;
   font-family: 'Noto Sans TC', sans-serif;
   max-height: 600px; overflow-y: auto; padding-right: 8px;
 }
+.out-txt pre { white-space: pre-wrap; font-family: inherit; }
+.out-txt table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 14px; }
+.out-txt th, .out-txt td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+.out-txt th { background: var(--surface-alt); font-weight: 600; color: var(--text-2); }
+.out-txt tr:nth-child(even) td { background: var(--surface-alt); }
+.out-txt p { margin: 6px 0; white-space: pre-wrap; }
+.out-txt h1,.out-txt h2,.out-txt h3 { margin: 12px 0 6px; }
 .out-txt::-webkit-scrollbar { width: 5px; }
 .out-txt::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 .out-acts {
@@ -1619,12 +1628,16 @@ async function generate(){
     }
     clearInterval(ht); stopGenTimer(); // [修改4]
     S.output=out;
-    document.getElementById('outTxt').textContent=out.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
+    renderOutput(out.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim());
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch(err){
-    clearInterval(ht); stopGenTimer(); // [修改4]
+    clearInterval(ht); stopGenTimer();
     document.getElementById('s5-ld').classList.add('hide');
+    if(err.message.includes('密碼')||err.message.includes('unauthorized')||err.message.includes('secret')||err.message.includes('Invalid')){
+      S.apiSecret=''; document.getElementById('secIn').value='';
+      document.getElementById('keyModal').classList.remove('hide'); return;
+    }
     document.getElementById('s5-err').classList.remove('hide');
     document.getElementById('s5-errMsg').textContent='出題失敗：'+err.message;
   }
@@ -1635,7 +1648,7 @@ async function generate(){
 // [修改4] 國語科也加計時器
 // ═══════════════════════════════════════
 async function toStep5Ch(){
-  if(!S.apiSecret){ S.step='2ch'; document.getElementById('keyModal').classList.remove('hide'); return; }
+  if(!S.apiSecret){ document.getElementById('keyModal').classList.remove('hide'); return; }
   const total=Object.values(S.chScores).reduce((a,v)=>a+v,0);
   if(total!==100){ alert('配分合計需等於 100 分'); return; }
   goStep(5);
@@ -1649,12 +1662,16 @@ async function toStep5Ch(){
     const result=await callAPI(buildChineseExamPrompt(),'generate','pro');
     stopGenTimer(); // [修改4]
     S.output=result;
-    document.getElementById('outTxt').textContent=result.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim();
+    renderOutput(result.split(/═══ 國語科雙向細目表對應 ═══/)[0].trim());
     document.getElementById('s5-ld').classList.add('hide');
     document.getElementById('s5-ok').classList.remove('hide');
   } catch(err){
-    stopGenTimer(); // [修改4]
+    stopGenTimer();
     document.getElementById('s5-ld').classList.add('hide');
+    if(err.message.includes('密碼')||err.message.includes('unauthorized')||err.message.includes('secret')||err.message.includes('Invalid')){
+      S.apiSecret=''; document.getElementById('secIn').value='';
+      document.getElementById('keyModal').classList.remove('hide'); return;
+    }
     document.getElementById('s5-err').classList.remove('hide');
     document.getElementById('s5-errMsg').textContent='出題失敗：'+err.message;
   }
@@ -1732,7 +1749,13 @@ ${S.grade}___班 座號：_______ 姓名：_______
 （檢查是否有題幹洩漏答案）
 
 ═══ 圖片生成指令 ═══
-（如無需配圖請留白）
+若本題需要配圖，請用英文輸出 Gemini 圖片生成指令，每張圖一個區塊，格式如下：
+【圖片用途】：說明這張圖對應哪一題
+- Style: flat illustration, child-friendly, bright colors, white background, no text
+- Purpose: elementary school exam illustration, Taiwan curriculum
+- Content: （具體描述圖片內容，越具體越好）
+- Avoid: realistic photos, complex backgrounds, human faces, any text or numbers in image
+若完全不需要配圖，請只寫「（本份試卷無需配圖）」
 
 ═══ 國語科雙向細目表對應 ═══
 請將所有題目配分對應許育健教授評量項目，輸出嚴格 JSON 格式。
@@ -1851,7 +1874,13 @@ ${fmt}
 （檢查題幹是否有洩漏答案）
 
 ═══ 圖片生成指令 ═══
-（如無需配圖請留白）
+若本題需要配圖，請用英文輸出 Gemini 圖片生成指令，每張圖一個區塊，格式如下：
+【圖片用途】：說明這張圖對應哪一題
+- Style: flat illustration, child-friendly, bright colors, white background, no text
+- Purpose: elementary school exam illustration, Taiwan curriculum
+- Content: （具體描述圖片內容，越具體越好）
+- Avoid: realistic photos, complex backgrounds, human faces, any text or numbers in image
+若完全不需要配圖，請只寫「（本份試卷無需配圖）」
 
 === 教材內容開始 ===
 ${mat}
@@ -1911,6 +1940,19 @@ function saveKey(){
   if(S.step===2) doAnalyze();
   else if(S.step==='2ch') toStep5Ch();
   else if(S.step===5) generate();
+}
+
+// ═══════════════════════════════════════
+// Markdown 渲染輸出
+// ═══════════════════════════════════════
+function renderOutput(text) {
+  const el = document.getElementById('outTxt');
+  if (typeof marked !== 'undefined' && typeof DOMPurify !== 'undefined') {
+    marked.setOptions({ breaks: true, gfm: true });
+    el.innerHTML = DOMPurify.sanitize(marked.parse(text));
+  } else {
+    el.textContent = text;
+  }
 }
 
 // ═══════════════════════════════════════
