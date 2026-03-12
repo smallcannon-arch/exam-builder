@@ -325,6 +325,8 @@ textarea { resize: vertical; min-height: 130px; line-height: 1.7; }
 .out-txt tr:nth-child(even) td { background: var(--surface-alt); }
 .out-txt p { margin: 6px 0; white-space: pre-wrap; }
 .out-txt h1,.out-txt h2,.out-txt h3 { margin: 12px 0 6px; }
+.out-txt ul, .out-txt ol { padding-left: 24px; margin: 8px 0; }
+.out-txt li { margin-bottom: 4px; }
 .out-txt::-webkit-scrollbar { width: 5px; }
 .out-txt::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 .out-acts {
@@ -972,6 +974,10 @@ function initChUploadZones() {
 }
 
 async function handleChFiles(zoneId, stId, files) {
+  if (S.chFiles[zoneId].length + files.length > 20) {
+    alert('為確保系統效能，單一向度最多上傳 20 個檔案，請分次處理或合併檔案。');
+    return;
+  }
   const stEl = document.getElementById(stId);
   stEl.textContent = '讀取中...';
   let addedCount = 0, addedChars = 0;
